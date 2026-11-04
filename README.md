@@ -41,3 +41,15 @@ Because all paths are relative and routing is via `#/...`, it works as a GitHub 
 ## Production roadmap
 
 Backend with authentication and role permissions; PostgreSQL and secure media storage; real availability/inventory, booking statuses and cancellations; payment provider, split payments/refunds/deposits; listing moderation, identity verification, fraud controls, Terms and Privacy; notification/email/SMS provider, real-time chats and admin dashboard. Validate listing categories against local law before allowing regulated items.
+
+## Client feedback update — 4 November 2026
+
+- Owner headers are aligned; redundant three-dot post menus removed.
+- Like and Comment actions removed from the home feed; Share uses a recognised share symbol, with Save retained.
+- Review stars and clearly illustrative review counts replace the previous bottom action row.
+- Entire listing cards open detail pages (including via keyboard Enter/Space).
+- Listing details now have Make an offer, simulated seller decisions and negotiation history in Account → My offers.
+- Accepted offers carry the agreed daily rate into checkout and booking calculations.
+- Electric lawn mower uses an accurate original product illustration.
+
+All starter listings, reviews, messages, offers and transactions remain simulated and browser-local.

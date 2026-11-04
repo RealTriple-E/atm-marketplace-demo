@@ -63,7 +63,7 @@ const ATM_LISTINGS = [
 [38,'Performance Road Bicycle',120,'Vehicles','Lusaka','Pedal Zambia','roadbike','Road bike with adjustable seat and helmet, for training or leisure.',4.8,17],
 [39,'Conference Coffee Urn Set',110,'Events','Ndola','Brew & Gather','coffee','Tea and coffee urns for meetings, workshops and small conferences.',4.7,14],
 [40,'Moving Van With Driver',1500,'Vehicles','Lusaka','MoveEasy Zambia','van','Convenient short-distance furniture or office moving van with driver.',4.8,26]
-].map(([id,title,price,category,city,owner,img,description,rating,reviews])=>({id,title,price,category,city,owner,img,image:photo(img),description,rating,reviews,unit:'day',deposit:Math.ceil(price*.25/10)*10,likes:17+(id*17)%109,comments:3+(id*7)%23,featured:id<=20,verified:id%4!==0,created:((id*3)%23)+1}));
+].map(([id,title,price,category,city,owner,img,description,rating,reviews])=>({id,title,price,category,city,owner,img,image:img==='lawn'?'lawn-mower.svg':photo(img),description,rating,reviews,unit:'day',deposit:Math.ceil(price*.25/10)*10,likes:17+(id*17)%109,comments:3+(id*7)%23,featured:id<=20,verified:id%4!==0,created:((id*3)%23)+1}));
 const ATM_START_NOTICES=[
   {id:1,kind:'welcome',title:'Welcome to ATM!',text:'Find, hire and list almost anything in Zambia.',age:'Today',read:false,route:'explore'},
   {id:2,kind:'idea',title:'Discover what is trending',text:'Explore popular items for hire around Lusaka and beyond.',age:'Yesterday',read:false,route:'trending'},
