@@ -53,3 +53,12 @@ Backend with authentication and role permissions; PostgreSQL and secure media st
 - Electric lawn mower uses an accurate original product illustration.
 
 All starter listings, reviews, messages, offers and transactions remain simulated and browser-local.
+
+
+## Client revision — Offers navigation (4 November 2026)
+
+- The floating nav uses **Home / Offers / Post / Account**. Browse/search remains available via Home search and category cards.
+- On a listing details screen, the nav is replaced by a fixed, near-edge-to-edge **Make Offer** CTA.
+- Customers can select dates and propose a daily rental rate. Offers first appear as **Pending** in My Offers.
+- For demonstrations, use **Simulate seller reply** on Pending offers to show Accepted, Counteroffer, or Declined; accepted offers can continue to the existing booking simulation. Withdraw pending offers as needed.
+- All offer statuses and history are stored only in the local browser, not synced to any server or real seller.
