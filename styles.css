@@ -43,3 +43,42 @@
 .offer-buttons .btn{font-size:13px}
 .offer-card>.link-btn{margin-top:10px}
 @media(max-width:380px){.feed-rating{gap:4px}.card-tap-hint{font-size:11px}.offer-card{padding:13px}.offer-facts{gap:8px}.feed-author{gap:9px}}
+
+/* Victor feedback 2026-11-04: streamlined home and compact, accessible mobile controls.
+   Preserve category scrolling and a tap-friendly floating pill on every screen. */
+.home-top{display:block;margin:0}
+.home-top .home-search{max-width:780px;margin:12px 0 18px}
+.category-rail{gap:12px;padding:2px 1px 9px}
+.category-item{min-width:72px;gap:7px;font-size:12px}
+.category-ball{height:58px;width:58px}
+.category-ball svg{height:25px;width:25px}
+.trend-section{margin-top:12px}
+.trend-section .section-head{margin:21px 0 14px}
+.fnav{width:min(440px,calc(100% - 54px));height:62px;padding:5px 7px;gap:2px;bottom:calc(11px + env(safe-area-inset-bottom,0px));border-radius:36px;box-shadow:0 8px 28px rgba(0,0,0,.13),0 1px 3px rgba(0,0,0,.04)}
+.fnav button{font-size:11px;gap:2px;border-radius:32px;min-height:48px}
+.fnav button svg{height:21px;width:21px}
+.fnav .add-icon{border-radius:6px;padding:2px}
+@media(min-width:680px){
+  .category-item{min-width:80px}
+  .category-ball{height:62px;width:62px}
+  .category-ball svg{height:27px;width:27px}
+  .fnav{width:min(470px,calc(100% - 72px));height:66px}
+}
+@media(min-width:1024px){
+  .home-top{display:block;margin:0}
+  .home-top .home-search{margin:16px 0 22px;max-width:780px}
+  .category-rail{gap:17px}
+  .category-ball{height:66px;width:66px}
+  .category-ball svg{height:28px;width:28px}
+  .fnav{height:66px}
+}
+@media(max-width:380px){
+  .home-top .home-search{margin:9px 0 14px}
+  .category-item{min-width:65px;gap:6px;font-size:11px}
+  .category-ball{height:52px;width:52px}
+  .category-ball svg{height:23px;width:23px}
+  .category-rail{gap:10px}
+  .fnav{width:calc(100% - 34px);height:58px;bottom:calc(8px + env(safe-area-inset-bottom,0px));padding:4px 6px}
+  .fnav button{font-size:10.5px;min-height:44px}
+  .fnav button svg{height:20px;width:20px}
+}
