@@ -82,3 +82,16 @@
   .fnav button{font-size:10.5px;min-height:44px}
   .fnav button svg{height:20px;width:20px}
 }
+
+/* ATM version 3. Rechecked on Victor's mobile: smaller controls, including at narrow widths. */
+html{color-scheme:only light}
+.category-rail{gap:11px}
+.category-item{min-width:66px;gap:6px;font-size:11.5px}
+.category-ball{width:54px;height:54px}
+.category-ball svg{width:23px;height:23px}
+.fnav{width:min(390px,calc(100% - 60px));height:58px;padding:4px 6px;bottom:calc(12px + env(safe-area-inset-bottom,0px))}
+.fnav button{min-height:44px;font-size:10.5px;gap:1px}
+.fnav button svg{width:20px;height:20px}
+@media(min-width:680px){.category-item{min-width:73px}.category-ball{height:58px;width:58px}.category-ball svg{height:25px;width:25px}.fnav{height:60px;max-width:410px}}
+@media(min-width:1024px){.category-ball{width:60px;height:60px}.category-ball svg{width:26px;height:26px}.fnav{height:60px}}
+@media(max-width:380px){.category-rail{gap:8px}.category-item{min-width:60px;font-size:10.5px}.category-ball{height:48px;width:48px}.category-ball svg{height:21px;width:21px}.fnav{width:calc(100% - 38px);height:54px;bottom:calc(9px + env(safe-area-inset-bottom,0px))}.fnav button{min-height:43px;font-size:10px}.fnav button svg{width:19px;height:19px}}
