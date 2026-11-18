@@ -696,3 +696,7 @@ html{color-scheme:only light}
  .atm-subchip{min-height:38px;padding:9px 12px;font-size:11px}
 }
 @media(prefers-reduced-motion:reduce){.atm-category-tile,.atm-subchip{transition:none}.atm-category-tile:hover{transform:none}}
+
+.atm-load-more{display:flex;align-items:center;justify-content:center;width:min(100%,420px);min-height:48px;margin:22px auto 28px;padding:12px 17px;border:1.5px solid #e35c22;background:#fff;color:#b84316;border-radius:15px;font-size:13px;font-weight:850;transition:background .17s}
+.atm-load-more:hover{background:#fff0e6}
+.atm-load-more:focus-visible{outline:3px solid #f59560;outline-offset:3px}
