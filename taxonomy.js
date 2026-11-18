@@ -139,6 +139,15 @@ const ATM_CATALOG_GROUPS = {
       count++;loop++;
     }
   });
+  // Demo feature attributes power real subcategory-specific filter choices.
+  ATM_LISTINGS.forEach(function(l){
+    var taxonomy=ATM_TAXONOMY.find(function(t){return t.name===l.category;});
+    if(!taxonomy)return;
+    var id=Number(l.id)||0;
+    l.features=taxonomy.filters.filter(function(_,i){return ((id+i*3)%5)<3;});
+    // Every category has at least two meaningful filter dimensions in the demo.
+    if(!l.features.length)l.features=[taxonomy.filters[id%taxonomy.filters.length]];
+  });
   // Previous auto-open host chats are not authorised until a demo payment completes.
   ATM_START_CHATS.splice(0,ATM_START_CHATS.length);
 })();
