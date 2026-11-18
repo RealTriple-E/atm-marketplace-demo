@@ -412,3 +412,18 @@ html{color-scheme:only light}
 @media(prefers-reduced-motion:reduce){
  .atm-offer-sheet .atm-response-icon.atm-accepted-icon,.atm-offer-sheet .atm-response-icon.atm-counter-icon{animation:none!important}
 }
+
+
+/* ATM client copy revision — five easily understood, independently coloured
+   likelihood states. Each label uses exactly the same color as its meter fill.
+   Rates are illustrative; host behaviour remains a demo simulation. */
+.atm-offer-sheet .atm-likelihood-very-low .atm-meter span{background-color:#C62828}
+.atm-offer-sheet .atm-likelihood-very-low b{color:#C62828}
+.atm-offer-sheet .atm-likelihood-low .atm-meter span{background-color:#C65317}
+.atm-offer-sheet .atm-likelihood-low b{color:#C65317}
+.atm-offer-sheet .atm-likelihood-moderate .atm-meter span{background-color:#916900}
+.atm-offer-sheet .atm-likelihood-moderate b{color:#916900}
+.atm-offer-sheet .atm-likelihood-high .atm-meter span{background-color:#2563B8}
+.atm-offer-sheet .atm-likelihood-high b{color:#2563B8}
+.atm-offer-sheet .atm-likelihood-very-high .atm-meter span{background-color:#147D49}
+.atm-offer-sheet .atm-likelihood-very-high b{color:#147D49}
