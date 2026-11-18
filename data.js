@@ -18,7 +18,7 @@ const ATM_IMAGE = {
   dress:'photo-1595777457583-95e059d581b8', inverter:'photo-1581092446327-9b52bd1570c2', freezer:'photo-1571175443880-49e1d25b2bc5',
   bike:'photo-1485965120184-e220f721d03e', washer2:'photo-1523413651479-597eb2da0ad6', sofa:'photo-1555041469-a586c61ea9bc',
   rooftop:'photo-1500534623283-312aade485b7', lights:'photo-1506157786151-b8491531f063', canopy:'photo-1533174072545-7a4b6ad7a6c3',
-  boat:'photo-1500534314209-a25ddb2bd429', roadbike:'photo-1541625602330-2277b4c461de', coffee:'photo-1495474472287-4d71bcdd2085',
+  boat:'photo-1500534314209-a25ddb2bd429', roadbike:'photo-1485965120184-e220f721d03e', coffee:'photo-1495474472287-4d71bcdd2085',
   van:'photo-1566933293069-b55c7f326dd4'
 };
 const photo=(k,w=900)=>ATM_IMAGE[k] ? `https://images.unsplash.com/${ATM_IMAGE[k]}?auto=format&fit=crop&w=${w}&q=83` : '';
