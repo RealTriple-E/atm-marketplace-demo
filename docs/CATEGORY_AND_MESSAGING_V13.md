@@ -59,3 +59,11 @@ The browser demonstration enforces this consistently in the listing, My Trips, M
 - Add hourly, weekly, per-trip, per-job and per-session rates; especially for Services.
 - Connect a real taxonomy database, robust location/geocoder, dynamic seller-managed availability, real popularity signals and searchable metadata.
 - Server-side message authorisation, fraud checks, dispute and refund workflows, payment confirmations and moderation are mandatory for any real use.
+
+## v14 Release QA corrections
+The live v13 browser audit identified three regressions that have been corrected before final client delivery:
+- **Broken bicycle images:** The failing road-bicycle Unsplash asset was replaced with the working bicycle asset already used by the catalogue.
+- **Pagination state leakage:** Each route change, including browser Back/Forward, resets the number of displayed results to 24; Load more continues to show the next 24 only within the current page.
+- **New listing discovery:** Newly published or updated owner listings are prioritised at the top of category and Explore grids under the default Trending sort, without falsely adding them to a category's popularity-based Trending carousel.
+
+A targeted JavaScript interaction regression verified: Explore 24 → Load more 48 → Hardware 24 → Load more 48 → Explore 24; publishing a Hardware / Power & Electrical listing; the listing appears as the first Hardware grid tile; and the bicycle image URL now refers to the known working asset. A separate live browser audit is used to verify rendering and payment-gated messaging.
