@@ -363,7 +363,7 @@ html{color-scheme:only light}
   0%{opacity:0;transform:translate3d(0,0,0) scale(.3) rotate(0deg)}
   12%{opacity:1}
   54%{opacity:1;transform:translate3d(var(--tx),var(--ty),0) scale(1) rotate(var(--r))}
-  100%{opacity:0;transform:translate3d(calc(var(--tx) * 1.2),calc(var(--ty) + 270px),0) rotate(calc(var(--r) * 1.7))}
+  100%{opacity:0;transform:translate3d(var(--tx),calc(var(--ty) + 270px),0) rotate(var(--r))}
 }
 @media(max-width:380px){
  .atm-payment-choice .atm-pay-brand{width:43px;height:43px;min-width:43px}
