@@ -379,11 +379,11 @@ html{color-scheme:only light}
 .atm-offer-sheet .atm-likelihood-low .atm-meter span{background-color:#F04438}
 .atm-offer-sheet .atm-likelihood-low b{color:#F04438}
 .atm-offer-sheet .atm-likelihood-ambitious .atm-meter span{background-color:#FD853A}
-.atm-offer-sheet .atm-likelihood-ambitious b{color:#DF6B25}
+.atm-offer-sheet .atm-likelihood-ambitious b{color:#FD853A}
 .atm-offer-sheet .atm-likelihood-medium .atm-meter span{background-color:#F79009}
-.atm-offer-sheet .atm-likelihood-medium b{color:#E57A04}
+.atm-offer-sheet .atm-likelihood-medium b{color:#F79009}
 .atm-offer-sheet .atm-likelihood-high .atm-meter span{background-color:#12B76A}
-.atm-offer-sheet .atm-likelihood-high b{color:#11975A}
+.atm-offer-sheet .atm-likelihood-high b{color:#12B76A}
 .atm-offer-sheet .atm-likelihood-very .atm-meter span{background-color:#039855}
 .atm-offer-sheet .atm-likelihood-very b{color:#039855}
 .atm-offer-sheet .atm-meter span{transition:width .35s cubic-bezier(.2,.75,.2,1),background-color .28s ease}
