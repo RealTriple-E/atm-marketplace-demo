@@ -16,9 +16,9 @@
   var unit=function(l){return l.category==="Property"?"night":"day";};
   var caps=function(l){return l.category==="Property"?"Guests":"People";};
   var blocked=function(s,l){var d=parse(s),id=Number(l.id)||1;return d.getDate()===((id*7)%23+3)||d.getDate()===((id*11)%23+3);};
-  var allowed=function(start,end,l,u){if(!start||!end||start<today()||end<start)return false;var n=duration(start,end,u);if(n>90||n<1)return false;for(var day=start;day<=end;day=add(day,1)){if(blocked(day,l))return false;}return true;};
-  var firstDate=function(l){for(var d=add(today(),1),i=0;i<120;i++,d=add(d,1))if(!blocked(d,l))return d;return add(today(),1);};
-  var selectRange=function(l){var x=selections[l.id],u=unit(l);if(x&&allowed(x.start,x.end,l,u))return x;var start=firstDate(l),end=start;for(var i=1;i<3;i++){var next=endFrom(start,i+1,u);if(allowed(start,next,l,u))end=next;else break;}return {start:start,end:end};};
+  var allowed=function(start,end,l,u){if(!start||!end||start<today()||end<start||(u==='night'&&end===start))return false;var n=duration(start,end,u);if(n>90||n<1)return false;for(var day=start;day<=end;day=add(day,1)){if(blocked(day,l))return false;}return true;};
+  var firstDate=function(l){for(var d=today(),i=0;i<120;i++,d=add(d,1))if(!blocked(d,l))return d;return add(today(),1);};
+  var selectRange=function(l){var x=selections[l.id],u=unit(l);if(x&&allowed(x.start,x.end,l,u))return x;var start=firstDate(l),end=start;for(var attempt=0;attempt<120;attempt++,start=add(start,1)){if(blocked(start,l))continue;var first=endFrom(start,1,u);if(!allowed(start,first,l,u))continue;end=first;for(var i=2;i<=3;i++){var next=endFrom(start,i,u);if(allowed(start,next,l,u))end=next;else break;}return {start:start,end:end};}return {start:today(),end:endFrom(today(),1,u)};};
   var makeFlow=function(l,mode){var r=selectRange(l),u=unit(l),n=duration(r.start,r.end,u);return {listing:l,mode:mode||"offer",phase:mode==="reserve"?"checkout":"compose",start:r.start,end:r.end,days:n,people:2,amount:Math.max(50,Math.round(l.price*.85/50)*50),rate:l.price,method:"mtn",offerId:null,discount:0};};
   var root=function(){if(!modal){modal=document.createElement("div");modal.id="atm-flow-root";document.body.appendChild(modal);}return modal;};
   var sync=function(){root().innerHTML=render();if(modal.firstElementChild){document.body.classList.add("atm-modal-open");}else{document.body.classList.remove("atm-modal-open");}};
