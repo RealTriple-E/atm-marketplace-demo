@@ -23,8 +23,36 @@
   var suggestedAmounts=function(p){var increment=offerIncrement(p);return Array.from(new Set([.8,.9,1].map(function(v){return Math.max(increment,Math.round(p*v/increment)*increment)})));};
   var makeFlow=function(l,mode){var r=selectRange(l),u=unit(l),n=duration(r.start,r.end,u),increment=offerIncrement(l.price);return {listing:l,mode:mode||"offer",phase:mode==="reserve"?"checkout":"compose",start:r.start,end:r.end,days:n,people:2,amount:Math.max(increment,Math.round(l.price*.85/increment)*increment),rate:l.price,method:"mtn",offerId:null,discount:0};};
   var root=function(){if(!modal){modal=document.createElement("div");modal.id="atm-flow-root";document.body.appendChild(modal);}return modal;};
-  var sync=function(){root().innerHTML=render();if(modal.firstElementChild){document.body.classList.add("atm-modal-open");}else{document.body.classList.remove("atm-modal-open");}};
+  var sync=function(){
+    var target=root(),next=render();
+    var current=target.querySelector&&target.querySelector(".atm-sheet");
+    if(current&&next){
+      var staging=document.createElement("div");
+      staging.innerHTML=next;
+      var incoming=staging.querySelector(".atm-sheet");
+      var oldHead=current.querySelector(".atm-sheet-head");
+      var oldContent=current.querySelector(".atm-sheet-content");
+      var newHead=incoming&&incoming.querySelector(".atm-sheet-head");
+      var newContent=incoming&&incoming.querySelector(".atm-sheet-content");
+      if(incoming&&oldHead&&oldContent&&newHead&&newContent){
+        current.className=incoming.className;
+        current.setAttribute("aria-label",incoming.getAttribute("aria-label"));
+        oldHead.innerHTML=newHead.innerHTML;
+        oldContent.innerHTML=newContent.innerHTML;
+        oldContent.scrollTop=0;
+        if(typeof oldContent.animate==="function"&&!(window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches)){
+          oldContent.animate([{opacity:.25,transform:"translateY(10px) scale(.985)"},{opacity:1,transform:"translateY(0) scale(1)"}],{duration:230,easing:"ease-out"});
+        }
+        document.body.classList.add("atm-modal-open");
+        return;
+      }
+    }
+    target.innerHTML=next;
+    if(modal.firstElementChild)document.body.classList.add("atm-modal-open");
+    else document.body.classList.remove("atm-modal-open");
+  };
   var close=function(){if(timer){clearTimeout(timer);timer=null;}if(confettiTimer){clearTimeout(confettiTimer);confettiTimer=null;}flow=null;calendar=null;if(modal)modal.innerHTML="";document.body.classList.remove("atm-modal-open");};
+  var backFromCalendar=function(){if(calendar&&calendar.context&&flow){calendar=null;sync();}else close();};
   var page=function(title,body,cls){return "<div class='atm-overlay' role='presentation' data-atmf='close'><section class='atm-sheet "+(cls||"")+"' role='dialog' aria-modal='true' aria-label='"+esc(title)+"'><div class='atm-drag'></div><div class='atm-sheet-head'><span class='atm-head-space'></span><h2>"+esc(title)+"</h2><button type='button' class='atm-circle-close' data-atmf='close' aria-label='Close'>"+icon("close")+"</button></div><div class='atm-sheet-content'>"+body+"</div></section></div>";};
   var listingCard=function(l){return "<div class='atm-flow-listing'><img src='"+esc(l.image)+"' alt=''><div><strong>"+esc(l.title)+"</strong><small>"+esc(l.city)+", Zambia · Listed at "+cash(l.price)+" / "+unit(l)+"</small></div></div>";};
   var stepper=function(label,value,key,min,max,hint){return "<div class='atm-stepper' data-stepper='"+key+"'><div><strong>"+esc(label)+"</strong>"+(hint?"<small>"+esc(hint)+"</small>":"")+"</div><div class='atm-stepper-buttons'><button type='button' data-atmf='step' data-key='"+key+"' data-dir='-1' aria-label='Fewer "+esc(label)+"' "+(value<=min?"disabled":"")+">"+icon("minus")+"</button><span aria-live='polite'>"+value+"</span><button type='button' data-atmf='step' data-key='"+key+"' data-dir='1' aria-label='More "+esc(label)+"' "+(value>=max?"disabled":"")+">"+icon("plus")+"</button></div></div>";};
@@ -160,8 +188,8 @@
     }
   };
   var actions={
-    close:function(){close();},
-    price:function(b){var inc=offerIncrement(flow.listing.price),step=Math.max(inc,Math.round(flow.listing.price*.05/inc)*inc);flow.amount=Math.max(inc,Math.min(1000000,flow.amount+Number(b.dataset.dir||1)*step));updateControls();},
+    close:function(){backFromCalendar();},
+    price:function(b){var inc=offerIncrement(flow.listing.price),step=inc;flow.amount=Math.max(inc,Math.min(1000000,flow.amount+Number(b.dataset.dir||1)*step));updateControls();},
     amount:function(b){flow.amount=Number(b.dataset.value);updateControls();},
     date:function(b){var s=b.dataset.date,ee=endFrom(s,flow.days,unit(flow.listing));if(!allowed(s,ee,flow.listing,unit(flow.listing))){var first=endFrom(s,1,unit(flow.listing));if(!allowed(s,first,flow.listing,unit(flow.listing))){notify("Select another available start date");return;}flow.start=s;flow.end=first;flow.days=1;}else{flow.start=s;flow.end=ee;}updateControls();},
     step:function(b){var dir=Number(b.dataset.dir||1),k=b.dataset.key;if(k==="people"){flow.people=Math.max(1,Math.min(12,flow.people+dir));updateControls();}else if(k==="days"){if(!moveDuration(dir))notify("Those dates are unavailable in this demo");updateControls();}},
@@ -200,14 +228,14 @@
   var finishDrag=function(e){
     if(!drag||e.pointerId!==drag.id)return;
     var d=drag;drag=null;
-    if(d.moved>105){d.sheet.style.transform="";d.sheet.style.transition="";close();return;}
+    if(d.moved>105){d.sheet.style.transform="";d.sheet.style.transition="";backFromCalendar();return;}
     d.sheet.style.transition="transform .22s cubic-bezier(.2,.8,.3,1)";
     d.sheet.style.transform="";
     setTimeout(function(){if(d.sheet)d.sheet.style.transition="";},250);
   };
   document.addEventListener("pointerup",finishDrag);
   document.addEventListener("pointercancel",finishDrag);
-  document.addEventListener("keydown",function(e){if(e.key==="Escape"&&(flow||calendar)){close();}});
+  document.addEventListener("keydown",function(e){if(e.key==="Escape"&&(flow||calendar)){backFromCalendar();}});
   window.ATMFlow={
     init:function(api){bridge=api;},
     offer:function(l){if(!l)return;close();flow=makeFlow(l,"offer");sync();},
