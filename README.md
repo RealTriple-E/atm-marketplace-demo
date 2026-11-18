@@ -76,3 +76,13 @@ All starter listings, reviews, messages, offers and transactions remain simulate
 
 ## Verified reference parity audit — 18 November 2026
 See [the detailed Vercel offer and Reserve parity audit](docs/VERCEL_OFFER_RESERVE_PARITY_AUDIT.md) for exact likelihood colours, statuses, fees, branding, the new confetti animation, representative source comparisons, intentional demo-only differences, and v10 mobile/checkout regression evidence. The demo is a fictional local-browser marketplace, not a live booking or money-transfer service.
+
+
+## ATM v13 — Six-category marketplace (18 November 2026)
+- The catalogue is organised into **Transport, Hardware, Events, Spaces & Property, Lifestyle and Services**, each with dedicated subcategories and working category-specific features and location filters.
+- Six category cards replace global Trending on the Home screen. Each category has a **Trending in [category]** carousel ranking sample listings inside that category/subcategory and a sortable listing grid.
+- The catalogue contains **288 fictional listings (48 per category)** with distinct IDs/titles, subcategory labels, images, Zambian cities, K prices, ratings and demo availability. The original listing IDs 1–40 are preserved.
+- Search spans categories; Explore and category results use interactive **Load more** pagination (24 at a time), keeping mobile rendering manageable.
+- Post/Edit includes mandatory category and subcategory selection, optional category features, and public-contact suppression. A new listing appears in its chosen category.
+- **Messaging rule:** There is no direct customer-provider chat, seller contact number, offer note or public comment before a booking has been marked **verified_demo** by the simulated payment-completion step. The booking Chat button then unlocks for that listing. Previously stored chat URLs are also gated. ATM Demo Support and reporting remain available at any time.
+- **Security limitation:** This is static JavaScript/localStorage. The payment-status and messaging checks are **demonstration UX only** and cannot securely authorise real users or protect against tampered localStorage. Live enforcement requires authenticated server-side policies, verified payment webhooks, row-level access control and message permissions.
