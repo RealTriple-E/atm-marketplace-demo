@@ -297,3 +297,32 @@ html{color-scheme:only light}
  .atm-offer-sheet .atm-price-step button,.atm-offer-sheet .atm-meter span,.atm-offer-sheet .atm-amount-chips button{transition:none}
  .atm-offer-sheet .atm-sheet-content{scroll-behavior:auto}
 }
+
+
+/* ATM offer QA layout correction 2026-11-18.
+   Prevent the total CTA covering Days / People: use natural-flow footer and
+   compact vertical spacing rather than a sticky child inside the scroller. */
+.atm-offer-sheet{max-height:min(97dvh,980px)}
+.atm-offer-sheet .atm-sheet-head{padding:8px 18px 9px}
+.atm-offer-sheet .atm-sheet-content{padding-top:8px;padding-bottom:max(15px,env(safe-area-inset-bottom,0px));overflow-y:auto;overscroll-behavior:contain}
+.atm-offer-sheet .atm-flow-listing{min-height:72px;margin-bottom:14px}
+.atm-offer-sheet .atm-price-step{margin:16px auto 10px}
+.atm-offer-sheet .atm-chance{margin:9px auto 11px}
+.atm-offer-sheet .atm-amount-chips{margin:8px 0 18px}
+.atm-offer-sheet .atm-flow-label{margin:9px 0}
+.atm-offer-sheet .atm-date-pill{min-height:62px}
+.atm-offer-sheet .atm-date-rail{padding-bottom:6px}
+.atm-offer-sheet .atm-stepper{min-height:54px;padding:8px 0}
+.atm-offer-sheet .atm-total-block{position:static!important;bottom:auto!important;margin-top:7px;padding:8px 0 0;z-index:auto}
+.atm-offer-sheet .atm-total-block>div{margin-bottom:10px;padding:12px 15px}
+.atm-offer-sheet .atm-total-block .atm-main-cta{height:53px}
+.atm-offer-sheet .atm-price-step button{height:56px;width:56px;min-width:56px}
+.atm-offer-sheet .atm-price-step strong{font-size:clamp(48px,12.8vw,58px)}
+@media(max-width:380px){
+ .atm-offer-sheet .atm-price-step{width:min(100%,320px);margin:15px auto 10px}
+ .atm-offer-sheet .atm-price-step strong{font-size:clamp(48px,13vw,56px)}
+ .atm-offer-sheet .atm-price-step button{height:56px;width:56px;min-width:56px}
+ .atm-offer-sheet .atm-chance{width:min(100%,320px)}
+ .atm-offer-sheet .atm-flow-listing{margin-bottom:12px}
+ .atm-offer-sheet .atm-total-block>div{padding:12px}
+}
