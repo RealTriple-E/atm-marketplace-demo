@@ -75,7 +75,7 @@ const avatar=(name,size='')=>`<div class="avatar ${name.length%3===0?'purple':na
 const image=(l,cls='',other='')=>`<img class="${cls}" src="${esc(l.image||photo(l.img)||photo('tent'))}" alt="${esc(l.title)}" loading="lazy" onerror="this.onerror=null;this.style.opacity='.05';this.parentElement.classList.add('image-fallback')" ${other}>`;
 const verify=l=>l.verified?`<span class="verified">${icon('shield')} Verified demo seller</span>`:'';
 const pagePath=()=>decodeURIComponent((location.hash||'#/home').replace(/^#\/?/,'')).split('/').filter(Boolean);
-function go(route,id){const target=`#/${route}${id!==undefined&&id!==null?'/'+encodeURIComponent(id):''}`;ui.sheet=null;ui.photoIdx=0;if(location.hash===target){render();scrollTo(0,0)}else{location.hash=target}}
+function go(route,id){const target=`#/${route}${id!==undefined&&id!==null?'/'+encodeURIComponent(id):''}`;if(location.hash!==target)ui.visibleCount=24;ui.sheet=null;ui.photoIdx=0;if(location.hash===target){render();scrollTo(0,0)}else{location.hash=target}}
 function activeNav(page){if(['home','explore','trending','category'].includes(page))return 'home';if(['offers','book','checkout','success'].includes(page))return 'offers';if(['post','edit'].includes(page))return 'post';return 'account'}
 function navBar(page){const active=activeNav(page);const tabs=[['home','home','Home'],['offers','dollar','Offers'],['post','plus','Post'],['account','user','Account']];return `<nav class="fnav" aria-label="Main navigation">${tabs.map(([p,ic,text])=>`<button aria-label="${text}" aria-current="${p===active?'page':'false'}" class="${p===active?'active':''}" data-action="go" data-route="${p}">${icon(ic,ic==='plus'?'add-icon':'')}<span>${text}</span></button>`).join('')}</nav>`}
 function listingOfferDock(id){const l=getListing(id);return l?`<div class="listing-offer-dock atm-dual-cta ${l.offersAllowed===false?'atm-reserve-only':''}">${l.offersAllowed===false?'':`<button type="button" class="listing-offer-button atm-offer-option" data-action="offer" data-id="${esc(l.id)}" aria-label="Make an offer for ${esc(l.title)}">${icon('handshake')}<span>Offer</span></button>`}<button type="button" class="listing-offer-button atm-reserve-option" data-action="reserve" data-id="${esc(l.id)}" aria-label="Reserve ${esc(l.title)}">${icon('calendar')}<span>Reserve</span></button></div>`:navBar('home')}
@@ -109,7 +109,7 @@ function sortedListings(array){
   else if(ui.sort==='Price: high')items.sort(function(a,b){return b.price-a.price;});
   else if(ui.sort==='Top rated')items.sort(function(a,b){return b.rating-a.rating;});
   else if(ui.sort==='Newest')items.sort(function(a,b){return b.id-a.id;});
-  else items.sort(function(a,b){return (b.trendScore||0)-(a.trendScore||0);});
+  else items.sort(function(a,b){const ownA=state.myListings.some(x=>!x.deleted&&String(x.id)===String(a.id))?1:0;const ownB=state.myListings.some(x=>!x.deleted&&String(x.id)===String(b.id))?1:0;return ownA===ownB?(b.trendScore||0)-(a.trendScore||0):ownB-ownA;});
   return items;
 }
 function globalFilters(){
@@ -292,6 +292,6 @@ let searchTimer;
 document.addEventListener('input',e=>{if(e.target.dataset.input==='search'){ui.query=e.target.value;clearTimeout(searchTimer);const input=e.target;const pos=input.selectionStart;searchTimer=setTimeout(()=>{render(true);const f=$('#search-listings');if(f){f.focus();f.setSelectionRange(pos,pos)}},210)}});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&ui.sheet){ui.sheet=null;render(true)}});
 window.ATMFlow.init({getOffer:id=>state.offers.find(o=>String(o.id)===String(id)),addOffer:o=>{state.offers.push(o);notify('Offer sent',`${getListing(o.listingId)?.title||'Rental'} · Awaiting demo seller response`,'offers','tip');save();},updateOffer:(id,fields)=>{const o=state.offers.find(x=>String(x.id)===String(id));if(o){Object.assign(o,fields);notify('Seller response (demo)',`${getListing(o.listingId)?.title||'Rental'} · ${o.status}`,'offers','tip');save();}},addBooking:b=>{state.bookings.push(b);notify('Demo reservation confirmed',`${getListing(b.listingId)?.title||'Rental'} · ${b.start} to ${b.end}`,'rentals','booking');save();},navigate:(route,id)=>go(route,id),refresh:()=>render(true)});
-window.addEventListener('hashchange',()=>{window.ATMFlow.dismiss();render()});
+window.addEventListener('hashchange',()=>{ui.visibleCount=24;window.ATMFlow.dismiss();render()});
 if(!location.hash)history.replaceState(null,'','#/home');render();
 })();
