@@ -60,14 +60,14 @@
   var totalDays=function(){return flow.days||duration(flow.start,flow.end,unit(flow.listing));};
   var rangeText=function(){return showDate(flow.start)+" – "+showDate(flow.end)+" · "+totalDays()+" "+(unit(flow.listing)==="night"?"night":"day")+(totalDays()===1?"":"s");};
   var chance=function(){
-    /* Reference interaction bands: percentages are offer / list price.
-       These labels are illustrative guidance, never a prediction. */
+    /* Five plain-English indicative levels, not real host probability estimates.
+       Retain reference fill percentages and numeric thresholds. */
     var ratio=flow.amount/flow.listing.price;
-    if(ratio>=.96)return ["Very likely accepted",95,"very"];
-    if(ratio>=.88)return ["Good chance",75,"high"];
-    if(ratio>=.75)return ["Host may counter",50,"medium"];
-    if(ratio>=.65)return ["Ambitious",28,"ambitious"];
-    return ["Unlikely",10,"low"];
+    if(ratio>=.96)return ["Very high chance",95,"very-high"];
+    if(ratio>=.88)return ["High chance",75,"high"];
+    if(ratio>=.75)return ["Moderate chance",50,"moderate"];
+    if(ratio>=.65)return ["Low chance",28,"low"];
+    return ["Very low chance",10,"very-low"];
   };
   var compose=function(){var l=flow.listing,c=chance(),proposals=suggestedAmounts(l.price);var body=listingCard(l)+"<div class='atm-price-controls'><div class='atm-price-step'><button data-atmf='price' data-dir='-1' aria-label='Reduce offered price'>"+icon("minus")+"</button><div><strong>"+cash(flow.amount)+"</strong><small>per "+unit(l)+"</small></div><button data-atmf='price' data-dir='1' aria-label='Increase offered price'>"+icon("plus")+"</button></div><div class='atm-chance atm-likelihood-"+c[2]+"' data-likelihood='"+c[2]+"'><div class='atm-meter' role='progressbar' aria-label='Illustrative acceptance likelihood' aria-valuemin='0' aria-valuemax='100' aria-valuenow='"+c[1]+"'><span style='width:"+c[1]+"%'></span></div><b>"+c[0]+"</b></div><div class='atm-amount-chips'>"+proposals.map(function(v){return "<button class='"+(flow.amount===v?"active":"")+"' data-atmf='amount' data-value='"+v+"'>"+cash(v)+"</button>";}).join("")+"</div></div>"+datesRail()+stepper(unit(l)==="night"?"Nights":"Days",flow.days,"days",1,90,"Longer rentals may be more attractive to hosts")+stepper(caps(l),flow.people,"people",1,12,"No change to offer price")+"<div class='atm-total-block'><div><span>Your total offer</span><strong>"+cash(flow.amount*totalDays())+"</strong></div><button class='atm-main-cta' data-atmf='send'>Send offer to "+esc(l.owner.split(" ")[0])+" "+icon("arrow")+"</button><small>Demo only · No payment until an offer is accepted.</small></div>";
  return page("Make an offer",body,"atm-offer-sheet");};
@@ -162,7 +162,7 @@
       if(meter)meter.setAttribute("aria-valuenow",String(chanceNow[1]));
       var likelihood=sheet.querySelector(".atm-chance");
       if(likelihood){
-        likelihood.classList.remove("atm-likelihood-low","atm-likelihood-ambitious","atm-likelihood-medium","atm-likelihood-high","atm-likelihood-very");
+        likelihood.classList.remove("atm-likelihood-very-low","atm-likelihood-low","atm-likelihood-moderate","atm-likelihood-high","atm-likelihood-very-high");
         likelihood.classList.add("atm-likelihood-"+chanceNow[2]);
         likelihood.dataset.likelihood=chanceNow[2];
       }
