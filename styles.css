@@ -372,3 +372,43 @@ html{color-scheme:only light}
  .atm-offer-sheet .atm-meter span,.atm-offer-sheet .atm-chance b,.atm-payment-choice{transition:none}
  .atm-confetti i{animation:none!important;opacity:0!important}
 }
+
+
+/* ATM reference five-tier visual parity · 18 Nov 2026
+   Five messages, three main hue families: red / orange / green. */
+.atm-offer-sheet .atm-likelihood-low .atm-meter span{background-color:#F04438}
+.atm-offer-sheet .atm-likelihood-low b{color:#F04438}
+.atm-offer-sheet .atm-likelihood-ambitious .atm-meter span{background-color:#FD853A}
+.atm-offer-sheet .atm-likelihood-ambitious b{color:#DF6B25}
+.atm-offer-sheet .atm-likelihood-medium .atm-meter span{background-color:#F79009}
+.atm-offer-sheet .atm-likelihood-medium b{color:#E57A04}
+.atm-offer-sheet .atm-likelihood-high .atm-meter span{background-color:#12B76A}
+.atm-offer-sheet .atm-likelihood-high b{color:#11975A}
+.atm-offer-sheet .atm-likelihood-very .atm-meter span{background-color:#039855}
+.atm-offer-sheet .atm-likelihood-very b{color:#039855}
+.atm-offer-sheet .atm-meter span{transition:width .35s cubic-bezier(.2,.75,.2,1),background-color .28s ease}
+.atm-offer-sheet .atm-chance b{transition:color .25s ease}
+.atm-payment-choice .atm-pay-brand{width:40px;height:40px;min-width:40px;border-radius:12px}
+.atm-pay-brand-mtn{background-color:#FFCB05;color:#141414;border:0}
+.atm-pay-brand-airtel{background-color:#E40000;color:#fff;border:0}
+.atm-pay-brand-card{background-color:#1A1F71;color:#fff;border:0}
+.atm-pay-brand-bank{background-color:#475467;color:#fff;border:0}
+.atm-payment-choice .atm-pay-brand svg{width:21px!important;height:21px!important}
+.atm-payment-choice{min-height:68px}
+.atm-payment-choice i{width:24px;height:24px;min-width:24px}
+.atm-payment-choice.selected i{background:#171717;border-color:#171717}
+.atm-offer-sheet .atm-response-icon.atm-accepted-icon{background:#E5FAEF;color:#07975C;box-shadow:0 0 0 12px rgba(18,183,106,.08);animation:atmAcceptedPop .6s cubic-bezier(.17,1.25,.35,1) both}
+.atm-offer-sheet .atm-response-icon.atm-counter-icon{background:#FFF1E0;color:#AD5B15;animation:atmAcceptedPop .6s cubic-bezier(.17,1.25,.35,1) both}
+@keyframes atmAcceptedPop{0%{transform:scale(.15) rotate(-30deg);opacity:0}60%{transform:scale(1.12) rotate(6deg);opacity:1}100%{transform:scale(1) rotate(0);opacity:1}}
+.atm-calendar-day.in-range{background:transparent;border-radius:50%;color:#222}
+.atm-post-offer-toggle{display:flex;align-items:center;gap:12px;border:1px solid #e6e6e6;border-radius:16px;padding:14px 16px;margin-top:17px;margin-bottom:17px;cursor:pointer}
+.atm-post-offer-toggle>input{width:20px;height:20px;accent-color:#151515;flex:none}
+.atm-post-offer-toggle span{flex:1}
+.atm-post-offer-toggle strong{font-size:14px;display:block}
+.atm-post-offer-toggle small{font-size:12px;color:#777;display:block;margin-top:4px}
+.atm-reserve-only .atm-reserve-option{width:100%;flex:1}
+.atm-demo-checkin{display:flex;align-items:start;gap:6px;flex-direction:column;padding:11px 13px;background:#f5f6f7;border:1px solid #ededed;border-radius:12px;margin:10px 0}
+.atm-demo-checkin strong{font-size:13px}.atm-demo-checkin span{font-size:11px;color:#737b85;line-height:1.5}
+@media(prefers-reduced-motion:reduce){
+ .atm-offer-sheet .atm-response-icon.atm-accepted-icon,.atm-offer-sheet .atm-response-icon.atm-counter-icon{animation:none!important}
+}
