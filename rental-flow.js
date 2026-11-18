@@ -56,7 +56,7 @@
     if(provider==="card")return "<span class='atm-pay-brand atm-pay-brand-card' aria-label='Visa or Mastercard, blue badge'>"+icon("credit")+"</span>";
     return "<span class='atm-pay-brand atm-pay-brand-bank' aria-label='Bank transfer, slate badge'>"+icon("wallet")+"</span>";
   };
-  var bill=function(){var l=flow.listing,rate=flow.rate,d=totalDays(),r=rate*d,discount=(l.category==="Property"&&d>=3)?Math.round(r*.05):0,deposit=Math.round(l.deposit||0),base=r-discount+deposit+service,fee=Math.round(base*(flow.method==="card"?.036:(flow.method==="bank"?0:.02)));return {rate:rate,days:d,rent:r,discount:discount,deposit:deposit,service:service,fee:fee,total:base+fee};};
+  var bill=function(){var l=flow.listing,rate=flow.rate,d=totalDays(),r=rate*d,discount=(l.category==="Property"&&!flow.offerId&&d>=3)?Math.round(r*.05):0,deposit=Math.round(l.deposit||0),base=r-discount+deposit+service,fee=Math.round(base*(flow.method==="card"?.036:(flow.method==="bank"?0:.02)));return {rate:rate,days:d,rent:r,discount:discount,deposit:deposit,service:service,fee:fee,total:base+fee};};
   var checkout=function(){var l=flow.listing,b=bill(),unitName=unit(l);
    var methods=paymentItems.map(function(p){return "<button type='button' class='atm-payment-choice "+(flow.method===p[0]?"selected":"")+"' data-atmf='method' data-value='"+p[0]+"'>"+paymentBrand(p[0])+"<span><b>"+p[1]+"</b><small>"+p[2]+"</small></span><i>"+(flow.method===p[0]?icon("check"):"")+"</i></button>";}).join("");
    var number=(flow.method==="mtn"||flow.method==="airtel")?"<div class='atm-demo-number'><span>Fictional demo mobile number</span><strong>"+(flow.method==="airtel"?"+260 97 000 0000":"+260 96 000 0000")+"</strong><small>Illustrative number only. No actual money prompt or phone contact occurs.</small></div>":"<div class='atm-demo-number'><small>No card or bank details are needed for this demonstration.</small></div>";
@@ -67,7 +67,7 @@
    "<button type='button' class='atm-main-cta' data-atmf='pay'>Pay "+cash(b.total)+" (demo) "+icon("arrow")+"</button><small class='atm-disclaimer'>Simulation only · No payment, phone request or bank transfer is made. Actual host rules and cancellation terms are not connected.</small>";
    return page("Confirm and pay",body,"atm-checkout-sheet");};
   var approval=function(){var l=flow.listing,b=bill(),method=paymentItems.find(function(p){return p[0]===flow.method;})||paymentItems[0];return page("Confirm and pay","<div class='atm-approval-panel'><div class='atm-approval-phone'>"+icon("phone")+"<span>1</span></div><h3>"+(flow.method==="mtn"?"Approve on your MTN phone":flow.method==="airtel"?"Approve on your Airtel phone":"Confirming your demo reservation")+"</h3><p>Simulating "+cash(b.total)+" via "+method[1]+". No real approval, PIN, card or money transfer is required.</p><div class='atm-approval-progress'><span></span></div><small>Preparing your demo confirmation…</small></div>","atm-checkout-sheet");};
-  var confirmed=function(){var b=flow.booking,l=flow.listing;return page("Reservation confirmed","<div class='atm-confirmed'><div class='atm-confirm-mark'>"+icon("check")+"</div><h3>You're going to "+esc(l.city)+"!</h3><p>"+esc(l.title)+" · "+showDate(flow.start)+" – "+showDate(flow.end)+"</p><div class='atm-whatsapp'><div><strong>ATM · Demo confirmation</strong><small>now ✓✓</small></div><p>Booking confirmed ✓ "+esc(l.title)+", "+totalDays()+" "+unit(l)+(totalDays()===1?"":"s")+" from "+showDate(flow.start)+". Total "+cash(b.total)+". Reference "+esc(b.ref)+". Rental handover details will be arranged with the host in a real marketplace.</p></div><button class='atm-main-cta' data-atmf='trip'>View my trip "+icon("arrow")+"</button><button class='atm-secondary-cta' data-atmf='explore'>Keep exploring</button><small>Demonstration booking only · No real item reserved or payment collected.</small></div>","atm-checkout-sheet");};
+  var confirmed=function(){var b=flow.booking,l=flow.listing;return page("Reservation confirmed","<div class='atm-confirmed'><div class='atm-confirm-mark'>"+icon("check")+"</div><h3>You're going to "+esc(l.city)+"!</h3><p>"+esc(l.title)+" · "+showDate(flow.start)+" – "+showDate(flow.end)+"</p><div class='atm-whatsapp'><div><strong>WhatsApp-style preview · ATM</strong><small>demo ✓✓</small></div><p>Booking confirmed ✓ "+esc(l.title)+", "+totalDays()+" "+unit(l)+(totalDays()===1?"":"s")+" from "+showDate(flow.start)+". Total "+cash(b.total)+". Reference "+esc(b.ref)+". "+(l.category==="Property"?"Example self check-in code: •••• (unlocks 24h before arrival in a real service). ":"")+"Rental handover details are arranged with the host in a real marketplace. No message was sent.</p></div><button class='atm-main-cta' data-atmf='trip'>View my trip "+icon("arrow")+"</button><button class='atm-secondary-cta' data-atmf='explore'>Keep exploring</button><small>Demonstration booking only · No real item reserved or payment collected.</small></div>","atm-checkout-sheet");};
   var calendarContent=function(){var l=calendar.listing,month=new Date(calendar.month+"-01T12:00:00"),year=month.getFullYear(),mo=month.getMonth(),start=new Date(year,mo,1),days=new Date(year,mo+1,0).getDate(),offset=(start.getDay()+6)%7,grid="<div class='atm-calendar-days'>"+["M","T","W","T","F","S","S"].map(function(w){return "<span>"+w+"</span>";}).join("")+"</div><div class='atm-calendar-grid'>";for(var k=0;k<offset;k++)grid+="<span class='atm-calendar-space'></span>";for(var d=1;d<=days;d++){var dt=iso(new Date(year,mo,d)),disabled=dt<today()||dt>add(today(),120)||blocked(dt,l),picked=dt===calendar.start||dt===calendar.end,mid=calendar.start&&calendar.end&&dt>calendar.start&&dt<calendar.end;grid+="<button type='button' class='atm-calendar-day "+(disabled?"disabled ":"")+(picked?"selected ":"")+(mid?"in-range":"")+"' data-atmf='pickday' data-date='"+dt+"' "+(disabled?"disabled aria-disabled='true'":"")+">"+d+"</button>";}grid+="</div>";
    var body="<p class='atm-calendar-hint'>Tap your start and end dates. Crossed-out dates are illustrative unavailable dates, not live bookings.</p><div class='atm-cal-nav'><button data-atmf='month' data-dir='-1' aria-label='Previous month'>"+icon("back")+"</button><strong>"+month.toLocaleDateString("en-GB",{month:"long",year:"numeric"})+"</strong><button data-atmf='month' data-dir='1' aria-label='Next month'>"+icon("arrow")+"</button></div>"+grid+"<div class='atm-selected-dates'><div><small>Start</small><strong>"+(calendar.start?showDate(calendar.start):"Select")+"</strong></div><div><small>End</small><strong>"+(calendar.end?showDate(calendar.end):"Select")+"</strong></div></div><button class='atm-main-cta' data-atmf='applydates' "+(!calendar.start?"disabled":"")+">Apply dates "+icon("arrow")+"</button>";return page("Select rental dates",body,"atm-calendar-sheet");};
   var render=function(){if(calendar)return calendarContent();if(!flow)return "";return flow.phase==="compose"?compose():flow.phase==="waiting"?waiting():flow.phase==="response"?counter():flow.phase==="checkout"?checkout():flow.phase==="approval"?approval():flow.phase==="confirmed"?confirmed():"";};
@@ -180,6 +180,33 @@
   };
   function notify(msg){var el=document.getElementById("toast");if(el){el.textContent=msg;el.classList.add("show");setTimeout(function(){el.classList.remove("show");},3000);}}
   document.addEventListener("click",function(e){var b=e.target.closest("[data-atmf]");if(!b)return;e.preventDefault();e.stopPropagation();var key=b.dataset.atmf;if(key==="close"&&b.classList.contains("atm-overlay")&&e.target.closest(".atm-sheet"))return;if(actions[key])actions[key](b);},true);
+  /* Drag the grey sheet handle down to dismiss; never intercept inner scrolling. */
+  var drag=null;
+  document.addEventListener("pointerdown",function(e){
+    var handle=e.target.closest&&e.target.closest(".atm-drag");
+    if(!handle||!modal||!modal.firstElementChild)return;
+    var sheet=handle.closest(".atm-sheet");
+    if(!sheet)return;
+    drag={id:e.pointerId,start:e.clientY,sheet:sheet,moved:0};
+    sheet.style.transition="none";
+    if(handle.setPointerCapture)try{handle.setPointerCapture(e.pointerId);}catch(_){}
+  });
+  document.addEventListener("pointermove",function(e){
+    if(!drag||e.pointerId!==drag.id)return;
+    var y=Math.max(0,e.clientY-drag.start);
+    drag.moved=y;
+    drag.sheet.style.transform="translate3d(0,"+y+"px,0)";
+  });
+  var finishDrag=function(e){
+    if(!drag||e.pointerId!==drag.id)return;
+    var d=drag;drag=null;
+    if(d.moved>105){d.sheet.style.transform="";d.sheet.style.transition="";close();return;}
+    d.sheet.style.transition="transform .22s cubic-bezier(.2,.8,.3,1)";
+    d.sheet.style.transform="";
+    setTimeout(function(){if(d.sheet)d.sheet.style.transition="";},250);
+  };
+  document.addEventListener("pointerup",finishDrag);
+  document.addEventListener("pointercancel",finishDrag);
   document.addEventListener("keydown",function(e){if(e.key==="Escape"&&(flow||calendar)){close();}});
   window.ATMFlow={
     init:function(api){bridge=api;},
