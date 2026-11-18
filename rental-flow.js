@@ -19,18 +19,20 @@
   var allowed=function(start,end,l,u){if(!start||!end||start<today()||end<start||(u==='night'&&end===start))return false;var n=duration(start,end,u);if(n>90||n<1)return false;for(var day=start;day<=end;day=add(day,1)){if(blocked(day,l))return false;}return true;};
   var firstDate=function(l){for(var d=today(),i=0;i<120;i++,d=add(d,1))if(!blocked(d,l))return d;return add(today(),1);};
   var selectRange=function(l){var x=selections[l.id],u=unit(l);if(x&&allowed(x.start,x.end,l,u))return x;var start=firstDate(l),end=start;for(var attempt=0;attempt<120;attempt++,start=add(start,1)){if(blocked(start,l))continue;var first=endFrom(start,1,u);if(!allowed(start,first,l,u))continue;end=first;for(var i=2;i<=3;i++){var next=endFrom(start,i,u);if(allowed(start,next,l,u))end=next;else break;}return {start:start,end:end};}return {start:today(),end:endFrom(today(),1,u)};};
-  var makeFlow=function(l,mode){var r=selectRange(l),u=unit(l),n=duration(r.start,r.end,u);return {listing:l,mode:mode||"offer",phase:mode==="reserve"?"checkout":"compose",start:r.start,end:r.end,days:n,people:2,amount:Math.max(50,Math.round(l.price*.85/50)*50),rate:l.price,method:"mtn",offerId:null,discount:0};};
+  var offerIncrement=function(p){return p<500?10:p<1000?25:50;};
+  var suggestedAmounts=function(p){var increment=offerIncrement(p);return Array.from(new Set([.8,.9,1].map(function(v){return Math.max(increment,Math.round(p*v/increment)*increment)})));};
+  var makeFlow=function(l,mode){var r=selectRange(l),u=unit(l),n=duration(r.start,r.end,u),increment=offerIncrement(l.price);return {listing:l,mode:mode||"offer",phase:mode==="reserve"?"checkout":"compose",start:r.start,end:r.end,days:n,people:2,amount:Math.max(increment,Math.round(l.price*.85/increment)*increment),rate:l.price,method:"mtn",offerId:null,discount:0};};
   var root=function(){if(!modal){modal=document.createElement("div");modal.id="atm-flow-root";document.body.appendChild(modal);}return modal;};
   var sync=function(){root().innerHTML=render();if(modal.firstElementChild){document.body.classList.add("atm-modal-open");}else{document.body.classList.remove("atm-modal-open");}};
   var close=function(){if(timer){clearTimeout(timer);timer=null;}flow=null;calendar=null;if(modal)modal.innerHTML="";document.body.classList.remove("atm-modal-open");};
-  var page=function(title,body,cls){return "<div class='atm-overlay' role='presentation' data-atmf='close'><section class='atm-sheet "+(cls||"")+"' role='dialog' aria-modal='true' aria-label='"+esc(title)+"'><div class='atm-drag'></div><div class='atm-sheet-head'><button type='button' class='atm-circle-close' data-atmf='close' aria-label='Close'>"+icon("close")+"</button><h2>"+esc(title)+"</h2><span class='atm-head-space'></span></div><div class='atm-sheet-content'>"+body+"</div></section></div>";};
+  var page=function(title,body,cls){return "<div class='atm-overlay' role='presentation' data-atmf='close'><section class='atm-sheet "+(cls||"")+"' role='dialog' aria-modal='true' aria-label='"+esc(title)+"'><div class='atm-drag'></div><div class='atm-sheet-head'><span class='atm-head-space'></span><h2>"+esc(title)+"</h2><button type='button' class='atm-circle-close' data-atmf='close' aria-label='Close'>"+icon("close")+"</button></div><div class='atm-sheet-content'>"+body+"</div></section></div>";};
   var listingCard=function(l){return "<div class='atm-flow-listing'><img src='"+esc(l.image)+"' alt=''><div><strong>"+esc(l.title)+"</strong><small>"+esc(l.city)+", Zambia · Listed at "+cash(l.price)+" / "+unit(l)+"</small></div></div>";};
-  var stepper=function(label,value,key,min,max,hint){return "<div class='atm-stepper'><div><strong>"+esc(label)+"</strong>"+(hint?"<small>"+esc(hint)+"</small>":"")+"</div><div class='atm-stepper-buttons'><button type='button' data-atmf='step' data-key='"+key+"' data-dir='-1' aria-label='Fewer "+esc(label)+"' "+(value<=min?"disabled":"")+">"+icon("minus")+"</button><span aria-live='polite'>"+value+"</span><button type='button' data-atmf='step' data-key='"+key+"' data-dir='1' aria-label='More "+esc(label)+"' "+(value>=max?"disabled":"")+">"+icon("plus")+"</button></div></div>";};
+  var stepper=function(label,value,key,min,max,hint){return "<div class='atm-stepper' data-stepper='"+key+"'><div><strong>"+esc(label)+"</strong>"+(hint?"<small>"+esc(hint)+"</small>":"")+"</div><div class='atm-stepper-buttons'><button type='button' data-atmf='step' data-key='"+key+"' data-dir='-1' aria-label='Fewer "+esc(label)+"' "+(value<=min?"disabled":"")+">"+icon("minus")+"</button><span aria-live='polite'>"+value+"</span><button type='button' data-atmf='step' data-key='"+key+"' data-dir='1' aria-label='More "+esc(label)+"' "+(value>=max?"disabled":"")+">"+icon("plus")+"</button></div></div>";};
   var datesRail=function(){var out="<div class='atm-flow-label'>"+(unit(flow.listing)==="night"?"Check-in":"Start date")+" <button type='button' class='atm-inline-link' data-atmf='calendar'>Full calendar "+icon("calendar")+"</button></div><div class='atm-date-rail'>";for(var i=0;i<12;i++){var s=add(today(),i),ban=blocked(s,flow.listing),sel=s===flow.start;out+="<button type='button' class='atm-date-pill "+(sel?"active ":"")+(ban?"blocked":"")+"' data-atmf='date' data-date='"+s+"' "+(ban?"disabled":"")+"><b>"+(i===0?"Today":i===1?"Tomorrow":parse(s).toLocaleDateString("en-GB",{weekday:"short"}))+"</b><small>"+showDate(s)+"</small></button>";}return out+"</div>";};
   var totalDays=function(){return flow.days||duration(flow.start,flow.end,unit(flow.listing));};
   var rangeText=function(){return showDate(flow.start)+" – "+showDate(flow.end)+" · "+totalDays()+" "+(unit(flow.listing)==="night"?"night":"day")+(totalDays()===1?"":"s");};
-  var chance=function(){var x=flow.amount/flow.listing.price;return x>=.9?["Great chance",90]:x>=.82?["Good chance",70]:x>=.7?["Host may counter",43]:["Below typical acceptance range",18];};
-  var compose=function(){var l=flow.listing,c=chance(),m=Math.max(50,Math.round(l.price*.05/50)*50);var proposals=[.8,.9,1].map(function(p){return Math.max(50,Math.round(l.price*p/50)*50);});var body=listingCard(l)+"<div class='atm-price-controls'><p>Your offer <span>per "+unit(l)+"</span></p><div class='atm-price-step'><button data-atmf='price' data-dir='-1' aria-label='Reduce offered price'>"+icon("minus")+"</button><div><strong>"+cash(flow.amount)+"</strong><small>per "+unit(l)+"</small></div><button data-atmf='price' data-dir='1' aria-label='Increase offered price'>"+icon("plus")+"</button></div><div class='atm-chance'><div class='atm-meter'><span style='width:"+c[1]+"%'></span></div><b>"+c[0]+"</b></div><div class='atm-amount-chips'>"+proposals.map(function(v){return "<button class='"+(flow.amount===v?"active":"")+"' data-atmf='amount' data-value='"+v+"'>"+cash(v)+"</button>";}).join("")+"</div></div>"+datesRail()+"<button type='button' class='atm-range-summary' data-atmf='calendar'>"+icon("calendar")+"<span>"+rangeText()+"</span>"+icon("arrow")+"</button>"+stepper(unit(l)==="night"?"Nights":"Days",flow.days,"days",1,90,"Longer rentals may be more attractive to hosts")+stepper(caps(l),flow.people,"people",1,12,"No change to offer price")+"<div class='atm-total-block'><div><span>Your total offer</span><strong>"+cash(flow.amount*totalDays())+"</strong></div><button class='atm-main-cta' data-atmf='send'>Send offer to "+esc(l.owner.split(" ")[0])+" "+icon("arrow")+"</button><small>Demo only · No payment until an offer is accepted.</small></div>";
+  var chance=function(){var x=flow.amount/flow.listing.price;return x>=.96?["Great chance",95]:x>=.90?["Good chance",78]:x>=.70?["Host may counter",50]:["Below typical acceptance range",26];};
+  var compose=function(){var l=flow.listing,c=chance(),proposals=suggestedAmounts(l.price);var body=listingCard(l)+"<div class='atm-price-controls'><div class='atm-price-step'><button data-atmf='price' data-dir='-1' aria-label='Reduce offered price'>"+icon("minus")+"</button><div><strong>"+cash(flow.amount)+"</strong><small>per "+unit(l)+"</small></div><button data-atmf='price' data-dir='1' aria-label='Increase offered price'>"+icon("plus")+"</button></div><div class='atm-chance'><div class='atm-meter' role='progressbar' aria-label='Illustrative acceptance likelihood' aria-valuemin='0' aria-valuemax='100' aria-valuenow='"+c[1]+"'><span style='width:"+c[1]+"%'></span></div><b>"+c[0]+"</b></div><div class='atm-amount-chips'>"+proposals.map(function(v){return "<button class='"+(flow.amount===v?"active":"")+"' data-atmf='amount' data-value='"+v+"'>"+cash(v)+"</button>";}).join("")+"</div></div>"+datesRail()+stepper(unit(l)==="night"?"Nights":"Days",flow.days,"days",1,90,"Longer rentals may be more attractive to hosts")+stepper(caps(l),flow.people,"people",1,12,"No change to offer price")+"<div class='atm-total-block'><div><span>Your total offer</span><strong>"+cash(flow.amount*totalDays())+"</strong></div><button class='atm-main-cta' data-atmf='send'>Send offer to "+esc(l.owner.split(" ")[0])+" "+icon("arrow")+"</button><small>Demo only · No payment until an offer is accepted.</small></div>";
  return page("Make an offer",body,"atm-offer-sheet");};
   var waiting=function(){var l=flow.listing;var body="<div class='atm-wait-panel'><div class='atm-wait-visual'><div class='atm-orbit'></div><span class='atm-wait-gavel'>"+icon("gavel")+"</span><span class='atm-wait-avatar'>"+esc(l.owner.split(" ").slice(0,2).map(function(x){return x[0];}).join(""))+"</span></div><h3>Waiting for "+esc(l.owner.split(" ")[0])+"…</h3><p>Your offer of <b>"+cash(flow.amount)+"/"+unit(l)+"</b> has entered the demo seller response sequence.</p><div class='atm-wait-dots'><i></i><i></i><i></i></div><small>Simulated response · No real host is contacted.</small></div>";
  return page("Offer sent",body,"atm-offer-sheet");};
@@ -57,12 +59,63 @@
   var moveDuration=function(dir){var u=unit(flow.listing),n=Math.max(1,Math.min(90,flow.days+dir)),end=endFrom(flow.start,n,u);if(!allowed(flow.start,end,flow.listing,u))return false;flow.days=n;flow.end=end;return true;};
   var openCalendar=function(l){if(!l)return;var context=flow&&String(flow.listing.id)===String(l.id),r=context?flow:selectRange(l);calendar={listing:l,start:r.start,end:r.end,month:(r.start||today()).slice(0,7),context:context};sync();};
   var updateResponse=function(){timer=null;if(!flow||flow.phase!=="waiting")return;var l=flow.listing,ratio=flow.amount/l.price,stat=ratio>=.92?"Accepted":ratio>=.69?"Counteroffer":"Declined",counter=stat==="Counteroffer"?Math.min(l.price,Math.max(flow.amount+50,Math.round(l.price*.91/50)*50)):null;bridge.updateOffer(flow.offerId,{status:stat,counter:counter,agreedRate:stat==="Accepted"?flow.amount:null,responded:Date.now()});flow.rate=stat==="Counteroffer"?counter:flow.amount;flow.phase="response";sync();};
+  /* Update only the individual values inside an existing sheet. This preserves
+     the bottom sheet DOM node, scroll position, drag handle and opening animation. */
+  var updateControls=function(){
+    if(!flow||!modal)return;
+    var sheet=modal.querySelector(".atm-sheet");
+    if(!sheet){sync();return;}
+    var animateValue=function(el,value){
+      if(!el)return;
+      value=String(value);
+      if(el.textContent===value)return;
+      el.textContent=value;
+      if(typeof el.animate==="function"&&!(window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches)){
+        el.animate([{opacity:.55,transform:"translateY(5px)"},{opacity:1,transform:"translateY(0)"}],{duration:200,easing:"ease-out"});
+      }
+    };
+    var allSteppers=sheet.querySelectorAll("[data-stepper]");
+    allSteppers.forEach(function(row){
+      var key=row.dataset.stepper,value=key==="days"?flow.days:flow.people,minimum=1,maximum=key==="days"?90:12;
+      animateValue(row.querySelector(".atm-stepper-buttons span"),value);
+      row.querySelectorAll(".atm-stepper-buttons button").forEach(function(button){
+        button.disabled=Number(button.dataset.dir)<0?value<=minimum:value>=maximum;
+      });
+    });
+    var summary=sheet.querySelector(".atm-range-summary span");
+    if(summary)animateValue(summary,rangeText());
+    if(flow.phase==="compose"){
+      animateValue(sheet.querySelector(".atm-price-step strong"),cash(flow.amount));
+      var chanceNow=chance(),meter=sheet.querySelector(".atm-meter"),line=sheet.querySelector(".atm-meter span");
+      if(line)line.style.width=chanceNow[1]+"%";
+      if(meter)meter.setAttribute("aria-valuenow",String(chanceNow[1]));
+      animateValue(sheet.querySelector(".atm-chance b"),chanceNow[0]);
+      sheet.querySelectorAll(".atm-amount-chips button").forEach(function(button){
+        var selected=Number(button.dataset.value)===flow.amount;
+        button.classList.toggle("active",selected);
+        button.setAttribute("aria-pressed",String(selected));
+      });
+      sheet.querySelectorAll(".atm-date-rail button[data-date]").forEach(function(button){
+        button.classList.toggle("active",button.dataset.date===flow.start);
+        button.setAttribute("aria-pressed",String(button.dataset.date===flow.start));
+      });
+      animateValue(sheet.querySelector(".atm-total-block>div strong"),cash(flow.amount*totalDays()));
+    }else if(flow.phase==="checkout"){
+      /* Recalculate only payment selectors and totals; do not remount the sheet. */
+      var tmp=document.createElement("div");
+      tmp.innerHTML=checkout();
+      [".atm-payment-list",".atm-demo-number",".atm-bill",".atm-main-cta"].forEach(function(selector){
+        var oldNode=sheet.querySelector(selector),fresh=tmp.querySelector(selector);
+        if(oldNode&&fresh)oldNode.replaceWith(fresh);
+      });
+    }
+  };
   var actions={
     close:function(){close();},
-    price:function(b){flow.amount=Math.max(50,Math.min(1000000,flow.amount+Number(b.dataset.dir||1)*Math.max(50,Math.round(flow.listing.price*.05/50)*50)));sync();},
-    amount:function(b){flow.amount=Number(b.dataset.value);sync();},
-    date:function(b){var s=b.dataset.date,ee=endFrom(s,flow.days,unit(flow.listing));if(!allowed(s,ee,flow.listing,unit(flow.listing))){flow.start=s;flow.end=s;flow.days=1;}else{flow.start=s;flow.end=ee;}sync();},
-    step:function(b){var dir=Number(b.dataset.dir||1),k=b.dataset.key;if(k==="people"){flow.people=Math.max(1,Math.min(12,flow.people+dir));sync();}else if(k==="days"){if(!moveDuration(dir))notify("Those dates are unavailable in this demo");sync();}},
+    price:function(b){var inc=offerIncrement(flow.listing.price),step=Math.max(inc,Math.round(flow.listing.price*.05/inc)*inc);flow.amount=Math.max(inc,Math.min(1000000,flow.amount+Number(b.dataset.dir||1)*step));updateControls();},
+    amount:function(b){flow.amount=Number(b.dataset.value);updateControls();},
+    date:function(b){var s=b.dataset.date,ee=endFrom(s,flow.days,unit(flow.listing));if(!allowed(s,ee,flow.listing,unit(flow.listing))){var first=endFrom(s,1,unit(flow.listing));if(!allowed(s,first,flow.listing,unit(flow.listing))){notify("Select another available start date");return;}flow.start=s;flow.end=first;flow.days=1;}else{flow.start=s;flow.end=ee;}updateControls();},
+    step:function(b){var dir=Number(b.dataset.dir||1),k=b.dataset.key;if(k==="people"){flow.people=Math.max(1,Math.min(12,flow.people+dir));updateControls();}else if(k==="days"){if(!moveDuration(dir))notify("Those dates are unavailable in this demo");updateControls();}},
     calendar:function(){openCalendar(flow.listing);},
     pickday:function(b){var s=b.dataset.date;if(!calendar.start||calendar.end||s<=calendar.start){calendar.start=s;calendar.end="";}else{var u=unit(calendar.listing);if(!allowed(calendar.start,s,calendar.listing,u)){notify("This date range includes an unavailable date");return;}calendar.end=s;}sync();},
     month:function(b){var d=new Date(calendar.month+"-01T12:00:00");d.setMonth(d.getMonth()+Number(b.dataset.dir));var m=iso(d).slice(0,7);if(m<today().slice(0,7)||m>add(today(),120).slice(0,7))return;calendar.month=m;sync();},
@@ -71,7 +124,7 @@
     accept:function(){var o=bridge.getOffer(flow.offerId);if(o&&o.status==="Counteroffer"){bridge.updateOffer(o.id,{status:"Accepted",agreedRate:o.counter});flow.rate=o.counter;}flow.phase="checkout";sync();},
     checkout:function(){var o=bridge.getOffer(flow.offerId);flow.rate=o&&o.agreedRate||flow.amount;flow.phase="checkout";sync();},
     retry:function(){flow.phase="compose";flow.amount=Math.max(50,Math.round(flow.listing.price*.9/50)*50);flow.offerId=null;sync();},
-    method:function(b){flow.method=b.dataset.value;sync();},
+    method:function(b){flow.method=b.dataset.value;updateControls();},
     pay:function(){flow.phase="approval";sync();if(timer)clearTimeout(timer);timer=setTimeout(function(){if(!flow||flow.phase!=="approval")return;var b=bill();var ref="ATM-DEMO-"+Math.random().toString(36).slice(2,8).toUpperCase();var booking={id:Date.now(),ref:ref,listingId:flow.listing.id,start:flow.start,end:flow.end,days:flow.days,guests:flow.people,method:paymentItems.find(function(p){return p[0]===flow.method;})[1]+" (demo)",status:"Confirmed (demo)",agreedRate:flow.rate,total:b.total,rent:b.rent,serviceFee:b.service,processingFee:b.fee,deposit:b.deposit,offerId:flow.offerId,created:Date.now()};flow.booking=booking;bridge.addBooking(booking);flow.phase="confirmed";sync();},4200);},
     trip:function(){close();bridge.navigate("rentals");},
     explore:function(){close();bridge.navigate("home");}
