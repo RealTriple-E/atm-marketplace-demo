@@ -242,3 +242,58 @@ html{color-scheme:only light}
 .atm-quick-search button:hover,.atm-chat-quick-replies button:hover{background:#fff0e8;border-color:#ffc6a9}
 .atm-quick-search button:focus-visible,.atm-chat-quick-replies button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .atm-chat-quick-replies{margin:14px 0 8px;max-width:100%}
+
+
+/* ATM offer reference parity 2026-11-18.
+   Reference-scale typography, full-width probability meter, compact chips and
+   no full-sheet refresh during amount/date/quantity/payment adjustments. */
+.atm-offer-sheet .atm-sheet-head{border-bottom:none;padding-bottom:9px}
+.atm-offer-sheet .atm-sheet-content{padding-top:11px}
+.atm-offer-sheet .atm-flow-listing{margin-bottom:24px;min-height:80px}
+.atm-offer-sheet .atm-price-controls{width:100%;text-align:center}
+.atm-offer-sheet .atm-price-step{display:flex;align-items:center;justify-content:space-between;gap:10px;width:min(100%,320px);margin:29px auto 17px}
+.atm-offer-sheet .atm-price-step>div{flex:1;min-width:0}
+.atm-offer-sheet .atm-price-step strong{font-size:clamp(48px,12.8vw,58px);line-height:1.02;letter-spacing:-.055em;font-weight:900;white-space:nowrap;font-variant-numeric:tabular-nums}
+.atm-offer-sheet .atm-price-step small{display:block;color:#858890;margin-top:6px;font-size:13px;font-weight:500}
+.atm-offer-sheet .atm-price-step button{height:56px;width:56px;min-width:56px;border:none;background:#f1f2f5;color:#17191e;box-shadow:none;transition:background .18s,transform .18s}
+.atm-offer-sheet .atm-price-step button:hover{background:#e5e7eb;transform:scale(1.035)}
+.atm-offer-sheet .atm-price-step button:active{transform:scale(.92)}
+.atm-offer-sheet .atm-price-step button svg{width:22px;height:22px}
+.atm-offer-sheet .atm-chance{display:flex;flex-direction:column;align-items:center;gap:8px;margin:15px auto 18px;width:min(100%,320px)}
+.atm-offer-sheet .atm-meter{width:100%;height:8px;max-width:none;background:#eff0f3;border-radius:999px;overflow:hidden}
+.atm-offer-sheet .atm-meter span{display:block;height:100%;background:#f58a18;transition:width .28s cubic-bezier(.21,.8,.25,1);border-radius:999px}
+.atm-offer-sheet .atm-chance b{color:#e87908;font-size:12px;font-weight:800;text-align:center}
+.atm-offer-sheet .atm-amount-chips{display:flex;justify-content:center;align-items:center;gap:8px;margin:12px 0 26px;flex-wrap:wrap}
+.atm-offer-sheet .atm-amount-chips button{font-size:13px;padding:9px 15px;border:1px solid #e4e5e9;background:#fff;color:#24262c;border-radius:999px;font-weight:700;min-height:35px;transition:background .16s,color .16s,border-color .16s,transform .14s}
+.atm-offer-sheet .atm-amount-chips button.active{background:#17191e;color:#fff;border-color:#17191e}
+.atm-offer-sheet .atm-amount-chips button:active{transform:scale(.94)}
+.atm-offer-sheet .atm-flow-label{margin-top:13px;margin-bottom:12px;font-size:15px}
+.atm-offer-sheet .atm-date-pill{min-height:72px;min-width:74px}
+.atm-offer-sheet .atm-date-rail{gap:8px;padding-bottom:12px}
+.atm-offer-sheet .atm-stepper{min-height:65px;padding:14px 0;border-bottom:0}
+.atm-offer-sheet .atm-stepper strong{font-size:14px}
+.atm-offer-sheet .atm-stepper small{font-size:12px}
+.atm-offer-sheet .atm-stepper-buttons button{height:37px;width:37px;background:#fff}
+.atm-offer-sheet .atm-stepper-buttons span{min-width:24px;font-size:16px}
+.atm-offer-sheet .atm-total-block{position:sticky;bottom:-1px;margin-top:13px;padding:12px 0 0;border:0;background:#fff;z-index:2}
+.atm-offer-sheet .atm-total-block>div{padding:15px 16px;margin:0 0 16px;border-radius:15px;background:#fff2e8;color:#23180e}
+.atm-offer-sheet .atm-total-block>div span{color:#65402b;font-size:13px}
+.atm-offer-sheet .atm-total-block>div strong{font-size:20px;font-weight:900;letter-spacing:-.025em}
+.atm-offer-sheet .atm-total-block .atm-main-cta{height:56px;border-radius:17px;box-shadow:0 7px 14px rgba(0,0,0,.13);font-size:14px}
+.atm-offer-sheet .atm-total-block>small{margin:9px 0 0;font-size:12px}
+.atm-offer-sheet .atm-sheet-content{scroll-behavior:smooth}
+@media(max-width:380px){
+ .atm-offer-sheet .atm-price-step{width:min(100%,290px);margin-top:24px}
+ .atm-offer-sheet .atm-price-step strong{font-size:clamp(45px,13vw,53px)}
+ .atm-offer-sheet .atm-price-step button{width:51px;height:51px;min-width:51px}
+ .atm-offer-sheet .atm-chance{width:min(100%,290px)}
+ .atm-offer-sheet .atm-total-block>div{padding:12px 13px}
+}
+@media(min-width:600px){
+ .atm-offer-sheet .atm-price-step{width:340px}
+ .atm-offer-sheet .atm-chance{width:340px}
+}
+@media(prefers-reduced-motion:reduce){
+ .atm-offer-sheet .atm-price-step button,.atm-offer-sheet .atm-meter span,.atm-offer-sheet .atm-amount-chips button{transition:none}
+ .atm-offer-sheet .atm-sheet-content{scroll-behavior:auto}
+}
