@@ -62,3 +62,13 @@ All starter listings, reviews, messages, offers and transactions remain simulate
 - Customers can select dates and propose a daily rental rate. Offers first appear as **Pending** in My Offers.
 - For demonstrations, use **Simulate seller reply** on Pending offers to show Accepted, Counteroffer, or Declined; accepted offers can continue to the existing booking simulation. Withdraw pending offers as needed.
 - All offer statuses and history are stored only in the local browser, not synced to any server or real seller.
+
+
+## Tap-first offer and reservation UX (18 November 2026)
+- The individual listing has **Offer** and **Reserve** buttons, both interactive. The fixed bottom controls retain ATM's black/orange styling.
+- Tap-first 7-column calendar with demonstrative blocked dates and range highlighting; selected dates carry into offers and reservation.
+- Offer sheet has suggested prices, +/- price controls, dates and days/people steppers, chance indicator and live total (no compulsory typing).
+- Sending an offer shows animated waiting then a simulated seller response; counteroffers can be accepted or revised. All states persist to browser My Offers.
+- Reserve opens animated Confirm and pay directly. MTN, Airtel, card and bank transfer are selectable; fees and totals update immediately. Demo mobile number is fictional and preselected. No real payment is processed.
+- Simulated approval transitions to confirmation and My Trips. All starter listings and payments are fictional; availability blocks are illustrative, not sourced from real sellers.
+- Review the connected [ATM Home List reference](https://atm-home-list.vercel.app/) for the interaction inspiration. The ATM implementation uses independently written code and retains ATM styling.
