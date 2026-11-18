@@ -111,3 +111,125 @@ html{color-scheme:only light}
 .offer-status.offer-pending{color:#a86c0c}
 @media(max-width:380px){.listing-offer-dock{padding:9px 12px calc(9px + env(safe-area-inset-bottom,0px))}.listing-offer-button{min-height:54px;font-size:16px;border-radius:17px}}
 @media(min-width:1024px){.listing-offer-dock{padding-bottom:20px}.listing-offer-button{max-width:960px}}
+
+
+/* ATM tap-first rental journey, 18 Nov 2026. ATM's original black/orange brand retained. */
+.atm-modal-open{overflow:hidden}
+.atm-overlay{position:fixed;inset:0;z-index:95;background:rgba(0,0,0,.57);display:flex;align-items:flex-end;justify-content:center;animation:atmBackdrop .26s ease both}
+.atm-sheet{width:min(620px,100%);max-height:min(92dvh,960px);display:flex;flex-direction:column;background:#fff;border-radius:28px 28px 0 0;box-shadow:0 -18px 55px rgba(0,0,0,.24);animation:atmSheetRise .36s cubic-bezier(.2,.85,.18,1) both;overflow:hidden}
+.atm-drag{width:42px;height:5px;background:#d6d6d6;border-radius:8px;align-self:center;flex-shrink:0;margin:11px 0 3px}
+.atm-sheet-head{display:grid;grid-template-columns:38px 1fr 38px;align-items:center;gap:5px;padding:10px 18px 14px;border-bottom:1px solid #f0f0f0}
+.atm-sheet-head h2{text-align:center;font-size:18px;font-weight:850;letter-spacing:-.025em}.atm-head-space{width:38px}
+.atm-circle-close{height:36px;width:36px;display:grid;place-items:center;border-radius:50%;background:#f2f2f2}
+.atm-circle-close svg,.atm-sheet button svg{width:19px;height:19px;flex-shrink:0}
+.atm-sheet-content{overflow-y:auto;overscroll-behavior:contain;padding:18px 20px max(30px,calc(22px + env(safe-area-inset-bottom,0px)));scrollbar-width:thin}
+.atm-flow-listing{display:flex;align-items:center;gap:13px;background:#f7f7f7;border-radius:17px;padding:10px;margin-bottom:21px}
+.atm-flow-listing img{height:66px;width:84px;object-fit:cover;border-radius:12px;background:#e6e6e6}
+.atm-flow-listing strong,.atm-flow-listing small{display:block}.atm-flow-listing strong{font-size:14px;line-height:1.3}.atm-flow-listing small{color:#797979;font-size:12px;margin-top:5px;line-height:1.3}
+.atm-price-controls{text-align:center}
+.atm-price-controls>p{font-size:13px;font-weight:800;color:#666}.atm-price-controls>p span{color:#999;font-weight:500}
+.atm-price-step{display:flex;align-items:center;justify-content:center;gap:22px;margin:15px 0}
+.atm-price-step button,.atm-stepper-buttons button{height:41px;width:41px;border:1.5px solid #dedede;border-radius:50%;display:grid;place-items:center;background:white}
+.atm-price-step strong{font-size:40px;line-height:1.05;letter-spacing:-.055em;font-weight:900;display:block}
+.atm-price-step small{font-size:13px;color:#777}
+.atm-chance{display:flex;align-items:center;gap:9px;justify-content:center;margin:14px 0 12px}
+.atm-chance b{font-size:12px;color:#6c6c6c}.atm-meter{height:7px;width:140px;background:#e9e9e9;border-radius:20px;overflow:hidden}.atm-meter span{display:block;height:100%;background:var(--accent);border-radius:20px;transition:width .28s ease}
+.atm-amount-chips{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:12px 0 25px}
+.atm-amount-chips button{padding:10px 17px;border:1px solid #e4e4e4;border-radius:20px;font-size:13px;font-weight:800}
+.atm-amount-chips button.active{background:#151515;color:white;border-color:#151515}
+.atm-flow-label{display:flex;align-items:center;justify-content:space-between;font-size:14px;font-weight:850;margin:12px 0}
+.atm-inline-link{color:var(--accent);display:inline-flex;gap:4px;align-items:center;font-size:12px;font-weight:750}
+.atm-inline-link svg{height:15px!important;width:15px!important}
+.atm-date-rail{display:flex;gap:7px;overflow-x:auto;scrollbar-width:none;padding:3px 0 9px}
+.atm-date-pill{border:1px solid #e5e5e5;border-radius:18px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:4px;min-width:76px;min-height:64px;padding:7px 10px}
+.atm-date-pill b{font-size:12px;font-weight:800}.atm-date-pill small{font-size:11px;color:#777}
+.atm-date-pill.active{background:#171717;color:white;border-color:#171717}.atm-date-pill.active small{color:white}
+.atm-date-pill.blocked{color:#aaa;text-decoration:line-through;background:#f8f8f8;cursor:not-allowed}
+.atm-range-summary,.atm-detail-dates{width:100%;display:flex;align-items:center;gap:11px;border:1px solid #e6e6e6;background:#fafafa;border-radius:15px;padding:12px 13px;margin:10px 0 15px;text-align:left;font-weight:760;font-size:13px}
+.atm-range-summary span,.atm-detail-dates span{flex:1}.atm-range-summary>svg,.atm-detail-dates>svg{height:19px;width:19px;color:var(--accent)}
+.atm-detail-dates{margin:5px 0 17px}.atm-detail-dates strong,.atm-detail-dates small{display:block}.atm-detail-dates small{color:#777;font-size:12px;margin-top:4px}
+.atm-stepper{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:13px 0;border-bottom:1px solid #f1f1f1}
+.atm-stepper strong{display:block;font-size:14px}.atm-stepper small{display:block;font-size:11px;color:#777;margin-top:4px}
+.atm-stepper-buttons{display:flex;align-items:center;gap:13px}.atm-stepper-buttons button{height:36px;width:36px}
+.atm-stepper-buttons button:disabled{opacity:.3;cursor:not-allowed}.atm-stepper-buttons span{font-size:16px;font-weight:900;min-width:21px;text-align:center}
+.atm-total-block{margin-top:20px;border-top:1px solid #f0f0f0;padding-top:18px}
+.atm-total-block>div{display:flex;align-items:center;justify-content:space-between;margin-bottom:15px}
+.atm-total-block>div span{font-size:14px;color:#555}.atm-total-block>div strong{font-size:23px;font-weight:900}
+.atm-main-cta{width:100%;display:flex;align-items:center;justify-content:center;gap:9px;min-height:52px;border-radius:15px;background:#131313;color:#fff;padding:12px 15px;font-weight:850;font-size:15px}
+.atm-main-cta:disabled{opacity:.4;cursor:not-allowed}
+.atm-main-cta:hover{background:#2a2a2a}.atm-main-cta svg{height:17px!important;width:17px!important}
+.atm-secondary-cta{width:100%;display:flex;justify-content:center;align-items:center;min-height:46px;border-radius:15px;background:#f5f5f5;font-weight:850;margin-top:10px}
+.atm-total-block>small,.atm-disclaimer{display:block;font-size:11px;color:#898989;text-align:center;margin:12px 0;line-height:1.5}
+.atm-dual-cta{gap:11px;max-width:none}.atm-dual-cta .listing-offer-button{flex:1;width:50%;min-width:0;border-radius:17px;max-width:none;height:56px}
+.atm-dual-cta .atm-offer-option{background:#fff;color:#151515;border:1.5px solid #202020;box-shadow:0 5px 16px rgba(0,0,0,.07)}
+.atm-dual-cta .atm-reserve-option{background:#111;color:#fff}
+.detail-layout{grid-template-columns:minmax(0,1fr)!important;max-width:960px;margin:auto}
+.atm-calendar-hint{font-size:13px;color:#777;line-height:1.5;margin:0 0 13px}
+.atm-cal-nav{display:flex;align-items:center;justify-content:space-between;margin:12px 0 18px}
+.atm-cal-nav>strong{font-size:18px}.atm-cal-nav button{border:1px solid #eee;border-radius:50%;width:37px;height:37px;display:grid;place-items:center}
+.atm-calendar-days,.atm-calendar-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;text-align:center}
+.atm-calendar-days span{font-size:11px;font-weight:800;color:#777;margin:4px 0 12px}
+.atm-calendar-day{display:grid;place-items:center;height:42px;width:100%;border-radius:50%;font-size:13px;font-weight:750;position:relative}
+.atm-calendar-day.disabled{color:#b4b4b4;text-decoration:line-through;cursor:not-allowed}
+.atm-calendar-day.selected{background:#171717;color:white}
+.atm-calendar-day.in-range{background:#ffe6d8;border-radius:7px;color:#69321a}
+.atm-selected-dates{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:25px 0 16px}
+.atm-selected-dates>div{padding:13px;background:#f7f7f7;border-radius:12px}
+.atm-selected-dates small,.atm-selected-dates strong{display:block}.atm-selected-dates small{font-size:12px;color:#777}.atm-selected-dates strong{margin-top:4px}
+.atm-wait-panel,.atm-response-panel,.atm-approval-panel,.atm-confirmed{text-align:center;padding:20px 0 10px}
+.atm-wait-panel h3,.atm-response-panel h3,.atm-approval-panel h3,.atm-confirmed h3{font-size:25px;letter-spacing:-.035em;margin:14px 0 9px}
+.atm-wait-panel p,.atm-response-panel p,.atm-approval-panel p,.atm-confirmed>p{font-size:14px;line-height:1.65;color:#666}
+.atm-wait-visual{width:180px;height:180px;position:relative;margin:12px auto}
+.atm-orbit{position:absolute;inset:10px;border-radius:50%;border:2px dashed #f3ad86;animation:atmOrbit 8s linear infinite}
+.atm-wait-gavel,.atm-wait-avatar{position:absolute;display:grid;place-items:center;border-radius:50%;height:65px;width:65px;box-shadow:0 8px 22px rgba(0,0,0,.07)}
+.atm-wait-gavel{background:#fff0e9;color:var(--accent);top:47px;left:12px;animation:atmPulse 2s ease-in-out infinite}
+.atm-wait-gavel svg{width:33px;height:33px}
+.atm-wait-avatar{right:8px;top:54px;background:#181818;color:white;font-size:23px;font-weight:900;animation:atmPulse 2s 1s ease-in-out infinite}
+.atm-wait-dots{display:flex;justify-content:center;gap:7px;margin:22px 0}
+.atm-wait-dots i{width:8px;height:8px;background:var(--accent);border-radius:50%;animation:atmBlink 1.1s infinite}
+.atm-wait-dots i:nth-child(2){animation-delay:.2s}.atm-wait-dots i:nth-child(3){animation-delay:.4s}
+.atm-response-icon{width:92px;height:92px;display:grid;place-items:center;background:#fff0e7;color:#c4531e;border-radius:50%;margin:13px auto;animation:atmPop .5s both}
+.atm-response-icon svg{width:45px;height:45px}
+.atm-response-panel .atm-main-cta{margin-top:30px}
+.atm-negotiated{color:#9b451a;font-weight:800;padding:10px 12px;background:#fff2eb;border-radius:12px;margin:-12px 0 14px;font-size:13px}
+.atm-stepper-heading,.atm-payment-title{font-weight:850;font-size:16px;margin:18px 0 10px}
+.atm-payment-list{display:grid;gap:9px}
+.atm-payment-choice{display:flex;align-items:center;gap:12px;text-align:left;border:1.5px solid #e7e7e7;border-radius:15px;padding:14px;width:100%;background:#fff}
+.atm-payment-choice.selected{border-color:#151515;background:#fcfcfc}
+.atm-payment-choice>svg{height:25px!important;width:25px!important}
+.atm-payment-choice span{flex:1}.atm-payment-choice b,.atm-payment-choice small{display:block}
+.atm-payment-choice b{font-size:14px}.atm-payment-choice small{font-size:12px;color:#777;margin-top:3px}
+.atm-payment-choice i{width:21px;height:21px;border:1px solid #ccc;border-radius:50%;display:grid;place-items:center}
+.atm-payment-choice.selected i{background:#161616;color:#fff}
+.atm-payment-choice i svg{height:15px!important;width:15px!important}
+.atm-demo-number{padding:13px;background:#f7f7f7;border-radius:13px;margin:15px 0}
+.atm-demo-number span,.atm-demo-number strong,.atm-demo-number small{display:block}
+.atm-demo-number span{font-size:11px;color:#888}.atm-demo-number strong{font-size:17px;margin:4px 0}.atm-demo-number small{font-size:11px;color:#888;line-height:1.5}
+.atm-bill{margin:18px 0;border-top:1px solid #eee;padding-top:15px}
+.atm-bill h3{font-size:16px;margin-bottom:14px}
+.atm-bill>div{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:7px 0;font-size:13px}
+.atm-bill>div span{color:#666}.atm-bill>div b{font-size:13px}
+.atm-bill>div.atm-bill-total{border-top:1px solid #ddd;margin-top:9px;padding-top:13px;font-weight:850}
+.atm-bill-total strong{font-size:24px;letter-spacing:-.04em}
+.atm-approval-phone{height:118px;width:118px;margin:14px auto;background:#fff1e9;border-radius:50%;display:grid;place-items:center;position:relative;animation:atmPulse 2s infinite}
+.atm-approval-phone svg{height:60px;width:60px;color:var(--accent)}
+.atm-approval-phone span{position:absolute;right:1px;top:3px;width:31px;height:31px;display:grid;place-items:center;border-radius:50%;background:var(--accent);color:#fff;font-weight:900}
+.atm-approval-progress{height:9px;background:#ededed;border-radius:20px;overflow:hidden;margin:24px 0}
+.atm-approval-progress span{display:block;height:100%;width:0;background:var(--accent);border-radius:20px;animation:atmProgress 4.2s linear forwards}
+.atm-confirm-mark{width:108px;height:108px;margin:10px auto;background:#e8f7ee;color:#13804d;display:grid;place-items:center;border-radius:50%;box-shadow:0 0 0 20px rgba(32,153,85,.06);animation:atmPop .55s both}
+.atm-confirm-mark svg{width:54px;height:54px}
+.atm-whatsapp{margin:22px 0;background:#eef9f2;border:1px solid #cdebd6;text-align:left;border-radius:17px;padding:15px;color:#164b2f}
+.atm-whatsapp>div{display:flex;justify-content:space-between;gap:8px}.atm-whatsapp strong{font-size:13px}
+.atm-whatsapp small{font-size:11px;color:#5e8e6b}.atm-whatsapp p{line-height:1.6;font-size:13px;margin:11px 0 0}
+.atm-confirmed .atm-secondary-cta{margin:11px 0}.atm-confirmed>small{display:block;color:#888;font-size:11px;line-height:1.4}
+.atm-trip-data{display:grid;gap:6px;background:#f8f8f8;border-radius:10px;padding:10px 12px;font-size:12px;color:#777;margin:7px 0}
+@keyframes atmSheetRise{from{transform:translateY(100%);opacity:.8}to{transform:translateY(0);opacity:1}}
+@keyframes atmBackdrop{from{opacity:0}to{opacity:1}}
+@keyframes atmOrbit{to{transform:rotate(360deg)}}
+@keyframes atmPulse{50%{transform:scale(1.08)}}
+@keyframes atmBlink{50%{opacity:.2;transform:translateY(-5px)}}
+@keyframes atmPop{0%{transform:scale(.5);opacity:0}75%{transform:scale(1.1);opacity:1}100%{transform:scale(1);opacity:1}}
+@keyframes atmProgress{to{width:100%}}
+@media(max-width:380px){.atm-sheet-content{padding:15px 14px calc(20px + env(safe-area-inset-bottom,0px))}.atm-price-step{gap:15px}.atm-price-step strong{font-size:34px}.atm-dual-cta{gap:8px}.atm-dual-cta .listing-offer-button{min-height:51px;height:51px;font-size:15px}}
+@media(min-width:750px){.atm-sheet{border-radius:28px 28px 0 0}.atm-dual-cta{max-width:960px}.atm-calendar-day{height:49px}}
+@media(prefers-reduced-motion:reduce){.atm-sheet,.atm-overlay,.atm-orbit,.atm-wait-gavel,.atm-wait-avatar,.atm-wait-dots i,.atm-response-icon,.atm-approval-phone,.atm-approval-progress span,.atm-confirm-mark{animation:none!important}.atm-approval-progress span{width:100%}}
