@@ -326,3 +326,49 @@ html{color-scheme:only light}
  .atm-offer-sheet .atm-flow-listing{margin-bottom:12px}
  .atm-offer-sheet .atm-total-block>div{padding:12px}
 }
+
+
+/* ATM semantic likelihood/payment branding and confetti · 18 Nov 2026.
+   Three dynamically selected states: low/red, counter/amber, good/green.
+   The meter text and fill must always have matching semantic colors. */
+.atm-offer-sheet .atm-likelihood-low .atm-meter span{background:#e44954}
+.atm-offer-sheet .atm-likelihood-low b{color:#d23845}
+.atm-offer-sheet .atm-likelihood-medium .atm-meter span{background:#f58a18}
+.atm-offer-sheet .atm-likelihood-medium b{color:#df7908}
+.atm-offer-sheet .atm-likelihood-high .atm-meter span{background:#099b62}
+.atm-offer-sheet .atm-likelihood-high b{color:#087b51}
+.atm-offer-sheet .atm-meter{height:8px}
+.atm-offer-sheet .atm-meter span{transition:width .3s cubic-bezier(.2,.8,.2,1),background-color .25s ease}
+.atm-offer-sheet .atm-chance b{transition:color .25s ease}
+
+/* Provider-coloured payment symbols, drawn with text/CSS (no brand asset downloads). */
+.atm-payment-choice .atm-pay-brand{width:47px;height:47px;min-width:47px;border-radius:13px;display:flex;align-items:center;justify-content:center;flex-direction:column;line-height:1;font-weight:950;letter-spacing:-.035em;font-size:14px}
+.atm-payment-choice .atm-pay-brand small{display:block;font-size:10px;line-height:1.05;font-weight:800;letter-spacing:0;margin-top:4px;color:inherit}
+.atm-pay-brand-mtn{background:#ffcb05;color:#131313;border:1px solid #e6b400}
+.atm-pay-brand-airtel{background:#e50026;color:#fff;border:1px solid #c8001e;font-size:12px!important;letter-spacing:-.045em!important}
+.atm-pay-brand-card{background:#172b86;color:#fff;border:1px solid #12206d;font-style:italic}
+.atm-pay-brand-bank{background:#f0f1f5;color:#394357;border:1px solid #e1e4eb}
+.atm-pay-brand-bank svg{height:24px!important;width:24px!important}
+.atm-payment-choice{transition:border-color .18s ease,background-color .18s ease,transform .16s ease}
+.atm-payment-choice:active{transform:scale(.985)}
+.atm-payment-choice.selected{box-shadow:0 0 0 1px rgba(20,20,20,.04)}
+
+/* Acceptance celebration overlaid on the existing dialog. No content remounting. */
+.atm-sheet{position:relative}
+.atm-confetti{position:absolute;inset:0;z-index:15;overflow:hidden;pointer-events:none}
+.atm-confetti i{position:absolute;top:36%;left:var(--cx);width:9px;height:13px;border-radius:2px;background:var(--shade);opacity:0;will-change:transform,opacity;animation:atmCelebration 1.75s cubic-bezier(.16,.75,.24,1) var(--delay) both}
+.atm-confetti i:nth-child(3n){width:7px;height:7px;border-radius:50%}
+.atm-confetti i:nth-child(4n){width:5px;height:16px}
+@keyframes atmCelebration{
+  0%{opacity:0;transform:translate3d(0,0,0) scale(.3) rotate(0deg)}
+  12%{opacity:1}
+  54%{opacity:1;transform:translate3d(var(--tx),var(--ty),0) scale(1) rotate(var(--r))}
+  100%{opacity:0;transform:translate3d(calc(var(--tx) * 1.2),calc(var(--ty) + 270px),0) rotate(calc(var(--r) * 1.7))}
+}
+@media(max-width:380px){
+ .atm-payment-choice .atm-pay-brand{width:43px;height:43px;min-width:43px}
+}
+@media(prefers-reduced-motion:reduce){
+ .atm-offer-sheet .atm-meter span,.atm-offer-sheet .atm-chance b,.atm-payment-choice{transition:none}
+ .atm-confetti i{animation:none!important;opacity:0!important}
+}
