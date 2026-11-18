@@ -56,7 +56,7 @@ state.myListings.forEach(function(l){
 });
 
 function save(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state))}catch(err){console.warn('Browser storage is full; data may not persist.',err);toast('Browser storage is full; recent changes may not persist')}}
-const ui={category:'All',subcategory:'All',feature:'All',faqOpen:-1,city:'All cities',query:'',sort:'Trending',sheet:null,photoIdx:0,booking:null,helpOpen:-1,postPreview:'',returnTo:'home',activityTab:'notifications',offerFilter:'All'};
+const ui={category:'All',subcategory:'All',feature:'All',faqOpen:-1,visibleCount:24,city:'All cities',query:'',sort:'Trending',sheet:null,photoIdx:0,booking:null,helpOpen:-1,postPreview:'',returnTo:'home',activityTab:'notifications',offerFilter:'All'};
 let toastTimer;
 function toast(msg){const el=$('#toast');if(!el)return;el.textContent=msg;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),3200)}
 const listings=()=>[...state.myListings.filter(l=>!l.deleted),...ATM_LISTINGS];
@@ -129,7 +129,7 @@ function explore(page){
     '<div class="atm-quick-search"><span>Quick search</span>'+['Hilux','Tent','Camera','Generator','Tractor','Chairs','House','Sound'].map(function(t){return '<button type="button" data-action="quicksearch" data-value="'+t+'">'+t+'</button>';}).join('')+'</div>'+
     '<div class="chip-strip"><button class="chip '+(ui.category==='All'?'active':'')+'" data-action="allcategories">All</button>'+ATM_TAXONOMY.map(function(c){return '<button class="chip '+(ui.category===c.name?'active':'')+'" data-action="category" data-value="'+esc(c.name)+'">'+icon(c.icon)+esc(c.name)+'</button>';}).join('')+'</div>'+
     '<div class="page-actions"><span class="results-line">'+results.length+' listings found</span><button class="link-btn" data-action="resetfilters">Reset filters</button></div>'+
-    (results.length?'<div class="listing-grid">'+results.map(tile).join('')+'</div>':empty('search','No rentals found','Try a different category, city or search term.','Reset filters','resetfilters'))+
+    (results.length?'<div class="listing-grid">'+results.slice(0,ui.visibleCount).map(tile).join('')+'</div>'+(results.length>ui.visibleCount?'<button class="atm-load-more" data-action="loadmore">Load more rentals ('+(results.length-ui.visibleCount)+' remaining)</button>':''):empty('search','No rentals found','Try a different category, city or search term.','Reset filters','resetfilters'))+
     '</section>';
 }
 function categoryPage(name){
@@ -162,7 +162,7 @@ function categoryPage(name){
       taxonomy.filters.map(function(feat){return '<button class="atm-filter-chip '+(ui.feature===feat?'active':'')+'" data-action="feature" data-value="'+esc(feat)+'">'+esc(feat)+'</button>';}).join('')+'</div></div>'+
       globalFilters()+
       '<div class="page-actions"><span class="results-line">'+results.length+' matching rentals</span><button class="link-btn" data-action="clearcategoryfilters">Clear filters</button></div>'+
-      (results.length?'<div class="listing-grid">'+results.map(tile).join('')+'</div>':empty('search','No items match','Change your filters or select another subcategory.','Clear filters','clearcategoryfilters'))+
+      (results.length?'<div class="listing-grid">'+results.slice(0,ui.visibleCount).map(tile).join('')+'</div>'+(results.length>ui.visibleCount?'<button class="atm-load-more" data-action="loadmore">Load more '+esc(name)+' listings ('+(results.length-ui.visibleCount)+' remaining)</button>':''):empty('search','No items match','Change your filters or select another subcategory.','Clear filters','clearcategoryfilters'))+
     '</section></section>';
 }
 function gallery(l){let photos=[l.image,...ATM_LISTINGS.filter(x=>x.category===l.category&&x.id!==l.id).slice(0,2).map(x=>x.image)];return photos}
@@ -225,20 +225,21 @@ function ensureChat(listingId){let l=getListing(listingId);if(!l||!chatAllowed(l
 function addSupport(){let c=state.conversations.find(c=>c.person==='ATM Demo Support');if(!c){c={id:Date.now(),listingId:0,person:'ATM Demo Support',messages:[{me:false,text:'Welcome to ATM demo support. Ask a question or report an issue. No live staff are connected.',time:'Now'}]};state.conversations.unshift(c);save()}go('chat',c.id)}
 function shareListing(id){let l=getListing(id);if(!l)return;const url=location.href.split('#')[0]+'#/listing/'+encodeURIComponent(id);if(navigator.share){navigator.share({title:l.title,text:'Check out this ATM rental marketplace demo listing.',url}).then(()=>toast('Shared successfully')).catch(()=>{});}else if(navigator.clipboard?.writeText){navigator.clipboard.writeText(url).then(()=>toast('Listing link copied')).catch(()=>fallbackCopy(url))}else fallbackCopy(url)}
 function fallbackCopy(text){let e=document.createElement('textarea');e.value=text;document.body.appendChild(e);e.select();try{document.execCommand('copy');toast('Link copied')}catch(_){toast('Unable to copy on this device')}e.remove()}
-function selectCategory(c){if(!ATM_TAXONOMY.some(t=>t.name===c))return;ui.category=c;ui.subcategory='All';ui.feature='All';ui.query='';ui.city='All cities';ui.sort='Trending';go('category',c)}
-function selectSortOrCity(field,value){ui[field]=value;render(true)}
+function selectCategory(c){if(!ATM_TAXONOMY.some(t=>t.name===c))return;ui.category=c;ui.subcategory='All';ui.feature='All';ui.query='';ui.city='All cities';ui.sort='Trending';ui.visibleCount=24;go('category',c)}
+function selectSortOrCity(field,value){ui[field]=value;ui.visibleCount=24;render(true)}
 function act(a){const action=a.dataset.action, id=a.dataset.id,route=a.dataset.route;switch(action){
 case'go':ui.sheet=null;go(route,id);break;
 case'back':if(history.length>1)history.back();else go('home');break;
 case'search':ui.category='All';ui.subcategory='All';ui.feature='All';ui.query='';go('explore');requestAnimationFrame(()=>$('#search-listings')?.focus());break;
 case'category':selectCategory(a.dataset.value);break;
 case'allcategories':ui.category='All';ui.subcategory='All';ui.feature='All';render(true);break;
-case'subcategory':ui.subcategory=a.dataset.value||'All';render(true);break;
-case'feature':ui.feature=a.dataset.value||'All';render(true);break;
-case'clearcategoryfilters':ui.subcategory='All';ui.feature='All';ui.city='All cities';ui.sort='Trending';ui.query='';render(true);break;
+case'subcategory':ui.subcategory=a.dataset.value||'All';ui.visibleCount=24;render(true);break;
+case'feature':ui.feature=a.dataset.value||'All';ui.visibleCount=24;render(true);break;
+case'clearcategoryfilters':ui.subcategory='All';ui.feature='All';ui.city='All cities';ui.sort='Trending';ui.query='';ui.visibleCount=24;render(true);break;
 case'quicksearch':ui.query=a.dataset.value||'';ui.category='All';go('explore');break;
 case'quickreply':{const c=state.conversations.find(x=>String(x.id)===String(id));const msg=String(a.dataset.value||'').slice(0,500);if(c&&conversationAllowed(c)&&msg){c.messages.push({me:true,text:msg,time:'Now'});c.messages.push({me:false,text:'This is a demo chat. Your quick question was saved locally; no real host has been contacted.',time:'Now'});save();render(true);toast('Quick reply sent (demo)')}break}
-case'resetfilters':ui.category='All';ui.subcategory='All';ui.feature='All';ui.city='All cities';ui.sort='Trending';ui.query='';render(true);break;
+case'resetfilters':ui.category='All';ui.subcategory='All';ui.feature='All';ui.city='All cities';ui.sort='Trending';ui.query='';ui.visibleCount=24;render(true);break;
+case'loadmore':ui.visibleCount=Math.min(600,ui.visibleCount+24);render(true);break;
 case'listing':go('listing',id);break;
 case'book':case'reserve':{const l=getListing(id);if(l)window.ATMFlow.reserve(l);break}
 case'calendar':{const l=getListing(id);if(l)window.ATMFlow.calendar(l);break}
