@@ -53,3 +53,27 @@ These are **illustrative guide labels**, not probabilities of a real host accept
 
 ## Boundaries retained intentionally
 This remains a **static GitHub Pages concept**: availability is generated illustrative data; payments, approvals, acceptance, authentication, and reservations are simulated. Live host confirmation, inventory calendars, payment gateways, WhatsApp messaging, secure account management and cross-device data require a separate authenticated backend and provider integrations. Do not describe fake notifications or hypothetical check-in codes as real.
+
+## Verified v10 live QA — completed 18 November 2026
+**Public tested build:** [ATM v10](https://realtriple-e.github.io/atm-marketplace-demo/client-review-offer-v10.html)  
+**Result:** PASS for exercised journeys, with the intended accepted-icon entry animation lasting about 0.3 seconds.
+
+| Test | Verified outcome |
+|---|---|
+| 320px and 390px likelihood | All five labels, filled widths (10/28/50/75/95%) and label/bar RGB colours match |
+| 320px/390px amounts | K1,500 → K1,550 → K1,500, always K50 steps; amount, text and meter update in place |
+| Sheet persistence | No modal node remount or scroll reset during amount, date, Days and People adjustments |
+| Acceptance | At 4.205s the accepted sheet and 65 confetti particles were visible; green check begins transparent and finishes its deliberate scale/rotation animation around 4.5s |
+| Accepted to checkout | Confirm and pay preserves K2,500/day; example total K8,374 including the illustrative K630 deposit, K80 service and MTN fee |
+| Calendar return | Checkout → Calendar → Close or Escape returns to checkout with dates and MTN selection intact |
+| Reserve-only property | Property ID 24 shows Reserve only, 3-night illustrative 5% discount and masked example check-in cue |
+| Provider badges | MTN yellow/black, Airtel red/white, Visa blue and Bank slate render correctly; 2% / 3.6% / 0% payment processing states were exercised |
+| Counteroffer | K2,000 offer generated a K2,300/day demo counter; accepting preserves negotiated rate and shows confetti |
+| Demo confirmation and Trips | Mock approval, WhatsApp-*style* confirmation and local My Trips entry passed |
+| Scrolling | 320×600 offer sheet had 168px scroll range and zero Days/People–total overlap; checkout content scrolled without page/body jump |
+| JS console | No observed window errors, unhandled rejections, console.error or console.warn in the exercised paths |
+
+**Intentional limitation:** No actual seller, inventory/calendar API, WhatsApp gateway, authentication service, payment provider, card collection, PIN or money movement exists in this concept. The acceptance meter is not statistically calibrated. The colors and bands are visual examples only.
+
+**Reference:** https://atm-home-list.vercel.app/  
+**Source repository:** https://github.com/RealTriple-E/atm-marketplace-demo
