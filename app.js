@@ -102,7 +102,7 @@ function home(){
   '</section>';
 }
 function tile(l){return `<div class="listing-tile"><div class="tile-media"><button data-action="listing" data-id="${l.id}" style="display:block;width:100%;padding:0;text-align:left">${image(l,'tile-image')}</button><button class="tile-save ${saved(l.id)?'is-saved':''}" data-action="save" data-id="${l.id}" aria-label="Save ${esc(l.title)}">${icon('heart')}</button></div><button data-action="listing" data-id="${l.id}" style="display:block;text-align:left;padding:0;width:100%"><div class="tile-name">${esc(l.title)}</div><div class="tile-city">${icon('pin')} ${esc(l.city)} · ★ ${l.rating}</div><div class="tile-price">${money(l.price)} <span>/ ${esc(l.unit||"day")}</span></div></button></div>`}
-const cities=['All cities','Lusaka','Ndola','Kitwe','Livingstone','Kabwe','Chingola','Solwezi','Chipata','Mazabuka','Mansa','Chilanga','Siavonga'];
+const cities=['All cities',...Array.from(new Set([...ATM_CATALOG_CITIES,...ATM_LISTINGS.map(l=>l.city),'Chilanga'])).sort((a,b)=>a.localeCompare(b))];
 function sortedListings(array){
   const items=array.slice();
   if(ui.sort==='Price: low')items.sort(function(a,b){return a.price-b.price;});
