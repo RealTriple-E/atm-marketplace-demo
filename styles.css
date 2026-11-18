@@ -427,3 +427,196 @@ html{color-scheme:only light}
 .atm-offer-sheet .atm-likelihood-high b{color:#2563B8}
 .atm-offer-sheet .atm-likelihood-very-high .atm-meter span{background-color:#147D49}
 .atm-offer-sheet .atm-likelihood-very-high b{color:#147D49}
+
+
+/* ATM v12 one-screen offer layout — 18 Nov 2026.
+   Optimized for small touch screens: all required offer controls fit in a
+   single visible bottom sheet. Natural flex distribution replaces scrolling.
+   Do not hide content on unusually tiny window/keyboard viewports. */
+.atm-offer-sheet{
+  height:min(calc(100dvh - 6px),780px);
+  max-height:calc(100dvh - 6px);
+  min-height:0;
+}
+.atm-offer-sheet .atm-drag{
+  width:40px;height:4px;margin:6px auto 0;
+}
+.atm-offer-sheet .atm-sheet-head{
+  min-height:43px;
+  padding:5px 17px 7px;
+  flex:none;
+}
+.atm-offer-sheet .atm-sheet-head h2{font-size:17px}
+.atm-offer-sheet .atm-sheet-content{
+  flex:1 1 auto;
+  min-height:0;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  gap:0;
+  overflow-y:auto; /* safety fallback; no scroll on supported mobile sizes */
+  padding:7px 16px max(9px,env(safe-area-inset-bottom,0px));
+  scroll-behavior:auto;
+}
+.atm-offer-sheet .atm-sheet-content>*{flex-shrink:0}
+.atm-offer-sheet .atm-flow-listing{
+  min-height:57px;
+  padding:6px 8px;
+  gap:9px;
+  margin:0;
+  border-radius:14px;
+}
+.atm-offer-sheet .atm-flow-listing img{
+  width:66px;height:48px;border-radius:10px;
+}
+.atm-offer-sheet .atm-flow-listing strong{font-size:13px;line-height:1.2}
+.atm-offer-sheet .atm-flow-listing small{font-size:11px;line-height:1.2;margin-top:3px}
+.atm-offer-sheet .atm-price-controls{margin:0}
+.atm-offer-sheet .atm-price-step{
+  width:min(100%,320px);
+  min-height:65px;
+  margin:0 auto 0;
+  gap:7px;
+}
+.atm-offer-sheet .atm-price-step strong{
+  font-size:clamp(42px,12vw,52px);
+  line-height:1;
+}
+.atm-offer-sheet .atm-price-step small{font-size:11px;margin-top:2px}
+.atm-offer-sheet .atm-price-step button{
+  width:46px;height:46px;min-width:46px;
+}
+.atm-offer-sheet .atm-price-step button svg{width:20px;height:20px}
+.atm-offer-sheet .atm-chance{
+  width:min(100%,320px);
+  gap:4px;
+  margin:0 auto 5px;
+}
+.atm-offer-sheet .atm-meter{height:7px}
+.atm-offer-sheet .atm-chance b{font-size:11.5px;line-height:1.15}
+.atm-offer-sheet .atm-amount-chips{
+  gap:6px;
+  min-height:31px;
+  margin:2px 0 0;
+}
+.atm-offer-sheet .atm-amount-chips button{
+  min-height:30px;
+  padding:5px 12px;
+  font-size:12px;
+}
+.atm-offer-sheet .atm-flow-label{
+  font-size:13px;
+  margin:1px 0;
+  min-height:19px;
+}
+.atm-offer-sheet .atm-inline-link{font-size:11px}
+.atm-offer-sheet .atm-date-rail{
+  padding:1px 0 2px;
+  margin:0;
+  gap:6px;
+  min-height:52px;
+}
+.atm-offer-sheet .atm-date-pill{
+  min-width:68px;min-height:50px;
+  padding:5px 7px;border-radius:13px;gap:2px;
+}
+.atm-offer-sheet .atm-date-pill b{font-size:11.5px}
+.atm-offer-sheet .atm-date-pill small{font-size:10px}
+.atm-offer-sheet .atm-stepper{
+  min-height:46px;
+  padding:3px 0;
+  border:0;
+}
+.atm-offer-sheet .atm-stepper strong{font-size:13px}
+.atm-offer-sheet .atm-stepper small{font-size:10.5px;margin-top:2px}
+.atm-offer-sheet .atm-stepper-buttons{gap:10px}
+.atm-offer-sheet .atm-stepper-buttons button{
+  width:37px;height:37px;
+}
+.atm-offer-sheet .atm-stepper-buttons span{font-size:14px;min-width:20px}
+.atm-offer-sheet .atm-total-block{
+  position:static!important;
+  margin:0;padding:0;border:0;z-index:auto;
+}
+.atm-offer-sheet .atm-total-block>div{
+  margin:0 0 6px;
+  padding:9px 12px;
+  border-radius:13px;
+  min-height:40px;
+}
+.atm-offer-sheet .atm-total-block>div span{font-size:12px}
+.atm-offer-sheet .atm-total-block>div strong{font-size:19px}
+.atm-offer-sheet .atm-total-block .atm-main-cta{
+  min-height:46px;
+  height:46px;
+  padding:8px 10px;
+  border-radius:13px;
+  font-size:13px;
+}
+.atm-offer-sheet .atm-total-block>small{
+  font-size:10.5px;line-height:1.15;margin:4px 0 0;
+}
+.atm-offer-sheet .atm-sheet-content:has(.atm-wait-panel),
+.atm-offer-sheet .atm-sheet-content:has(.atm-response-panel){
+  justify-content:center;
+}
+@media (max-height:680px){
+  .atm-offer-sheet .atm-sheet-head{min-height:39px;padding:4px 15px 5px}
+  .atm-offer-sheet .atm-sheet-content{padding:4px 12px max(6px,env(safe-area-inset-bottom,0px))}
+  .atm-offer-sheet .atm-flow-listing{min-height:52px;padding:4px 6px}
+  .atm-offer-sheet .atm-flow-listing img{width:60px;height:43px}
+  .atm-offer-sheet .atm-price-step{min-height:58px}
+  .atm-offer-sheet .atm-price-step strong{font-size:clamp(40px,11.5vw,48px)}
+  .atm-offer-sheet .atm-price-step button{height:44px;width:44px;min-width:44px}
+  .atm-offer-sheet .atm-chance{margin:0 auto 3px;gap:3px}
+  .atm-offer-sheet .atm-amount-chips{min-height:29px}
+  .atm-offer-sheet .atm-amount-chips button{min-height:28px;padding:4px 10px}
+  .atm-offer-sheet .atm-flow-label{min-height:17px}
+  .atm-offer-sheet .atm-date-rail{min-height:47px;padding:0 0 1px}
+  .atm-offer-sheet .atm-date-pill{min-height:45px;min-width:63px;padding:3px 5px}
+  .atm-offer-sheet .atm-stepper{min-height:42px;padding:2px 0}
+  .atm-offer-sheet .atm-stepper-buttons button{width:35px;height:35px}
+  .atm-offer-sheet .atm-total-block>div{min-height:36px;padding:7px 10px;margin-bottom:4px}
+  .atm-offer-sheet .atm-total-block .atm-main-cta{height:44px;min-height:44px}
+  .atm-offer-sheet .atm-total-block>small{margin-top:3px;font-size:10px}
+}
+@media (max-height:560px){
+  .atm-offer-sheet .atm-flow-listing{min-height:47px}
+  .atm-offer-sheet .atm-flow-listing img{width:54px;height:39px}
+  .atm-offer-sheet .atm-price-step{min-height:54px}
+  .atm-offer-sheet .atm-price-step strong{font-size:clamp(36px,11vw,44px)}
+  .atm-offer-sheet .atm-date-pill{min-height:42px}
+  .atm-offer-sheet .atm-date-rail{min-height:44px}
+  .atm-offer-sheet .atm-stepper{min-height:39px}
+  .atm-offer-sheet .atm-total-block>div{min-height:34px}
+}
+
+/* Payment method selection: restore compact icon badges without consuming
+   room reserved for names and fee descriptions. Applies at every viewport. */
+.atm-payment-choice .atm-pay-brand{
+  width:32px;
+  min-width:32px;
+  max-width:32px;
+  height:32px;
+  border-radius:9px;
+  flex:0 0 32px;
+}
+.atm-payment-choice .atm-pay-brand svg{
+  width:17px!important;
+  height:17px!important;
+}
+.atm-payment-choice{
+  gap:10px;
+  padding:10px 12px;
+  min-height:60px;
+}
+.atm-payment-choice span:not(.atm-pay-brand){min-width:0}
+.atm-payment-choice b{font-size:13px}
+.atm-payment-choice small{font-size:11px;line-height:1.2}
+@media(max-width:380px){
+  .atm-payment-choice .atm-pay-brand{
+    width:30px;min-width:30px;max-width:30px;height:30px;flex-basis:30px;
+  }
+  .atm-payment-choice .atm-pay-brand svg{width:16px!important;height:16px!important}
+  .atm-payment-choice{gap:8px;padding:9px 10px}
+}
