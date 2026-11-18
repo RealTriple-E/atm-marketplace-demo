@@ -77,3 +77,15 @@ This remains a **static GitHub Pages concept**: availability is generated illust
 
 **Reference:** https://atm-home-list.vercel.app/  
 **Source repository:** https://github.com/RealTriple-E/atm-marketplace-demo
+
+## ATM client-requested wording (18 November 2026, v11)
+The reference website's five labels remain documented above as source observations. The ATM marketplace deliberately uses **simpler, consistent customer-facing wording**, with **five distinct colours** and matching bar/label hues. Thresholds and fill lengths are retained from the reference:
+| Offer / listed rate | ATM label | Hex colour | Meter fill |
+|---|---|---|---|
+| Below 65% | Very low chance | `#C62828` dark red | 10% |
+| 65–under 75% | Low chance | `#C65317` orange | 28% |
+| 75–under 88% | Moderate chance | `#916900` gold | 50% |
+| 88–under 96% | High chance | `#2563B8` blue | 75% |
+| 96% and higher | Very high chance | `#147D49` green | 95% |
+
+All five levels are illustrative only—not scientifically calibrated odds or actual host acceptance predictions. No seller is contacted.
