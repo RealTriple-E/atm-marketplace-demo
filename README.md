@@ -72,3 +72,7 @@ All starter listings, reviews, messages, offers and transactions remain simulate
 - Reserve opens animated Confirm and pay directly. MTN, Airtel, card and bank transfer are selectable; fees and totals update immediately. Demo mobile number is fictional and preselected. No real payment is processed.
 - Simulated approval transitions to confirmation and My Trips. All starter listings and payments are fictional; availability blocks are illustrative, not sourced from real sellers.
 - Review the connected [ATM Home List reference](https://atm-home-list.vercel.app/) for the interaction inspiration. The ATM implementation uses independently written code and retains ATM styling.
+
+
+## Verified reference parity audit — 18 November 2026
+See [the detailed Vercel offer and Reserve parity audit](docs/VERCEL_OFFER_RESERVE_PARITY_AUDIT.md) for exact likelihood colours, statuses, fees, branding, the new confetti animation, representative source comparisons, intentional demo-only differences, and v10 mobile/checkout regression evidence. The demo is a fictional local-browser marketplace, not a live booking or money-transfer service.
