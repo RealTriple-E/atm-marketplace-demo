@@ -67,7 +67,7 @@ const ATM_PHOTO_SETS={
 const ATM_OWNER_SEED = ['stock portrait','sample account','illustrative feedback'];
 const ATM_HASH=(s)=>Array.from(String(s||'')).reduce((h,c)=>((h*33+c.charCodeAt(0))>>>0),5381);
 const ATM_PORTRAIT_IDS=[12,47,13,32,44,49,26,60,16,56,43,5,36,54,29,11,37,59,8,64,68,22,2,41,39,15,20,52,21,25,7,51,34,24,48,35,55,6,46,40,19,62,63,57,14,38,17,30,27,3,45,53,33,50,18,31,28,9,1,10,4,58,23,61,65,66,67,69];
-const ATM_HEADSHOT=(seller)=>'https://i.pravatar.cc/240?img='+ATM_PORTRAIT_IDS[ATM_HASH(seller)%ATM_PORTRAIT_IDS.length];
+const ATM_HEADSHOT=(seller)=>{const ix=[...new Set(ATM_LISTINGS.map(l=>l.owner))].indexOf(seller);return 'https://i.pravatar.cc/240?img='+ATM_PORTRAIT_IDS[(ix>=0?ix:ATM_HASH(seller))%ATM_PORTRAIT_IDS.length];};
 const ATM_SELLER_FALLBACK='https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=240&q=85';
 const ATM_MEMBER_NAMES=['Martha L.','Daniel M.','Grace C.','Mutale B.','Lydia K.','Brian N.','Thandiwe P.','Josephine M.','Chilufya T.','Mary S.','Lewis P.','Nadia J.'];
 const ATM_REVIEW_TEXT=[
