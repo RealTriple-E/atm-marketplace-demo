@@ -56,7 +56,7 @@ state.myListings.forEach(function(l){
 });
 
 function save(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state))}catch(err){console.warn('Browser storage is full; data may not persist.',err);toast('Browser storage is full; recent changes may not persist')}}
-const ui={category:'All',subcategory:'All',feature:'All',faqOpen:-1,storyExpanded:false,visibleCount:24,city:'All cities',query:'',sort:'Trending',sheet:null,photoIdx:0,booking:null,helpOpen:-1,postPreview:'',returnTo:'home',activityTab:'notifications',offerFilter:'All'};
+const ui={category:'All',subcategory:'All',feature:'All',faqOpen:-1,storyExpanded:false,calendarOffset:0,visibleCount:24,city:'All cities',query:'',sort:'Trending',sheet:null,photoIdx:0,booking:null,helpOpen:-1,postPreview:'',returnTo:'home',activityTab:'notifications',offerFilter:'All'};
 let toastTimer;
 function toast(msg){const el=$('#toast');if(!el)return;el.textContent=msg;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),3200)}
 const listings=()=>[...state.myListings.filter(l=>!l.deleted),...ATM_LISTINGS];
@@ -75,7 +75,7 @@ const avatar=(name,size='')=>`<span class="avatar atm-photo-avatar" ${size?`styl
 const image=(l,cls='',other='')=>`<img class="${cls}" src="${esc(l.image||photo(l.img)||photo('tent'))}" alt="${esc(l.title)}" loading="lazy" onerror="this.onerror=null;this.style.opacity='.05';this.parentElement.classList.add('image-fallback')" ${other}>`;
 const verify=l=>l.verified?`<span class="verified">${icon('shield')} Verified demo seller</span>`:'';
 const pagePath=()=>decodeURIComponent((location.hash||'#/home').replace(/^#\/?/,'')).split('/').filter(Boolean);
-function go(route,id){const target=`#/${route}${id!==undefined&&id!==null?'/'+encodeURIComponent(id):''}`;if(location.hash!==target)ui.visibleCount=24;ui.sheet=null;ui.photoIdx=0;ui.storyExpanded=false;if(location.hash===target){render();scrollTo(0,0)}else{location.hash=target}}
+function go(route,id){const target=`#/${route}${id!==undefined&&id!==null?'/'+encodeURIComponent(id):''}`;if(location.hash!==target)ui.visibleCount=24;ui.sheet=null;ui.photoIdx=0;ui.storyExpanded=false;ui.calendarOffset=0;if(location.hash===target){render();scrollTo(0,0)}else{location.hash=target}}
 function activeNav(page){if(['home','explore','trending','category'].includes(page))return 'home';if(['offers','book','checkout','success'].includes(page))return 'offers';if(['post','edit'].includes(page))return 'post';return 'account'}
 function navBar(page){const active=activeNav(page);const tabs=[['home','home','Home'],['offers','dollar','Offers'],['post','plus','Post'],['account','user','Account']];return `<nav class="fnav" aria-label="Main navigation">${tabs.map(([p,ic,text])=>`<button aria-label="${text}" aria-current="${p===active?'page':'false'}" class="${p===active?'active':''}" data-action="go" data-route="${p}">${icon(ic,ic==='plus'?'add-icon':'')}<span>${text}</span></button>`).join('')}</nav>`}
 function listingOfferDock(id){const l=getListing(id);return l?`<div class="listing-offer-dock atm-v15-bookbar ${l.offersAllowed===false?'atm-reserve-only':''}" aria-label="Rental booking options"><div class="atm-v15-bookprice"><strong>${money(l.price)}</strong><span>/ ${esc(l.unit||'day')}</span><small>Demo rate · Terms apply</small></div>${l.offersAllowed===false?'':`<button type="button" class="listing-offer-button atm-offer-option" data-action="offer" data-id="${esc(l.id)}" aria-label="Make an offer for ${esc(l.title)}">${icon('handshake')}<span>Offer</span></button>`}<button type="button" class="listing-offer-button atm-reserve-option" data-action="reserve" data-id="${esc(l.id)}" aria-label="Reserve ${esc(l.title)}"><span>Reserve</span></button></div>`:navBar('home')}
@@ -174,6 +174,33 @@ function listingFacts(l){
   if(l.category==='Events')return 'Event hire · Packages available · Demo listing';
   return 'Rental item · Flexible dates · Demo listing';
 }
+const ATM_CITY_CENTRES={
+ Lusaka:[-15.4167,28.2833],Ndola:[-12.9587,28.6366],Kitwe:[-12.8024,28.2132],Livingstone:[-17.8419,25.8543],
+ Kabwe:[-14.4432,28.4519],Chingola:[-12.5289,27.8838],Solwezi:[-12.1833,26.4],Chipata:[-13.6333,32.65],
+ Mazabuka:[-15.8557,27.7479],Mansa:[-11.1965,28.8944],Chilanga:[-15.565,28.27],Siavonga:[-16.5382,28.7144],
+ Kasama:[-10.2129,31.1808],Mongu:[-15.2534,23.1312],Choma:[-16.8065,26.9531],Lundazi:[-12.2929,33.17],
+ Chililabombwe:[-12.3661,27.8263]
+};
+function inlinePreviewCalendar(l){
+ const today=new Date(),first=new Date(today.getFullYear(),today.getMonth()+Math.max(0,Math.min(12,ui.calendarOffset||0)),1);
+ const y=first.getFullYear(),m=first.getMonth(),startOffset=(first.getDay()+6)%7,days=new Date(y,m+1,0).getDate();
+ const id=Number(l.id)||1,blockA=(id*7)%23+3,blockB=(id*11)%23+3;
+ const cells=Array.from({length:startOffset},()=>'<span class="atm-v15-blank-day"></span>');
+ for(let n=1;n<=days;n++){
+  const d=new Date(y,m,n),past=d<new Date(today.getFullYear(),today.getMonth(),today.getDate()),unavailable=past||n===blockA||n===blockB;
+  cells.push('<button type="button" class="atm-v15-day '+(unavailable?'unavailable':'')+'" '+(unavailable?'disabled':'data-action="calendar" data-id="'+esc(l.id)+'"')+' aria-label="'+n+' '+first.toLocaleString('en-GB',{month:'long'})+' '+y+(unavailable?', unavailable':'')+'">'+n+'</button>');
+ }
+ return '<div class="atm-v15-calendar-preview"><div class="atm-v15-calendar-top"><strong>'+first.toLocaleString('en-GB',{month:'long',year:'numeric'})+'</strong><div><button data-action="previewmonth" data-dir="-1" aria-label="Previous month" '+((ui.calendarOffset||0)===0?'disabled':'')+'>'+icon('back')+'</button><button data-action="previewmonth" data-dir="1" aria-label="Next month" '+((ui.calendarOffset||0)>=12?'disabled':'')+'>'+icon('chevron')+'</button></div></div>'+
+  '<div class="atm-v15-calendar-days">'+['M','T','W','T','F','S','S'].map(x=>'<span>'+x+'</span>').join('')+'</div>'+
+  '<div class="atm-v15-calendar-grid">'+cells.join('')+'</div>'+
+  '<small>Crossed-out dates are illustrative booked or past days. Tap an available date to open the full picker.</small></div>';
+}
+function generalAreaMap(city){
+ const coords=ATM_CITY_CENTRES[city];if(!coords)return '';
+ const [lat,lon]=coords,spread=.055;
+ const url='https://www.openstreetmap.org/export/embed.html?bbox='+encodeURIComponent([lon-spread,lat-spread,lon+spread,lat+spread].join(','))+'&layer=mapnik&marker='+encodeURIComponent(lat+','+lon);
+ return '<div class="atm-v15-map-preview"><iframe src="'+esc(url)+'" title="Map overview of '+esc(city)+', Zambia, not the exact listing address" loading="lazy" referrerpolicy="no-referrer" allowfullscreen></iframe><div>City centre overview · Exact rental address is private until booking</div></div>';
+}
 function detail(l){
  if(!l)return notFound();
  const pics=gallery(l),seller=ATM_SELLER_DATA(l.owner);
@@ -207,8 +234,8 @@ function detail(l){
    '<p class="atm-v15-demo-note">'+icon('shield')+' Verified badge, photos, ratings and availability are illustrative in this concept.</p></div>'+
   '<div class="atm-v15-section"><h2>What this hire includes</h2><div class="atm-v15-feature-grid">'+features.map(feat=>'<span>'+icon('check')+esc(feat)+'</span>').join('')+'</div></div>'+
   (l.category==='Spaces & Property'?'<div class="atm-v15-section atm-v15-stay-tiers"><h2>Stay longer, pay less</h2><div class="atm-v15-tier-grid"><div><small>1–2 nights</small><strong>'+money(l.price)+'</strong><span>Standard rate</span></div><div><small>3–4 nights</small><strong>'+money(Math.round(l.price*.95))+'</strong><span>5% off</span></div><div><small>5+ nights</small><strong>'+money(Math.round(l.price*.90))+'</strong><span>10% off</span></div></div><small>Example direct-reservation rates; accepted negotiated offers are priced separately.</small></div>':'')+
-  '<div class="atm-v15-section atm-v15-availability"><h2>Availability</h2><p>Select the dates that work for you. Unavailable days are marked in the booking calendar.</p><button class="atm-v15-date-choice" data-action="calendar" data-id="'+esc(l.id)+'">'+icon('calendar')+'<span><strong>Choose rental dates</strong><small>'+esc(availText)+' · Tap to change</small></span>'+icon('chevron')+'</button></div>'+
-  '<div class="atm-v15-section atm-v15-location"><h2>Where you will find it</h2><div class="atm-v15-location-card">'+icon('pin')+'<div><strong>'+esc(l.city)+', Zambia</strong><p>Exact collection or delivery details become available after a confirmed, paid booking.</p></div></div></div>'+
+  '<div class="atm-v15-section atm-v15-availability"><h2>Availability</h2><p>Select the dates that work for you. Unavailable days are marked in the booking calendar.</p>'+inlinePreviewCalendar(l)+'<button class="atm-v15-date-choice" data-action="calendar" data-id="'+esc(l.id)+'">'+icon('calendar')+'<span><strong>Choose rental dates</strong><small>'+esc(availText)+' · Tap to change</small></span>'+icon('chevron')+'</button></div>'+
+  '<div class="atm-v15-section atm-v15-location"><h2>Where you will find it</h2>'+generalAreaMap(l.city)+'<div class="atm-v15-location-card">'+icon('pin')+'<div><strong>'+esc(l.city)+', Zambia</strong><p>Exact collection or delivery details become available after a confirmed, paid booking.</p></div></div></div>'+
   '<div class="atm-v15-section atm-v15-review-section" id="atm-v15-reviews"><div class="atm-v15-section-heading"><h2>Reviews</h2><span>★ '+Number(l.rating||4.8).toFixed(2)+' · '+Number(l.reviews||0)+' sample reviews</span></div><div class="atm-v15-review-rail">'+seller.reviewItems.slice(0,4).map(x=>'<article class="atm-v15-review-card"><div><span class="atm-v15-review-portrait">'+avatar(x.name,'width:38px;height:38px')+'</span><span><strong>'+esc(x.name)+'</strong><small>'+esc(x.date)+' · '+x.score+'/5</small></span></div><p>'+esc(x.text)+'</p></article>').join('')+'</div><button class="atm-v15-readmore" data-action="seller" data-value="'+esc(l.owner)+'">All host reviews '+icon('chevron')+'</button></div>'+
   '<div class="atm-v15-section atm-v15-prepay"><h2>Before you reserve</h2><p>Customers and providers cannot exchange messages before verified payment. Browse the listing details, choose dates and use Offer or Reserve. ATM support remains available through Help & safety.</p><button class="atm-v15-readmore" data-action="go" data-route="help">Help & safety '+icon('chevron')+'</button></div>'+
  '</div></section>';
@@ -315,6 +342,7 @@ case'listingfaq':ui.faqOpen=ui.faqOpen===Number(id)?-1:Number(id);render(true);b
 case'seller':go('seller',a.dataset.value);break;
 case'reviews':{const el=$('#atm-v15-reviews');if(el)el.scrollIntoView({behavior:'smooth',block:'start'});break}
 case'readstory':ui.storyExpanded=!ui.storyExpanded;render(true);break;
+case'previewmonth':ui.calendarOffset=Math.max(0,Math.min(12,(ui.calendarOffset||0)+Number(a.dataset.dir||1)));render(true);break;
 case'galleryprev':case'gallerynext':case'gallerygoto':{
  const track=$('#atm-gallery-track');if(!track)break;
  const total=track.children.length,w=track.clientWidth||1;
