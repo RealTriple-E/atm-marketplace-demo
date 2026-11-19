@@ -10,7 +10,7 @@ const ATM_PHOTO_SETS={
  'Buses & Minibuses':['photo-1533473359331-0135ef1b58bf','photo-1449965408869-eaa3f722e40d','photo-1519641471654-76ce0107ad1b'],
  'Pickups & Vans':['photo-1566933293069-b55c7f326dd4','photo-1519641471654-76ce0107ad1b','photo-1549317661-bd32c8ce0db2'],
  'Trucks & Haulage':['photo-1586191582151-f73872dfd183','photo-1519003722824-194d4455a60c','photo-1566933293069-b55c7f326dd4'],
- 'Bicycles & E-bikes':['photo-1485965120184-e220f721d03e','photo-1517649763962-0c623066013b','photo-1541625602330-2277b4c461de'],
+ 'Bicycles & E-bikes':['photo-1485965120184-e220f721d03e','photo-1517649763962-0c623066013b','photo-1507035895480-2b3156c31fc8'],
  'Boats & Watercraft':['photo-1500534314209-a25ddb2bd429','photo-1519046904884-53103b34b206','photo-1544551763-46a013bb70d5'],
  'Aircraft & Helicopters':['photo-1464037866556-6812c9d1c72e','photo-1436491865332-7a61a109cc05','photo-1506947411487-a56738267384'],
  'Campers & Motorhomes':['photo-1504280390367-361c6d9f38f4','photo-1532339142463-fd0a8979791a','photo-1478131143081-80f7f84ca84d'],
@@ -92,7 +92,7 @@ const ATM_SELLER_DATA=(name)=>{
 const ATM_ITEM_GALLERY=(l)=>{
   if(Array.isArray(l.gallery)&&l.gallery.length)return l.gallery.filter(Boolean);
   const set=ATM_PHOTO_SETS[l.subcategory] || ATM_PHOTO_SETS['Houses & Apartments'];
-  if(!l.demo&&l.image&&String(l.image).startsWith('data:'))return [l.image];
+  if(l.mediaKind!=='sample-stock'&&l.image)return [l.image];
   // Each generated listing has a consistent, subcategory-specific stock photo sequence.
   const rotation=(ATM_HASH(l.title||l.id))%set.length;
   return [set[rotation],set[(rotation+1)%set.length],set[(rotation+2)%set.length]].map(x=>ATM_STOCK(x,1200));
