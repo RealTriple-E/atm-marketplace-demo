@@ -91,7 +91,7 @@ const ATM_SELLER_DATA=(name)=>{
 };
 /* Prefer item-specific photos over generic subcategory images whenever recognised. */
 const ATM_ITEM_OVERRIDES=[
- [/(?:garden party games|garden party|outdoor table tennis|party board games)/i,['photo-1511795409834-ef04bbd61622','photo-1533174072545-7a4b6ad7a6c3','photo-1500534623283-312aade485b7']],
+ [/(?:garden party games|garden party|outdoor table tennis|party board games)/i,['photo-1511795409834-ef04bbd61622','photo-1533174072545-7a4b6ad7a6c3','photo-1519741497674-611481863552']],
  [/(?:kiosk|retail space|shopfront|market stall|pop-up)/i,['photo-1441986300917-64674bd600d8','photo-1497366811353-6870744d04b2','photo-1460925895917-afdab827c52f']],
  [/(?:lawn mower|lawnmower|mowing)/i,['photo-1458245201577-fc8a130b8829','photo-1731082686849-d2e0a4d2c70c','photo-1416879595882-3373a0480b5b']],
  [/(?:concrete mixer|cement mixer)/i,['photo-1751221701301-b02ca1b4b49e','photo-1504307651254-35680f356dfd','photo-1740765428765-fc958dc5e3e7']],
