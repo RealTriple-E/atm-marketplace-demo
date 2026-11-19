@@ -91,6 +91,9 @@ const ATM_SELLER_DATA=(name)=>{
 };
 /* Prefer item-specific photos over generic subcategory images whenever recognised. */
 const ATM_ITEM_OVERRIDES=[
+ [/(?:lawn mower|lawnmower|mowing)/i,['photo-1458245201577-fc8a130b8829','photo-1731082686849-d2e0a4d2c70c','photo-1416879595882-3373a0480b5b']],
+ [/(?:concrete mixer|cement mixer)/i,['photo-1751221701301-b02ca1b4b49e','photo-1504307651254-35680f356dfd','photo-1740765428765-fc958dc5e3e7']],
+ [/(?:flatbed truck|flatbed haulage)/i,['photo-1774133665983-5bb126f59bd1','photo-1586191582151-f73872dfd183','photo-1519003722824-194d4455a60c']],
  [/safari.+(minibus|bus)|tour minibus/i,['photo-1623094701717-b186ec95acff','photo-1605410522294-80aa1f8b4153','photo-1772380043298-6544d49a8f64']],
  [/(?:hilux|hardbody|ford ranger|pickup truck|double cab)/i,['photo-1759213281196-6c5e463b3021','photo-1663576268373-0bef1214f700','photo-1759130534259-273e015f70f9']],
  [/(?:safari|game.drive|off.road jeep)/i,['photo-1695367255171-72e83ebddb8d','photo-1792824418533-593a04879d06','photo-1759130534259-273e015f70f9']],
