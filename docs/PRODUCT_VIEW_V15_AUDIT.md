@@ -52,3 +52,12 @@ The reference's villa listing is a mobile-first product-detail presentation:
 5. No chat on detail/profile, unpaid deep links blocked; chat only accessible via eligible paid demo booking in My Trips and revoked on cancellation.
 6. Offer, counteroffer, accepted confetti, Reserve, property discount, calendar and payment provider choice remain functional.
 7. Check successful rendering of representative stock images and portraits, no console errors, readable responsive layout.
+
+## Live v15 QA findings and v17 changes (19 November 2026)
+A live browser audit at 320px, 390px and desktop confirmed: full-bleed hero geometry (390×351px); rounded black 24px-overlap sheet; no title truncation or horizontal overflow; three-gallery swipe, dot and arrow gestures; seller profile navigation, member date and fictional reviews; absence of seller chat on listing and prepayment surfaces; My Trips-only chat after verified demo payment; cancellation revokes access; and no captured JS errors.
+
+**Image mismatch discovered and corrected:** The 'Garden Party Games — Solwezi' item was incorrectly showing scuba imagery. Recreation & Games, Children's Events and Boats & Watercraft photo sets have been revised to remove the scuba image completely. Garden-party images are now outdoor/event-related; Boats uses a real speedboat image; retailer kiosks get shop imagery. For frequently recognised titles such as Hilux, safari minibuses, farm tractors, lawnmowers, excavators, generators, etc., specific stock-photo overrides take precedence over broad subcategory defaults.
+
+**Cache caveat:** The v15 audit found that stale same-version asset URLs could momentarily serve an older one-slide gallery. A fresh versioned v17 client-review page and asset URLs ensure the browser requests the current three-slide photo data. Source images load externally, so a cold load can show a placeholder briefly. Seller portraits on prominent views are loaded as sample photos with a fallback source.
+
+**Final catalogue invariants:** 288 fictional listings, 60 mapped subcategories, at least 3 slide URLs per demo listing, 46 unique sample seller portrait URLs, zero scuba image URLs. Stock imagery is illustrative of listing types and should not be represented as photographs of the specific nonexistent rental unit.
