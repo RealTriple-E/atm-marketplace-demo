@@ -71,7 +71,7 @@ const isContactInListing=text=>/(?:\+?260[\s.\-]?[0-9\s.\-]{8,}|\b0[79][0-9\s.\-
 const myListing=id=>state.myListings.find(l=>String(l.id)===String(id));
 const saved=id=>state.favorites.includes(String(id));
 const liked=id=>state.likes.includes(String(id));
-const avatar=(name,size='')=>`<span class="avatar atm-photo-avatar" ${size?`style="${esc(size)}"`:''}><img src="${esc(ATM_HEADSHOT(name))}" alt="Sample portrait for ${esc(name)}" loading="lazy" onerror="this.onerror=null;this.src='${ATM_SELLER_FALLBACK}'"></span>`;
+const avatar=(name,size='')=>`<span class="avatar atm-photo-avatar" ${size?`style="${esc(size)}"`:''}><img src="${esc(ATM_HEADSHOT(name))}" alt="Sample portrait for ${esc(name)}" loading="${/height:(?:56|100)px/.test(size)?'eager':'lazy'}" onerror="this.onerror=null;this.src='${ATM_SELLER_FALLBACK}'"></span>`;
 const image=(l,cls='',other='')=>`<img class="${cls}" src="${esc(l.image||photo(l.img)||photo('tent'))}" alt="${esc(l.title)}" loading="lazy" onerror="this.onerror=null;this.style.opacity='.05';this.parentElement.classList.add('image-fallback')" ${other}>`;
 const verify=l=>l.verified?`<span class="verified">${icon('shield')} Verified demo seller</span>`:'';
 const pagePath=()=>decodeURIComponent((location.hash||'#/home').replace(/^#\/?/,'')).split('/').filter(Boolean);
