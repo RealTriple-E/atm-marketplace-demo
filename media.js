@@ -32,7 +32,7 @@ const ATM_PHOTO_SETS={
  'Decor & Accessories':['photo-1519225421980-715cb0215aed','photo-1519741497674-611481863552','photo-1511795409834-ef04bbd61622'],
  'Catering Equipment':['photo-1555244162-803834f70033','photo-1556910103-1c02745aae4d','photo-1495474472287-4d71bcdd2085'],
  'Photography Booths':['photo-1517457373958-b7bdd4587205','photo-1516035069371-29a1b244cc32','photo-1492691527719-9d1e07e534b4'],
- 'Children’s Events':['photo-1544551763-46a013bb70d5','photo-1511795409834-ef04bbd61622','photo-1533174072545-7a4b6ad7a6c3'],
+ 'Children’s Events':['photo-1511795409834-ef04bbd61622','photo-1533174072545-7a4b6ad7a6c3','photo-1517457373958-b7bdd4587205'],
  'Screens & Displays':['photo-1492684223066-81342ee5ff30','photo-1574717024653-61fd2cf4d44d','photo-1506157786151-b8491531f063'],
  'Event Packages':['photo-1519741497674-611481863552','photo-1511795409834-ef04bbd61622','photo-1519167758481-83f550bb49b3'],
  'Houses & Apartments':['photo-1600596542815-ffad4c1539a9','photo-1600607687939-ce8a6c25118c','photo-1564013799919-ab600027ffc6'],
@@ -48,7 +48,7 @@ const ATM_PHOTO_SETS={
  'Fashion & Formal Wear':['photo-1595777457583-95e059d581b8','photo-1483985988355-763728e1935b','photo-1558769132-cb1aea458c5e'],
  'Sports & Fitness':['photo-1571019613454-1cb2f99b2d8b','photo-1517836357463-d25dfeac3438','photo-1485965120184-e220f721d03e'],
  'Outdoor & Camping':['photo-1504280390367-361c6d9f38f4','photo-1478131143081-80f7f84ca84d','photo-1532339142463-fd0a8979791a'],
- 'Recreation & Games':['photo-1493711662062-fa541adb3fc8','photo-1544551763-46a013bb70d5','photo-1528605248644-14dd04022da1'],
+ 'Recreation & Games':['photo-1511512578047-dfb367046420','photo-1511795409834-ef04bbd61622','photo-1533174072545-7a4b6ad7a6c3'],
  'Household & Furniture':['photo-1555041469-a586c61ea9bc','photo-1503602642458-232111445657','photo-1600607687939-ce8a6c25118c'],
  'Baby & Family':['photo-1503454537195-1dcabb73ffb9','photo-1515488042361-ee00e0ddd4e4','photo-1555041469-a586c61ea9bc'],
  'Travel Accessories':['photo-1476514525535-07fb3b4ae5f1','photo-1500534623283-312aade485b7','photo-1485965120184-e220f721d03e'],
@@ -91,6 +91,8 @@ const ATM_SELLER_DATA=(name)=>{
 };
 /* Prefer item-specific photos over generic subcategory images whenever recognised. */
 const ATM_ITEM_OVERRIDES=[
+ [/(?:garden party games|garden party|outdoor table tennis|party board games)/i,['photo-1511795409834-ef04bbd61622','photo-1533174072545-7a4b6ad7a6c3','photo-1500534623283-312aade485b7']],
+ [/(?:kiosk|retail space|shopfront|market stall|pop-up)/i,['photo-1441986300917-64674bd600d8','photo-1497366811353-6870744d04b2','photo-1460925895917-afdab827c52f']],
  [/(?:lawn mower|lawnmower|mowing)/i,['photo-1458245201577-fc8a130b8829','photo-1731082686849-d2e0a4d2c70c','photo-1416879595882-3373a0480b5b']],
  [/(?:concrete mixer|cement mixer)/i,['photo-1751221701301-b02ca1b4b49e','photo-1504307651254-35680f356dfd','photo-1740765428765-fc958dc5e3e7']],
  [/(?:flatbed truck|flatbed haulage)/i,['photo-1774133665983-5bb126f59bd1','photo-1586191582151-f73872dfd183','photo-1519003722824-194d4455a60c']],
