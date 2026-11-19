@@ -100,10 +100,10 @@ const ATM_ITEM_GALLERY=(l)=>{
 (function curateDemoImages(){
   if(typeof ATM_LISTINGS==='undefined')return;
   ATM_LISTINGS.forEach(l=>{
+    l.mediaKind='sample-stock'; // Stock sample listings get a real multi-photo gallery.
     const originals=ATM_ITEM_GALLERY(l);
     l.gallery=originals;
     if(originals.length)l.image=originals[0];
     l.ownerPortrait=ATM_HEADSHOT(l.owner);
-    l.mediaKind='sample-stock';
   });
 })();
