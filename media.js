@@ -5,9 +5,9 @@ const ATM_STOCK=(id,width=1200)=>'https://images.unsplash.com/'+id+'?auto=format
 const ATM_PHOTO_SETS={
  'Sedans & Hatchbacks':['photo-1494976388531-d1058494cdd8','photo-1542362567-b07e54358753','photo-1503376780353-7e6692767b70'],
  'SUVs & 4×4s':['photo-1549317661-bd32c8ce0db2','photo-1519641471654-76ce0107ad1b','photo-1503376780353-7e6692767b70'],
- 'Safari & Tour Vehicles':['photo-1500534623283-312aade485b7','photo-1549317661-bd32c8ce0db2','photo-1519641471654-76ce0107ad1b'],
+ 'Safari & Tour Vehicles':['photo-1695367255171-72e83ebddb8d','photo-1792824418533-593a04879d06','photo-1759130534259-273e015f70f9'],
  'Motorbikes & Scooters':['photo-1558981806-ec527fa84c39','photo-1464822759023-fed622ff2c3b','photo-1517649763962-0c623066013b'],
- 'Buses & Minibuses':['photo-1533473359331-0135ef1b58bf','photo-1449965408869-eaa3f722e40d','photo-1519641471654-76ce0107ad1b'],
+ 'Buses & Minibuses':['photo-1623094701717-b186ec95acff','photo-1605410522294-80aa1f8b4153','photo-1772380043298-6544d49a8f64'],
  'Pickups & Vans':['photo-1566933293069-b55c7f326dd4','photo-1519641471654-76ce0107ad1b','photo-1549317661-bd32c8ce0db2'],
  'Trucks & Haulage':['photo-1586191582151-f73872dfd183','photo-1519003722824-194d4455a60c','photo-1566933293069-b55c7f326dd4'],
  'Bicycles & E-bikes':['photo-1485965120184-e220f721d03e','photo-1517649763962-0c623066013b','photo-1507035895480-2b3156c31fc8'],
@@ -16,10 +16,10 @@ const ATM_PHOTO_SETS={
  'Campers & Motorhomes':['photo-1504280390367-361c6d9f38f4','photo-1532339142463-fd0a8979791a','photo-1478131143081-80f7f84ca84d'],
  'Specialised Vehicles':['photo-1586191582151-f73872dfd183','photo-1566933293069-b55c7f326dd4','photo-1449965408869-eaa3f722e40d'],
  'Hand & Power Tools':['photo-1504148455328-c376907d081c','photo-1530124566582-a618bc2615dc','photo-1581092160562-40aa08e78837'],
- 'Construction Machinery':['photo-1504307651254-35680f356dfd','photo-1581092160607-ee22621dd758','photo-1487958449943-2429e8be8625'],
- 'Agricultural Equipment':['photo-1500382017468-9049fed747ef','photo-1499529112087-3cb3b73cec95','photo-1500382017468-9049fed747ef'],
+ 'Construction Machinery':['photo-1780054984791-ef3f58ca753e','photo-1740765428765-fc958dc5e3e7','photo-1504307651254-35680f356dfd'],
+ 'Agricultural Equipment':['photo-1758608951432-773ae6a33f56','photo-1781785162688-2a50338fe9a7','photo-1500382017468-9049fed747ef'],
  'Gardening & Landscaping':['photo-1416879595882-3373a0480b5b','photo-1497250681960-ef046c08a56e','photo-1463320726281-696a485928c7'],
- 'Power & Electrical':['photo-1581092160562-40aa08e78837','photo-1581092446327-9b52bd1570c2','photo-1473341304170-971dccb5ac1e'],
+ 'Power & Electrical':['photo-1681263576605-9eda564bcfcc','photo-1581092446327-9b52bd1570c2','photo-1473341304170-971dccb5ac1e'],
  'Cleaning Equipment':['photo-1581578731548-c64695cc6952','photo-1523413651479-597eb2da0ad6','photo-1581092160562-40aa08e78837'],
  'Industrial & Workshop':['photo-1581092160607-ee22621dd758','photo-1504307651254-35680f356dfd','photo-1504148455328-c376907d081c'],
  'Lifting & Access':['photo-1487958449943-2429e8be8625','photo-1504307651254-35680f356dfd','photo-1581092160607-ee22621dd758'],
@@ -89,12 +89,24 @@ const ATM_SELLER_DATA=(name)=>{
     reviewItems:Array.from({length:5},(_,i)=>({name:ATM_MEMBER_NAMES[(h+i*7)%ATM_MEMBER_NAMES.length],score:i===2?4:5,
       date:['Nov 2026','Oct 2026','Sep 2026','Aug 2026','Jul 2026'][i],text:ATM_REVIEW_TEXT[(h+i)%ATM_REVIEW_TEXT.length]}))};
 };
+/* Prefer item-specific photos over generic subcategory images whenever recognised. */
+const ATM_ITEM_OVERRIDES=[
+ [/safari.+(minibus|bus)|tour minibus/i,['photo-1623094701717-b186ec95acff','photo-1605410522294-80aa1f8b4153','photo-1772380043298-6544d49a8f64']],
+ [/(?:hilux|hardbody|ford ranger|pickup truck|double cab)/i,['photo-1759213281196-6c5e463b3021','photo-1663576268373-0bef1214f700','photo-1759130534259-273e015f70f9']],
+ [/(?:safari|game.drive|off.road jeep)/i,['photo-1695367255171-72e83ebddb8d','photo-1792824418533-593a04879d06','photo-1759130534259-273e015f70f9']],
+ [/(?:excavator|earthworks)/i,['photo-1780054984791-ef3f58ca753e','photo-1740765428765-fc958dc5e3e7','photo-1504307651254-35680f356dfd']],
+ [/(?:tractor|plough|farm field|harrow|harvester)/i,['photo-1758608951432-773ae6a33f56','photo-1781785162688-2a50338fe9a7','photo-1500382017468-9049fed747ef']],
+ [/(?:minibus|coaster|passenger van|tour bus|school bus)/i,['photo-1623094701717-b186ec95acff','photo-1605410522294-80aa1f8b4153','photo-1772380043298-6544d49a8f64']],
+ [/(?:generator|power station|portable power|solar backup)/i,['photo-1681263576605-9eda564bcfcc','photo-1581092446327-9b52bd1570c2','photo-1473341304170-971dccb5ac1e']],
+ [/(?:camera|canon|sony alpha|photography kit|drone)/i,['photo-1516035069371-29a1b244cc32','photo-1492691527719-9d1e07e534b4','photo-1542038784456-1ea8e935640e']],
+ [/(?:mountain bicycle|road bicycle|electric city bicycle|road training bicycle)/i,['photo-1485965120184-e220f721d03e','photo-1517649763962-0c623066013b','photo-1507035895480-2b3156c31fc8']]
+];
 const ATM_ITEM_GALLERY=(l)=>{
   if(Array.isArray(l.gallery)&&l.gallery.length)return l.gallery.filter(Boolean);
-  const set=ATM_PHOTO_SETS[l.subcategory] || ATM_PHOTO_SETS['Houses & Apartments'];
+  const match=ATM_ITEM_OVERRIDES.find(([pattern])=>pattern.test(String(l.title||'')));const set=(match&&match[1])||ATM_PHOTO_SETS[l.subcategory]||ATM_PHOTO_SETS['Houses & Apartments'];
   if(l.mediaKind!=='sample-stock'&&l.image)return [l.image];
   // Each generated listing has a consistent, subcategory-specific stock photo sequence.
-  const rotation=(ATM_HASH(l.title||l.id))%set.length;
+  const rotation=match?0:ATM_HASH(l.title||l.id)%set.length;
   return [set[rotation],set[(rotation+1)%set.length],set[(rotation+2)%set.length]].map(x=>ATM_STOCK(x,1200));
 };
 (function curateDemoImages(){
