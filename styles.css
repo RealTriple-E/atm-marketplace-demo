@@ -848,3 +848,7 @@ html{color-scheme:only light}
  .atm-v15-seller-reviews{grid-template-columns:1fr}
 }
 @media(prefers-reduced-motion:reduce){.atm-v15-gallery-dot{transition:none}}
+
+/* v15 photo on animated offer response */
+.atm-wait-avatar{overflow:hidden;padding:0!important}
+.atm-wait-avatar img{width:100%;height:100%;object-fit:cover;display:block;border-radius:50%}
