@@ -879,3 +879,52 @@ html{color-scheme:only light}
 .atm-v15-map-preview iframe{width:100%;height:100%;border:0;filter:saturate(.75)}
 .atm-v15-map-preview>div{position:absolute;bottom:0;left:0;right:0;padding:8px 10px;font-size:10px;font-weight:800;background:#111d;color:#fff}
 @media(max-width:350px){.atm-v15-calendar-grid .atm-v15-day{height:35px}.atm-v15-map-preview{height:170px}}
+
+
+/* ATM v20: restore the original circular, horizontally swipeable Home categories.
+   Keep all six v13 taxonomy entries and their subcategory routes unchanged. */
+.atm-home .atm-category-circle-rail{
+ display:flex;align-items:flex-start;gap:19px;overflow-x:auto;overscroll-behavior-x:contain;
+ padding:6px 2px 17px;margin:7px -2px 21px;scroll-snap-type:x proximity;
+ -webkit-overflow-scrolling:touch;scrollbar-width:none;
+}
+.atm-home .atm-category-circle-rail::-webkit-scrollbar{display:none}
+.atm-home .atm-category-circle-item{
+ display:flex;flex-direction:column;align-items:center;gap:9px;
+ flex:0 0 99px;min-width:0;scroll-snap-align:start;
+ background:transparent;border:0;padding:2px 0 5px;text-align:center;
+ color:#111;cursor:pointer;
+}
+.atm-home .atm-category-circle-icon{
+ width:76px;height:76px;border-radius:50%;display:grid;place-items:center;
+ background:#f1f1f3;border:1px solid #e8e8eb;color:#151515;
+ box-shadow:0 2px 5px #00000007;
+ transition:background .15s ease,transform .15s ease,border-color .15s ease;
+}
+.atm-home .atm-category-circle-icon svg{width:33px;height:33px;stroke-width:1.8}
+.atm-home .atm-category-circle-item strong{
+ display:block;max-width:100%;min-height:30px;font-size:12px;
+ line-height:1.25;font-weight:800;white-space:normal;overflow-wrap:normal;
+}
+.atm-home .atm-category-circle-item:hover .atm-category-circle-icon{
+ background:#fff0e8;border-color:#faab80;transform:translateY(-2px);
+}
+.atm-home .atm-category-circle-item:focus-visible{outline:3px solid #e96b27;outline-offset:2px;border-radius:14px}
+@media(min-width:680px){
+ .atm-home .atm-category-circle-rail{gap:26px;padding-bottom:19px}
+ .atm-home .atm-category-circle-item{flex-basis:118px;gap:11px}
+ .atm-home .atm-category-circle-icon{width:89px;height:89px}
+ .atm-home .atm-category-circle-icon svg{width:38px;height:38px}
+ .atm-home .atm-category-circle-item strong{font-size:13px}
+}
+@media(max-width:380px){
+ .atm-home .atm-category-circle-rail{gap:10px;padding-bottom:12px}
+ .atm-home .atm-category-circle-item{flex-basis:84px;gap:7px}
+ .atm-home .atm-category-circle-icon{width:64px;height:64px}
+ .atm-home .atm-category-circle-icon svg{width:29px;height:29px}
+ .atm-home .atm-category-circle-item strong{font-size:11px}
+}
+@media(prefers-reduced-motion:reduce){
+ .atm-home .atm-category-circle-icon{transition:none}
+ .atm-home .atm-category-circle-item:hover .atm-category-circle-icon{transform:none}
+}
