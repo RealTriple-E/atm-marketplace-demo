@@ -135,7 +135,7 @@ begin
     select b.* from public.atm_bookings b
     where b.status='awaiting_payment' and b.payment_deadline<clock_timestamp()
     order by b.payment_deadline
-    for update skip locked limit 100
+    limit 100 for update skip locked
   loop
     update public.atm_bookings
       set status='cancelled',cancelled_at=clock_timestamp(),
