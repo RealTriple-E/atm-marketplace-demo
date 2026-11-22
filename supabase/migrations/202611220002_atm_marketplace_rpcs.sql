@@ -139,6 +139,7 @@ declare
   v_seller uuid;
   v_id uuid;
   v_alias text;
+  v_new_bidder boolean:=false;
   v_previous atm_private.atm_bids%rowtype;
   v_minimum integer;
   v_now timestamptz:=clock_timestamp();
@@ -192,6 +193,7 @@ begin
     where b.auction_id=p_auction_id and b.buyer_id=v_user
     order by b.created_at desc limit 1;
   if v_alias is null then
+    v_new_bidder:=true;
     select 'Bidder '||(count(distinct buyer_id)+1)::text into v_alias
        from atm_private.atm_bids where auction_id=p_auction_id;
   end if;
@@ -207,7 +209,9 @@ begin
     v_ends:=v_ends+interval '2 minutes';
   end if;
   update public.atm_auctions
-    set highest_bid=p_amount,bid_count=bid_count+1,ends_at=v_ends
+    set highest_bid=p_amount,bid_count=bid_count+1,
+      bidder_count=bidder_count+case when v_new_bidder then 1 else 0 end,
+      ends_at=v_ends
     where id=p_auction_id;
   return pg_catalog.jsonb_build_object('bid_id',v_id,'amount',p_amount,'auction_id',
     p_auction_id,'ends_at',v_ends,'replayed',false);
