@@ -63,3 +63,5 @@ jobs:
           psql -v ON_ERROR_STOP=1 -f supabase/optional/atm_cron_setup.sql
       - name: Exercise ownership, bidding, RLS, settlement and chat
         run: psql -v ON_ERROR_STOP=1 -f tests/db/atm-live-integrations.sql
+      - name: Race two simultaneous buyer bids
+        run: bash tests/db/atm-concurrent-bids.sh
