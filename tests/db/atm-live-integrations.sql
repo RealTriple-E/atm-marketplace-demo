@@ -137,14 +137,15 @@ end $$;
 
 -- Only service_role can validate payment and unlock chat.
 reset role;
+select set_config('atm.test.booking_id',(select b.id from public.atm_bookings b where b.auction_id=current_setting('atm.test.auction')::uuid)::text,false);
 set role service_role;
 select set_config('request.jwt.claim.role','service_role',false);
 select public.atm_confirm_payment(
- (select b.id from public.atm_bookings b where b.auction_id=current_setting('atm.test.auction')::uuid),
+ current_setting('atm.test.booking_id')::uuid,
  'test-provider','event-test-0001','payment-confirmation-0001',225
 );
 select public.atm_confirm_payment(
- (select b.id from public.atm_bookings b where b.auction_id=current_setting('atm.test.auction')::uuid),
+ current_setting('atm.test.booking_id')::uuid,
  'test-provider','event-test-0001','payment-confirmation-0001',225
 );
 reset role;
