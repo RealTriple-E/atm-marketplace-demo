@@ -196,16 +196,7 @@ select:focus-visible,a:focus-visible{
 
 /* Consistent, quiet branding on the homepage and top navigation. */
 .topbar .brand{color:var(--atm-blue);letter-spacing:-.095em}
-.atm-home .atm-category-circle-item:nth-child(1) .atm-category-circle-icon,
-.atm-home .atm-category-circle-item:nth-child(2) .atm-category-circle-icon,
-.atm-home .atm-category-circle-item:nth-child(3) .atm-category-circle-icon,
-.atm-home .atm-category-circle-item:nth-child(4) .atm-category-circle-icon,
-.atm-home .atm-category-circle-item:nth-child(5) .atm-category-circle-icon,
-.atm-home .atm-category-circle-item:nth-child(6) .atm-category-circle-icon{
-  color:var(--atm-blue-deep);
-  background:#EFF5FF;
-  border-color:#E0ECFC;
-}
+/* Keep the six category icons' original individual colours from styles.css. */
 .atm-home .atm-category-circle-item:focus-visible,
 .listing-offer-button:focus-visible,
 .offer-filter-chip:focus-visible{
