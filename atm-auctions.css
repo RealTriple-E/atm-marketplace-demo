@@ -79,3 +79,10 @@
 @media(min-width:720px){.atm-auction-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.atm-auction-media{height:195px}.atm-auction-detail-photo{height:390px}.atm-home-auctions .atm-auction-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
 @media(max-width:375px){.atm-auction-body{padding:10px}.atm-auction-metrics strong{font-size:12px}.atm-auction-summary>div{padding:11px 7px}.atm-auction-summary strong{font-size:13px}.atm-perk-form{grid-template-columns:1fr}}
 @media(prefers-reduced-motion:reduce){.atm-perk{transition:none}}
+
+/* Separate real-account beta link, shown in the original demo account screen. */
+.atm-live-entry{display:flex;justify-content:space-between;align-items:center;gap:14px;text-decoration:none;border:1px solid #e8c8aa;background:#fff8f1;color:#171717;padding:15px 16px;border-radius:15px;margin:12px 0 20px}
+.atm-live-entry span:first-child{display:flex;flex-direction:column;gap:4px}
+.atm-live-entry strong{font-size:14px;font-weight:900}
+.atm-live-entry small{font-size:12px;color:#69625e;line-height:1.4}
+.atm-live-entry>span:last-child{font-size:27px;color:#b9601e}

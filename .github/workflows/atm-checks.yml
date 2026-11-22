@@ -22,5 +22,43 @@ jobs:
           node --check rental-flow.js
           node --check atm-auctions.js
           node --check app.js
+          node --check atm-live-config.js
+          node --check atm-live.js
       - name: Test auction domain rules
-        run: node --test tests/auction-model.test.cjs
+        run: node --test tests/auction-model.test.cjs tests/atm-live-smoke.test.cjs
+  database:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_DB: atm_ci
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: atm_test_password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d atm_ci"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      PGHOST: 127.0.0.1
+      PGPORT: 5432
+      PGUSER: postgres
+      PGPASSWORD: atm_test_password
+      PGDATABASE: atm_ci
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install PostgreSQL client
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends postgresql-client
+      - name: Create test-only Auth and apply ATM migrations
+        run: |
+          psql -v ON_ERROR_STOP=1 -f tests/db/bootstrap.sql
+          psql -v ON_ERROR_STOP=1 -f supabase/migrations/202611220001_atm_live_schema.sql
+          psql -v ON_ERROR_STOP=1 -f supabase/migrations/202611220002_atm_marketplace_rpcs.sql
+          psql -v ON_ERROR_STOP=1 -f supabase/optional/atm_cron_setup.sql
+      - name: Exercise ownership, bidding, RLS, settlement and chat
+        run: psql -v ON_ERROR_STOP=1 -f tests/db/atm-live-integrations.sql
