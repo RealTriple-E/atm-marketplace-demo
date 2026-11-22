@@ -7,7 +7,7 @@ const E=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt
 const I=s=>/^https:\/\/[^\s"<>]+$/i.test(String(s||''))?E(s):'./favicon.svg';
 const T=s=>{const x=Math.max(0,Math.ceil((new Date(s).getTime()-Date.now())/1000)),d=Math.floor(x/86400);return(d?d+'d ':'')+[Math.floor(x%86400/3600),Math.floor(x%3600/60),x%60].map(y=>String(y).padStart(2,'0')).join(':')};
 const categories=['Transport','Hardware','Events','Spaces & Property','Lifestyle','Services'];
-let api,user=null,seller=null,mode='buyer',busy=false,flash='',db={listings:[],auctions:[],perks:[],sellers:[],feed:[],mine:[],watches:[],bookings:[],offers:[],messages:[]};
+let api,user=null,seller=null,buyerProfile=null,mode='buyer',busy=false,flash='',db={listings:[],auctions:[],perks:[],sellers:[],feed:[],mine:[],watches:[],bookings:[],offers:[],messages:[]};
 let proposed=0,polling=false,chan;
 const page=()=>{const h=(location.hash||'#/browse').replace(/^#\//,'').split('/');return[h[0],h[1]||'']};
 const go=(p,id)=>{location.hash='#/'+p+(id?'/'+id:'');draw();};
@@ -40,7 +40,7 @@ function sellerProfile(){
 function sellerPage(){
  if(!user)return auth();if(!seller)return sellerProfile();
  const owned=db.listings.filter(l=>l.seller_id===user.id);
- return `<h1>Seller dashboard</h1><p>Welcome, ${E(seller.business_name)}. Manage your own listings and auctions.</p><div class="atm-live-stats"><div><b>${owned.length}</b><small>Listings</small></div><div><b>${owned.filter(l=>linked(l)).length}</b><small>Auctions</small></div><div><b>${db.offers.filter(o=>owned.some(l=>l.id===o.listing_id)&&o.status==='pending').length}</b><small>Pending offers</small></div></div><a class="atm-live-button" href="#/new">Publish a new listing</a><div class="atm-live-grid">${owned.map(card).join('')||'<p>You have not published a rental yet.</p>'}</div>`;
+ return `<h1>Seller dashboard</h1><p>Welcome, ${E(seller.business_name)}. Manage your own listings and auctions.</p><div class="atm-live-stats"><div><b>${owned.length}</b><small>Listings</small></div><div><b>${owned.filter(l=>linked(l)).length}</b><small>Auctions</small></div><div><b>${db.offers.filter(o=>owned.some(l=>l.id===o.listing_id)&&o.status==='pending').length}</b><small>Pending offers</small></div></div><a class="atm-live-button" href="#/new">Publish a new listing</a><div class="atm-live-grid">${owned.map(l=>'<div class="atm-live-seller-item">'+card(l)+(l.pricing_mode!=='auction'?'<button class="secondary" data-action="toggleoffers" data-id="'+E(l.id)+'" data-enable="'+(!l.offers_allowed)+'">'+(l.offers_allowed?'Disable negotiations':'Enable negotiations')+'</button>':'<p class="atm-live-note">Auction terms cannot be negotiated.</p>')+'</div>').join('')||'<p>You have not published a rental yet.</p>'}</div>`;
 }
 function newListing(){
  if(!user)return auth();if(!seller)return sellerProfile();
@@ -73,7 +73,7 @@ function offers(){
  return `<h1>${mode==='seller'?'Offers received':'My price offers'}</h1>${own.map(o=>`<article class="atm-live-booking"><b>${E(listing(o.listing_id)?.title||'Rental')}</b><p>Offered ${K(o.offered_amount)} · ${E(o.status)}</p>${o.counter_amount?'<p>Counter '+K(o.counter_amount)+'</p>':''}${mode==='seller'&&o.status==='pending'?'<button class="primary" data-action="respond" data-id="'+E(o.id)+'" data-response="accept">Accept</button><button class="secondary" data-action="respond" data-id="'+E(o.id)+'" data-response="counter">Counter</button><button class="secondary" data-action="respond" data-id="'+E(o.id)+'" data-response="decline">Decline</button>':''}${mode==='buyer'&&o.status==='countered'?'<button class="primary" data-action="respond" data-id="'+E(o.id)+'" data-response="accept">Accept counter</button>':''}</article>`).join('')||'<p>No offers.</p>'}`;
 }
 function account(){
- return !user?auth():`<h1>My ATM account</h1><p>${E(user.email)}</p><p>Mode: ${E(mode)} · Seller profile: ${seller?E(seller.business_name):'not yet created'}</p><button data-action="signout" class="secondary">Sign out</button>`;
+ return !user?auth():`<h1>My ATM account</h1><p>${E(user.email)}</p><p>Mode: ${E(mode)} · Seller profile: ${seller?E(seller.business_name):'not yet created'}</p><form data-form="buyerprofile" class="atm-live-form"><h2>Buyer profile</h2><label>Display name<input name="display_name" required minlength="2" maxlength="80" value="${E(buyerProfile?.display_name||'ATM Buyer')}"></label><label>City<input name="city" required minlength="2" maxlength="90" value="${E(buyerProfile?.city||'Lusaka')}"></label><button class="primary">Update buyer profile</button></form><button data-action="signout" class="secondary">Sign out</button>`;
 }
 function messages(id){
  if(!user)return auth();const b=db.bookings.find(b=>b.id===id);
@@ -85,7 +85,13 @@ function draw(){
  R.innerHTML=base(content);
 }
 async function profile(){
- if(!user){seller=null;return;}
+ if(!user){seller=null;buyerProfile=null;return;}
+ buyerProfile=await errData(api.from('atm_profiles').select('user_id,display_name,city').eq('user_id',user.id).maybeSingle());
+ if(!buyerProfile){
+   const fallback=(user.email||'ATM Buyer').split('@')[0].replace(/[._-]/g,' ').trim().slice(0,80);
+   try{await errData(api.from('atm_profiles').insert({user_id:user.id,display_name:fallback.length>=2?fallback:'ATM Buyer',city:'Lusaka'}));}catch(e){if(e.code!=='23505')throw e;}
+   buyerProfile=await errData(api.from('atm_profiles').select('user_id,display_name,city').eq('user_id',user.id).maybeSingle());
+ }
  seller=await errData(api.from('atm_sellers').select('user_id,business_name,avatar_url,city').eq('user_id',user.id).maybeSingle());
 }
 async function reload(){
@@ -123,6 +129,10 @@ R.addEventListener('click',async ev=>{
  if(action==='mode'){mode=b.dataset.mode==='seller'?'seller':'buyer';localStorage.setItem('atm-live-mode',mode);go(mode==='seller'?'seller':'browse');return;}
  if(action==='signout')return transact(async()=>{await errData(api.auth.signOut());user=null;seller=null;go('browse');});
  if(action==='watch')return transact(async()=>{if(!user)throw Error('Sign in first');const watched=db.watches.some(w=>w.auction_id===id);if(watched)await errData(api.from('atm_watches').delete().eq('user_id',user.id).eq('auction_id',id));else await errData(api.from('atm_watches').insert({user_id:user.id,auction_id:id}));});
+ if(action==='toggleoffers')return transact(async()=>{
+   const l=listing(id);if(!l||!user||l.seller_id!==user.id||l.pricing_mode==='auction')throw Error('Only owners may change standard-listing negotiations');
+   await errData(api.rpc('atm_set_negotiations',{p_listing_id:id,p_enabled:b.dataset.enable==='true'}));
+ });
  if(action==='settle')return transact(async()=>{await errData(api.rpc('atm_settle_auction',{p_auction_id:id}));});
  if(action==='bid')return transact(async()=>{const a=auction(id),l=listing(a?.listing_id);if(!user||!a||l?.seller_id===user.id||a.status!=='live')throw Error('You are not permitted to bid');const amount=proposed||low(a);if(!confirm('Confirm '+K(amount)+' bid? No money is collected now.'))return;await errData(api.rpc('atm_place_bid',{p_auction_id:id,p_amount:amount,p_request_key:crypto.randomUUID()}));proposed=0;});
  if(action==='respond')return transact(async()=>{let n=null;if(b.dataset.response==='counter'){const v=prompt('Counter amount in K');if(v===null)return;n=Number(v);if(!Number.isInteger(n)||n<1||n>1000000)throw Error('Invalid counter amount');}await errData(api.rpc('atm_respond_offer',{p_offer_id:id,p_action:b.dataset.response,p_counter_amount:n}));});
@@ -136,6 +146,7 @@ R.addEventListener('submit',async ev=>{
  const f=new FormData(form),type=form.dataset.form;
  await transact(async()=>{
   if(type==='auth'){const email=String(f.get('email')).trim(),password=String(f.get('password'));if(ev.submitter?.value==='register'){const r=await errData(api.auth.signUp({email,password,options:{emailRedirectTo:location.origin+location.pathname}}));if(!r.session){alert('Please check your email to confirm your account before signing in.');return;}}else await errData(api.auth.signInWithPassword({email,password}));await authState();go('browse');}
+  else if(type==='buyerprofile'){if(!user)throw Error('Sign in first');await errData(api.from('atm_profiles').update({display_name:String(f.get('display_name')).trim(),city:String(f.get('city')).trim()}).eq('user_id',user.id));await profile();}
   else if(type==='seller'){if(!user)throw Error('Sign in first');await errData(api.from('atm_sellers').insert({user_id:user.id,business_name:String(f.get('business_name')).trim(),avatar_url:String(f.get('avatar_url')).trim(),city:String(f.get('city')).trim()}));await profile();go('seller');}
   else if(type==='listing'){if(!seller||!user)throw Error('Seller profile required');const method=String(f.get('pricing')),auc=method==='auction',images=String(f.get('images')).split(/[\n,]+/).map(x=>x.trim()).filter(Boolean);if(images.length<1||images.length>10||images.some(x=>!/^https:\/\/[^\s"<>]+$/i.test(x)))throw Error('Provide one to ten valid HTTPS image URLs');const rewards=[0,1,2].map(i=>({at:Number(f.get('perkAt'+i)),label:String(f.get('perkLabel'+i)||'').trim()})).filter(x=>x.label);await errData(api.rpc('atm_create_listing',{p_title:String(f.get('title')).trim(),p_description:String(f.get('description')).trim(),p_category:String(f.get('category')),p_subcategory:String(f.get('subcategory')).trim(),p_city:String(f.get('city')).trim(),p_image_urls:images,p_price_amount:Number(f.get('price')),p_deposit_amount:Number(f.get('deposit')||0),p_pricing_mode:method,p_request_key:form.dataset.requestKey||crypto.randomUUID(),p_starting_bid:auc?Number(f.get('startBid')):null,p_bid_increment:auc?Number(f.get('increment')):null,p_reserve_amount:auc?Number(f.get('reserve')||0):0,p_duration_hours:auc?Number(f.get('duration')):null,p_rental_start:auc?String(f.get('rentalStart')):null,p_rental_end:auc?String(f.get('rentalEnd')):null,p_rewards:auc?rewards:[]}));go('seller');}
   else if(type==='offer'){await errData(api.rpc('atm_submit_offer',{p_listing_id:String(f.get('listing_id')),p_amount:Number(f.get('amount'))}));go('offers');}
