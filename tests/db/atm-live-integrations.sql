@@ -190,4 +190,129 @@ begin
  end;
 end $$;
 reset role;
+
+-- Lifecycle hardening: disabled negotiations withdraw all pending offers atomically.
+set role authenticated;
+select set_config('request.jwt.claim.sub','11111111-1111-4111-8111-111111111111',false);
+select public.atm_set_negotiations(current_setting('atm.test.fixed')::uuid,false);
+do $
+begin
+ if exists(select 1 from public.atm_offers
+     where listing_id=current_setting('atm.test.fixed')::uuid
+       and status in ('pending','countered')) then
+   raise exception 'Disabling negotiations left active offers';
+ end if;
+end $;
+select set_config('request.jwt.claim.sub','22222222-2222-4222-8222-222222222222',false);
+do $
+begin
+  begin
+    perform public.atm_submit_offer(current_setting('atm.test.fixed')::uuid,175);
+    raise exception 'Buyer offered after negotiations disabled';
+  exception when sqlstate '22023' then null;
+  end;
+  begin
+    perform public.atm_respond_offer(
+      (select id from public.atm_offers
+       where listing_id=current_setting('atm.test.fixed')::uuid limit 1),
+       'accept',null);
+    raise exception 'Buyer accepted a cancelled offer';
+  exception when sqlstate '22023' then null;
+  end;
+end $;
+select set_config('request.jwt.claim.sub','11111111-1111-4111-8111-111111111111',false);
+select public.atm_set_negotiations(current_setting('atm.test.fixed')::uuid,true);
+select set_config('request.jwt.claim.sub','22222222-2222-4222-8222-222222222222',false);
+select set_config('atm.test.new_offer',public.atm_submit_offer(
+   current_setting('atm.test.fixed')::uuid,180)::text,false);
+select set_config('request.jwt.claim.sub','11111111-1111-4111-8111-111111111111',false);
+select public.atm_respond_offer(current_setting('atm.test.new_offer')::uuid,'counter',190);
+-- Disabling after a counteroffer must cancel its acceptance path.
+select public.atm_set_negotiations(current_setting('atm.test.fixed')::uuid,false);
+select set_config('request.jwt.claim.sub','22222222-2222-4222-8222-222222222222',false);
+do $
+begin
+ if (select status from public.atm_offers where id=current_setting('atm.test.new_offer')::uuid)<>'cancelled' then
+   raise exception 'Existing counteroffer was not cancelled';
+ end if;
+ begin
+   perform public.atm_respond_offer(current_setting('atm.test.new_offer')::uuid,'accept',null);
+   raise exception 'Cancelled counteroffer was accepted';
+ exception when sqlstate '22023' then null;
+ end;
+end $;
+
+-- Unpaid winner lifecycle: expiry must release payment-pending state without unlocking chat.
+select set_config('request.jwt.claim.sub','11111111-1111-4111-8111-111111111111',false);
+select set_config('atm.test.unpaid_listing',public.atm_create_listing(
+  'Unpaid Auction Example','A complete test-only equipment rental with no actual payment.',
+  'Hardware','Cameras & Electronics','Lusaka',array['https://example.org/unpaid.jpg'],
+  400,50,'auction','ddddddd1-dddd-4ddd-8ddd-ddddddddddd1',
+  100,25,0,24,current_date+7,current_date+8,'[]'::jsonb
+)::text,false);
+select set_config('atm.test.unpaid_auction',a.id::text,false)
+from public.atm_auctions a
+where a.listing_id=current_setting('atm.test.unpaid_listing')::uuid;
+select set_config('request.jwt.claim.sub','22222222-2222-4222-8222-222222222222',false);
+select public.atm_place_bid(current_setting('atm.test.unpaid_auction')::uuid,100,
+  'ddddddd2-dddd-4ddd-8ddd-ddddddddddd2');
+reset role;
+update public.atm_auctions set starts_at=clock_timestamp()-interval '2 days',
+ ends_at=clock_timestamp()-interval '1 minute'
+ where id=current_setting('atm.test.unpaid_auction')::uuid;
+set role authenticated;
+select set_config('request.jwt.claim.sub','22222222-2222-4222-8222-222222222222',false);
+select public.atm_settle_auction(current_setting('atm.test.unpaid_auction')::uuid);
+reset role;
+select set_config('atm.test.unpaid_booking',id::text,false)
+ from public.atm_bookings where auction_id=current_setting('atm.test.unpaid_auction')::uuid;
+update public.atm_bookings set payment_deadline=clock_timestamp()-interval '1 minute'
+ where id=current_setting('atm.test.unpaid_booking')::uuid;
+do $
+declare v_first integer;v_again integer;
+begin
+  v_first:=atm_private.atm_expire_unpaid();
+  v_again:=atm_private.atm_expire_unpaid();
+  if v_first<>1 or v_again<>0 then
+    raise exception 'Expiry is not idempotent: %, %',v_first,v_again;
+  end if;
+  if not exists(select 1 from public.atm_bookings
+      where id=current_setting('atm.test.unpaid_booking')::uuid
+        and status='cancelled'
+        and cancellation_reason='payment_deadline'
+        and cancelled_at is not null) then
+    raise exception 'Unpaid booking was not cancelled';
+  end if;
+  if not exists(select 1 from public.atm_auctions
+      where id=current_setting('atm.test.unpaid_auction')::uuid
+        and status='cancelled') then
+    raise exception 'Unpaid auction state not cancelled';
+  end if;
+end $;
+set role authenticated;
+select set_config('request.jwt.claim.sub','22222222-2222-4222-8222-222222222222',false);
+do $
+begin
+  begin
+    insert into public.atm_messages(booking_id,sender_id,body)
+      values(current_setting('atm.test.unpaid_booking')::uuid,auth.uid(),'Expired booking contact');
+    raise exception 'Cancelled booking unexpectedly allowed chat';
+  exception when sqlstate '42501' then null;
+  end;
+end $;
+reset role;
+set role service_role;
+select set_config('request.jwt.claim.role','service_role',false);
+do $
+begin
+  begin
+    perform public.atm_confirm_payment(
+      current_setting('atm.test.unpaid_booking')::uuid,
+      'test-provider','expired-event-0001','expired-payment-reference',150);
+    raise exception 'Expired cancelled booking unexpectedly accepted payment';
+  exception when sqlstate '22023' then null;
+  end;
+end $;
+reset role;
+
 select 'ATM LIVE INTEGRATION: PASS' as result;
