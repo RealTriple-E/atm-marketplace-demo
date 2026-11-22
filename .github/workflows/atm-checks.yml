@@ -25,7 +25,7 @@ jobs:
           node --check atm-live-config.js
           node --check atm-live.js
       - name: Test auction domain rules
-        run: node --test tests/auction-model.test.cjs
+        run: node --test tests/auction-model.test.cjs tests/atm-live-smoke.test.cjs
   database:
     runs-on: ubuntu-latest
     services:
