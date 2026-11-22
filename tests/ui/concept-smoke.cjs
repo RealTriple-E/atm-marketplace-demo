@@ -24,8 +24,17 @@ async function caseRun(name,work,width=390,height=844){
   }finally{await ctx.close();await browser.close();}
 }
 async function widthOK(p){
-  const w=await p.evaluate(()=>[document.documentElement.scrollWidth,document.documentElement.clientWidth]);
-  assert.ok(w[0]<=w[1]+2,'Horizontal overflow '+JSON.stringify(w));
+  const w=await p.evaluate(()=>{
+    const scroll=document.documentElement.scrollWidth,viewport=document.documentElement.clientWidth;
+    const offenders=[...document.querySelectorAll('body *')].map(el=>{
+      const r=el.getBoundingClientRect();
+      return {name:el.tagName.toLowerCase(),className:typeof el.className==='string'?el.className.slice(0,100):'',
+        left:Math.round(r.left),right:Math.round(r.right),width:Math.round(r.width),
+        scrollWidth:el.scrollWidth,clientWidth:el.clientWidth};
+    }).filter(x=>x.right>viewport+2&&x.left>=0).slice(0,25);
+    return {scroll,viewport,offenders};
+  });
+  assert.ok(w.scroll<=w.viewport+2,'Horizontal overflow '+JSON.stringify(w));
 }
 async function home(p){
   assert.equal(await p.locator('.atm-category-circle-item').count(),6);
