@@ -56,6 +56,7 @@ create table if not exists public.atm_auctions (
   bid_increment integer not null check (bid_increment between 1 and 100000),
   highest_bid integer,
   bid_count integer not null default 0 check (bid_count>=0),
+  bidder_count integer not null default 0 check (bidder_count>=0),
   status text not null default 'live' check (status in ('live','awaiting_payment','paid','closed_no_winner','cancelled')),
   winning_public_bid_id uuid,
   reserve_met boolean,
