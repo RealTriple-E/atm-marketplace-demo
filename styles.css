@@ -1013,3 +1013,10 @@ html{color-scheme:only light}
   .atm-home-feed .feed-photo{transition:none}
   .atm-home-feed .feed-photo-btn:hover .feed-photo{transform:none}
 }
+
+/* Narrow phones: keep the seller promotion CTA inside its own card. */
+@media(max-width:420px){
+  .atm-home-promo{flex-direction:column;align-items:stretch;gap:14px;padding:19px 16px}
+  .atm-home-promo>div{min-width:0}
+  .atm-home-promo .btn{align-self:stretch;width:100%;white-space:normal;min-width:0}
+}
