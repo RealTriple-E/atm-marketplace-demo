@@ -51,6 +51,16 @@ async function home(p){
   assert.ok(theme.loaded,'Blue theme stylesheet missing');
   assert.equal(theme.primary,'#1877F2','Primary theme token must be Facebook blue');
   assert.equal(theme.nav,'rgb(11, 93, 203)','Active tab should use blue, not black');
+  const palette=await p.locator('.atm-category-circle-icon').evaluateAll(icons=>
+    icons.map(icon=>({bg:getComputedStyle(icon).backgroundColor,fg:getComputedStyle(icon).color})));
+  assert.deepEqual(palette,[
+    {bg:'rgb(235, 242, 250)',fg:'rgb(34, 83, 139)'},
+    {bg:'rgb(255, 242, 231)',fg:'rgb(173, 83, 28)'},
+    {bg:'rgb(244, 238, 253)',fg:'rgb(104, 75, 147)'},
+    {bg:'rgb(231, 244, 237)',fg:'rgb(38, 112, 75)'},
+    {bg:'rgb(252, 236, 240)',fg:'rgb(169, 68, 100)'},
+    {bg:'rgb(235, 239, 249)',fg:'rgb(69, 92, 148)'}
+  ],'All six categories must retain their distinct original colours');
   assert.equal(await p.locator('.atm-home-feed .feed-card').count(),20);
   assert.equal(await p.locator('.atm-live-entry').count(),0);
   await widthOK(p);
