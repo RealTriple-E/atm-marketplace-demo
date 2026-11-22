@@ -119,17 +119,17 @@ end $$;
 -- Winner sees only their private booking, but still cannot send messages before payment.
 select set_config('request.jwt.claim.sub','33333333-3333-4333-8333-333333333333',false);
 do $$
-declare id uuid;
+declare v_booking_id uuid;
 begin
- select id into id from public.atm_bookings
+ select b.id into v_booking_id from public.atm_bookings b
    where auction_id=current_setting('atm.test.auction')::uuid;
- if id is null then raise exception 'Winner booking not visible'; end if;
- if (select total_amount from public.atm_bookings where atm_bookings.id=id)<>225 then
+ if v_booking_id is null then raise exception 'Winner booking not visible'; end if;
+ if (select total_amount from public.atm_bookings where atm_bookings.id=v_booking_id)<>225 then
    raise exception 'Winner amount/deposit mismatch';
  end if;
  begin
    insert into public.atm_messages(booking_id,sender_id,body)
-     values(id,auth.uid(),'Unsafe prepayment contact');
+     values(v_booking_id,auth.uid(),'Unsafe prepayment contact');
    raise exception 'Chat was allowed before verified payment';
  exception when sqlstate '42501' then null;
  end;
