@@ -30,10 +30,12 @@ ATM's original GitHub Pages rental marketplace remains an interactive browser-on
 3. In the new dedicated ATM database, run migrations in this order:
    - `supabase/migrations/202611220001_atm_live_schema.sql`
    - `supabase/migrations/202611220002_atm_marketplace_rpcs.sql`
+   - `supabase/migrations/202611220003_atm_lifecycle_hardening.sql`
 4. Check the Supabase Data API exposure settings. Since late 2026, tables may not be exposed automatically. The migration grants needed permissions, but you must confirm Data API access for the dedicated project's `public` schema. Do not expose the `atm_private` schema.
 5. Run Supabase's RLS/security/performance advisors. Verify all policies, functions and grants, especially `atm_confirm_payment`.
 6. Optionally enable **Supabase Cron**, then run `supabase/optional/atm_cron_setup.sql` and activate the one-minute job described at the end of that file. Without this job, settlement also happens when a signed-in user visits an expired auction and requests finalisation; do not rely on client visits for reliable production settlement.
-7. In `atm-live-config.js`, set ONLY the new ATM URL and **publishable** key:
+7. Enable the two lifecycle Cron jobs described in `supabase/optional/atm_cron_setup.sql`: one settles ended auctions and the other cancels bookings that remain unpaid after their deadline. Neither job should be added to Kora. Expired winners are **not silently replaced by runner-up bidders**.
+8. In `atm-live-config.js`, set ONLY the new ATM URL and **publishable** key:
    ```js
    window.ATM_LIVE_CONFIG = {
      url: "https://YOUR-ATM-PROJECT.supabase.co",
@@ -41,9 +43,9 @@ ATM's original GitHub Pages rental marketplace remains an interactive browser-on
    };
    ```
    Never put a service-role key, secret key, database password, or Kora project reference in any browser file.
-8. Deploy this configuration with GitHub Pages only after the hosted security smoke tests pass. The original ATM demo is unaffected by an unconfigured beta.
-9. Test with two separate authenticated accounts on two devices, a seller-owned auction, bid increments, near-deadline bid extension, reserve met/unmet, settlement, and private winner booking access.
-10. Integrate an actual mobile-money/card provider **server-side**, validate provider signatures and callback IDs, then call `atm_confirm_payment` using a server-held service credential. Until that is finished, the Live UI shows payment pending. **Never simulate a verified payment in production.**
+9. Deploy this configuration with GitHub Pages only after the hosted security smoke tests pass. The original ATM demo is unaffected by an unconfigured beta.
+10. Test with two separate authenticated accounts on two devices, a seller-owned auction, bid increments, near-deadline bid extension, reserve met/unmet, settlement, and private winner booking access.
+11. Integrate an actual mobile-money/card provider **server-side**, validate provider signatures and callback IDs, then call `atm_confirm_payment` using a server-held service credential. Until that is finished, the Live UI shows payment pending. **Never simulate a verified payment in production.**
 
 ## Test commands
 
@@ -61,7 +63,9 @@ GitHub Actions runs `.github/workflows/atm-checks.yml` on branches and pull requ
 psql -v ON_ERROR_STOP=1 -f tests/db/bootstrap.sql
 psql -v ON_ERROR_STOP=1 -f supabase/migrations/202611220001_atm_live_schema.sql
 psql -v ON_ERROR_STOP=1 -f supabase/migrations/202611220002_atm_marketplace_rpcs.sql
+psql -v ON_ERROR_STOP=1 -f supabase/migrations/202611220003_atm_lifecycle_hardening.sql
 psql -v ON_ERROR_STOP=1 -f tests/db/atm-live-integrations.sql
+bash tests/db/atm-concurrent-bids.sh
 ```
 
 A local stub of `auth.uid()` is used **only in CI**. This is not a substitute for running hosted Supabase Auth and Realtime tests before accepting real customer transactions.
@@ -81,3 +85,13 @@ A local stub of `auth.uid()` is used **only in CI**. This is not a substitute fo
 - [Supabase Postgres Changes](https://supabase.com/docs/guides/realtime/postgres-changes)
 - [Supabase Cron](https://supabase.com/docs/guides/cron)
 - [Supabase 2026 changelog](https://supabase.com/changelog?types=breaking-change)
+
+## Lifecycle guarantees added 22 November 2026
+
+**Seller negotiations.** Disabling negotiations now atomically cancels pending and countered offers. Offer creation and responses lock the listing before changing state, so a buyer cannot accept a stale counteroffer while the seller is disabling negotiations. Already accepted offers remain as a historical agreement; a payment/booking integration for those offers is still required.
+
+**Unpaid auction winners.** Successful auctions create a payment-pending booking with a 48-hour default deadline. The private `atm_expire_unpaid()` task cancels bookings that pass that deadline, records `cancelled_at` and `cancellation_reason='payment_deadline'`, and marks the auction cancelled. It is idempotent, uses row locking to avoid races with payment confirmation, and never enables chat for an unpaid winner. No automatic transfer to the runner-up is made.
+
+**True simultaneous bids.** The CI test `tests/db/atm-concurrent-bids.sh` starts two independent authenticated PostgreSQL sessions simultaneously at the same starting amount, expects exactly one accepted bid, and verifies the highest bid, bidder count, total bids and public feed all match. This complements sequential validation.
+
+**Important:** The hosted ATM Live beta remains disabled until an independent ATM project is provisioned and configured, and genuine payment callbacks remain unavailable until a provider is connected securely. A green CI result is not proof that payments or hosted Supabase authentication have been tested.
