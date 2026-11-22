@@ -106,6 +106,8 @@ async function auction(p){
     localStorage.setItem(k,JSON.stringify(s));
   });
   await p.goto(BASE+'#/mybids');
+  // Hash navigation does not reload the app's in-memory state; reload after fixture edit.
+  await p.reload({waitUntil:'domcontentloaded'});
   await p.locator('[data-action="claimwin"]').first().click();
   await p.locator('.atm-checkout-sheet').waitFor();
   const bill=await p.locator('.atm-bill').textContent();
