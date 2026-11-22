@@ -928,3 +928,95 @@ html{color-scheme:only light}
  .atm-home .atm-category-circle-icon{transition:none}
  .atm-home .atm-category-circle-item:hover .atm-category-circle-icon{transform:none}
 }
+
+
+/* ATM v23 — final interactive concept home / community feed / photo posting.
+   Six CIRCULAR category choices remain the canonical home navigation. */
+.atm-home-heading{
+  padding:clamp(22px,4vw,38px);
+  margin:8px 0 17px;
+  border-radius:27px;
+  background:radial-gradient(circle at 93% 17%,rgba(249,178,126,.33),transparent 37%),
+             linear-gradient(118deg,#fff7f1 0%,#fff 72%);
+  border:1px solid #f4eee8;
+}
+.atm-home-heading .atm-home-eyebrow{
+  display:inline-block;
+  color:#ad4c21;
+  font-weight:900;
+  font-size:11px;
+  letter-spacing:.105em;
+  margin-bottom:10px;
+}
+.atm-home-heading h1{font-size:clamp(30px,4vw,48px);line-height:1.08;max-width:700px}
+.atm-home-heading p{max-width:580px;font-size:clamp(13px,1.6vw,16px);color:#635c57}
+.atm-home-section-heading{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:23px 0 6px}
+.atm-home-section-heading strong{font-weight:900;font-size:17px;letter-spacing:-.025em}
+.atm-home-section-heading span{font-size:12px;color:#787878}
+.atm-home .atm-category-circle-rail{margin-bottom:26px}
+.atm-home .atm-category-circle-icon{border-color:transparent}
+.atm-home .atm-category-circle-item:nth-child(1) .atm-category-circle-icon{background:#ebf2fa;color:#22538b}
+.atm-home .atm-category-circle-item:nth-child(2) .atm-category-circle-icon{background:#fff2e7;color:#ad531c}
+.atm-home .atm-category-circle-item:nth-child(3) .atm-category-circle-icon{background:#f4eefd;color:#684b93}
+.atm-home .atm-category-circle-item:nth-child(4) .atm-category-circle-icon{background:#e7f4ed;color:#26704b}
+.atm-home .atm-category-circle-item:nth-child(5) .atm-category-circle-icon{background:#fcecf0;color:#a94464}
+.atm-home .atm-category-circle-item:nth-child(6) .atm-category-circle-icon{background:#ebeff9;color:#455c94}
+.atm-home .atm-category-circle-item:hover .atm-category-circle-icon{border-color:#f15a24;box-shadow:0 5px 15px #ef794422}
+.atm-home-section-copy{color:#777;font-size:13px;line-height:1.6;margin:-5px 0 14px}
+.atm-home .atm-home-auctions,.atm-home .atm-home-recent,.atm-home .atm-home-social{margin:27px 0 33px}
+.atm-home .section-head{margin:23px 0 15px}
+.atm-home-recent-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.atm-home-feed{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start;gap:19px;max-width:1100px;margin:0 auto}
+.atm-home-feed .feed-card{margin:0;padding:13px;min-width:0;border-radius:21px;box-shadow:0 4px 20px rgba(0,0,0,.035)}
+.atm-home-feed .feed-author{width:100%;text-align:left;min-height:56px}
+.atm-home-feed .feed-author>svg{width:17px;height:17px;color:#999;flex:0 0 auto}
+.atm-home-feed .feed-photo-btn{cursor:pointer;width:100%;display:block;text-align:left;overflow:hidden;isolation:isolate}
+.atm-home-feed .feed-photo-btn:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.atm-home-feed .feed-photo{width:100%;min-height:0;max-height:none;aspect-ratio:1.4;object-fit:cover;transition:transform .3s ease}
+.atm-home-feed .feed-photo-btn:hover .feed-photo{transform:scale(1.03)}
+.atm-home-feed .photo-counter{pointer-events:none}
+.atm-home-feed .feed-category-label{font-size:11px;line-height:1.4;color:#7d7d7d;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.atm-home-feed .feed-actions{gap:8px}
+.atm-home-feed .feed-actions .spacer{min-width:4px}
+.atm-home-feed .feed-title-button{display:flex;align-items:center;gap:7px;text-align:left;width:100%;padding:3px 4px;font-size:18px;font-weight:900;line-height:1.25;letter-spacing:-.025em}
+.atm-home-feed .feed-title-button>svg{width:16px;height:16px;flex:0 0 auto;color:#888}
+.atm-home-feed .feed-price span{font-size:13px;color:#767676;font-weight:600}
+.atm-home-feed .feed-description{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden;line-height:1.55;min-height:0}
+.atm-home-feed .feed-bottom{flex-wrap:wrap;gap:8px;padding-bottom:3px}
+.atm-home-feed .feed-rating{display:flex;align-items:center;gap:5px;font-size:12px;color:#666}
+.atm-home-feed .feed-view-link{display:inline-flex;align-items:center;gap:4px;font-size:12px;color:#d1511d;font-weight:850;white-space:nowrap}
+.atm-home-feed .feed-view-link svg{height:14px;width:14px}
+.atm-home-promo{margin:34px 0}
+.atm-locked-auction-range{cursor:default!important;border-style:solid!important;display:flex;align-items:center;gap:12px}
+.atm-locked-auction-range span{flex:1;min-width:0}
+.atm-locked-auction-range small{font-size:11px;color:#667085;max-width:100px}
+.atm-auction-total-label{border-left:3px solid #e76424}
+@media(min-width:980px){
+  .atm-home-recent-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+@media(max-width:700px){
+  .atm-home-feed{grid-template-columns:1fr;max-width:560px;gap:16px}
+  .atm-home-heading{border-radius:22px;padding:21px 19px}
+  .atm-home .atm-home-social{margin-top:22px}
+  .atm-home-feed .feed-photo{aspect-ratio:1.3}
+}
+@media(max-width:380px){
+  .atm-home-heading{padding:18px 15px}
+  .atm-home-heading h1{font-size:30px}
+  .atm-home .section-head h2{font-size:19px}
+  .atm-home .atm-home-social .atm-meta{font-size:10px}
+  .atm-home-feed .feed-card{padding:10px;border-radius:18px}
+  .atm-home-feed .feed-title-button{font-size:16px}
+  .atm-home-feed .feed-category-label{max-width:150px;font-size:10px}
+}
+@media(prefers-reduced-motion:reduce){
+  .atm-home-feed .feed-photo{transition:none}
+  .atm-home-feed .feed-photo-btn:hover .feed-photo{transform:none}
+}
+
+/* Narrow phones: keep the seller promotion CTA inside its own card. */
+@media(max-width:420px){
+  .atm-home-promo{flex-direction:column;align-items:stretch;gap:14px;padding:19px 16px}
+  .atm-home-promo>div{min-width:0}
+  .atm-home-promo .btn{align-self:stretch;width:100%;white-space:normal;min-width:0}
+}

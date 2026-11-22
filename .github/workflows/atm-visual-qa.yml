@@ -1,0 +1,57 @@
+name: ATM interactive frontend browser QA
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - 'feat/**'
+      - 'fix/**'
+    paths:
+      - app.js
+      - data.js
+      - media.js
+      - taxonomy.js
+      - rental-flow.js
+      - atm-auctions.js
+      - styles.css
+      - atm-auctions.css
+      - index.html
+      - 'tests/ui/**'
+      - '.github/workflows/atm-visual-qa.yml'
+  pull_request:
+    branches:
+      - main
+permissions:
+  contents: read
+jobs:
+  chromium:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install pinned headless browser runner
+        run: |
+          npm install --no-save --no-package-lock playwright@1.57.0
+          npx playwright install --with-deps chromium
+      - name: Serve the static ATM concept (no backend)
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/atm-http-server.log 2>&1 &
+          for i in $(seq 1 20); do
+            if curl -fsS http://127.0.0.1:4173/index.html > /dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/atm-http-server.log
+          exit 1
+      - name: Test mobile and desktop buyer / seller journeys
+        run: node tests/ui/concept-smoke.cjs
+      - name: Preserve visual evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: atm-ui-concept-chromium-screenshots
+          path: artifacts/
+          if-no-files-found: ignore
+          retention-days: 7

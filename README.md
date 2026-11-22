@@ -2,6 +2,26 @@
 
 Responsive, mobile-first rental marketplace prototype based on an Uber-inspired layout. The app runs on static hosting and has no runtime build step.
 
+## Current release: frontend concept only (22 November 2026)
+
+ATM is an **interactive buyer-and-seller UI concept**, not a live rental service.
+**Do not configure a database, real login, payment provider or seller messaging server.**
+The working demo is [ATM Marketplace on GitHub Pages](https://realtriple-e.github.io/atm-marketplace-demo/#/home).
+
+- **Home:** six **circular** categories, demonstration auctions, a discovery grid and **20 social-style fictional rental posts**, each with a seller portrait, sharing, saving and a full listing detail.
+- **Categories:** Transport, Hardware, Events, Spaces & Property, Lifestyle and Services. Each has its own Trending carousel, subcategories, filters and pagination across 288 fictional examples.
+- **Product detail:** swipeable, dot/arrow-controlled galleries, seller profiles, reviews, sample availability, city information and functional Offer or Reserve actions.
+- **Seller:** dashboard, listing management, create/edit/delete, fixed or negotiable prices, timed auctions, configurable rewards and three image URL slots (the cover can also be uploaded).
+- **Buyer:** bids, sample competitor bids, sample notifications, saved listings, offers and counteroffers, reservations, simulated MTN/Airtel/card/bank checkout, My Trips and messaging after fictional payment.
+- **Auction checkout:** a winning bid represents the **entire rental period**, not the rate per day. Dates are locked to the auction award and fees/deposits appear once.
+- **No live beta exposure:** the unconfigured ATM Live entry is removed from Account. Direct visitors to live.html are redirected to the concept. Optional Live/SQL source remains in GitHub but is not activated.
+
+### Automated checks
+
+The project has frontend syntax/domain checks plus a real Chromium regression suite covering buyer navigation, mobile widths, custom seller galleries, reservations, postpayment chat, and auction totals. The browser workflow is at .github/workflows/atm-visual-qa.yml, and screenshots are attached to its GitHub Actions runs. It serves only static files, without Supabase or a payment processor.
+
+To run the browser tests locally, serve this directory on port 4173, install the pinned Playwright 1.57.0 package and its Chromium browser in a test environment, and run node tests/ui/concept-smoke.cjs.
+
 ## Run locally
 
 Open `index.html` in a browser or serve the directory:
@@ -14,7 +34,7 @@ Visit http://localhost:8080/.
 
 ## Included journeys
 
-- Home screen with 20 swipeable trending hire cards and 20 vertically scrolling social-style hire posts.
+- Home screen with six circular category choices, rental-auction previews and 20 social-style sample hire posts. Trending carousels are inside their respective category pages.
 - Explore/search with category and city filters, price/rating/newest sorting, and detailed rental pages.
 - Saved items, like/comment/share, image galleries, reporting.
 - Select booking dates, calculate total including deposit, select simulated payment and complete a demo booking.
@@ -29,14 +49,11 @@ Visit http://localhost:8080/.
 
 Photos use public Unsplash-hosted images for illustrative purposes, with locally styled fallbacks if images are unavailable. Font is open-licensed Figtree (a geometric substitute for the proprietary Uber Move font); no Uber font assets or logo are bundled. The project is independent of Uber.
 
-## Publish to GitHub Pages
+## Publishing this concept
 
-1. Create a **new public repository** named `atm-marketplace-demo` (or another name) on GitHub.
-2. Add all repository files (including `.nojekyll`) to its `main` branch.
-3. In **Settings → Pages → Build and deployment**, choose **Deploy from a branch**, branch `main`, folder `/ (root)`, then Save.
-4. The site URL will follow `https://YOUR-USERNAME.github.io/REPO-NAME/` once GitHub confirms successful publication.
+This repository is already configured to publish from the GitHub Pages branch, **gh-pages**, at [ATM Marketplace](https://realtriple-e.github.io/atm-marketplace-demo/#/home). Do not change the Pages deployment source to main without updating the repository's hosting configuration.
 
-Because all paths are relative and routing is via `#/...`, it works as a GitHub Pages project site without a framework or GitHub Actions.
+The source of truth is main. After a verified frontend pull request is merged, fast-forward gh-pages to the new main commit. GitHub Actions must show a successful Pages deployment. This is static-file hosting and requires no database.
 
 ## Production roadmap
 
