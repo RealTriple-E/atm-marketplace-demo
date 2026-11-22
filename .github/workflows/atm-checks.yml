@@ -1,0 +1,26 @@
+name: ATM frontend checks
+on:
+  push:
+    branches:
+      - main
+      - 'feat/**'
+  pull_request:
+    branches:
+      - main
+permissions:
+  contents: read
+jobs:
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check JavaScript syntax
+        run: |
+          node --check data.js
+          node --check taxonomy.js
+          node --check media.js
+          node --check rental-flow.js
+          node --check atm-auctions.js
+          node --check app.js
+      - name: Test auction domain rules
+        run: node --test tests/auction-model.test.cjs
