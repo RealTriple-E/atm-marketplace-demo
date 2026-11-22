@@ -37,7 +37,20 @@ async function widthOK(p){
   assert.ok(w.scroll<=w.viewport+2,'Horizontal overflow '+JSON.stringify(w));
 }
 async function home(p){
+  assert.equal(await p.locator('.atm-home-heading').count(),0,'Screenshot hero must be removed');
+  assert.equal(await p.locator('.atm-home-promo').count(),0,'Redundant homepage promo must be removed');
   assert.equal(await p.locator('.atm-category-circle-item').count(),6);
+  const theme=await p.evaluate(()=>{
+    const active=document.querySelector('.fnav button.active');
+    const circle=document.querySelector('.atm-category-circle-icon');
+    return {loaded:[...document.styleSheets].some(s=>s.href&&s.href.includes('atm-blue-theme.css')),
+      nav:active?getComputedStyle(active).color:null,
+      primary:getComputedStyle(document.documentElement).getPropertyValue('--atm-blue').trim(),
+      category:circle?getComputedStyle(circle).backgroundColor:null};
+  });
+  assert.ok(theme.loaded,'Blue theme stylesheet missing');
+  assert.equal(theme.primary,'#1877F2','Primary theme token must be Facebook blue');
+  assert.equal(theme.nav,'rgb(11, 93, 203)','Active tab should use blue, not black');
   assert.equal(await p.locator('.atm-home-feed .feed-card').count(),20);
   assert.equal(await p.locator('.atm-live-entry').count(),0);
   await widthOK(p);
@@ -50,6 +63,12 @@ async function home(p){
   await p.goto(BASE+'#/home');
   await p.locator('.atm-home-feed .feed-photo-btn').first().click();
   await p.locator('.atm-v15-detail').waitFor();
+  const listingTheme=await p.evaluate(()=>({
+     surface:getComputedStyle(document.querySelector('.atm-v15-panel')).backgroundColor,
+     cta:getComputedStyle(document.querySelector('.atm-v15-bookbar .atm-reserve-option')).backgroundColor
+  }));
+  assert.equal(listingTheme.surface,'rgb(255, 255, 255)','Product page should be minimal white, not black');
+  assert.equal(listingTheme.cta,'rgb(24, 119, 242)','Reserve CTA should use Facebook blue');
   assert.ok(await p.locator('#atm-gallery-track .atm-v15-slide').count()>=3);
   await p.locator('[data-action="gallerynext"]').click();
   await p.waitForTimeout(300);
@@ -65,6 +84,8 @@ async function seller(p){
   await p.goto(BASE+'#/account');
   await p.locator('[data-action="switchmode"][data-mode="seller"]').click();
   await p.locator('.atm-seller-dashboard').waitFor();
+  assert.equal(await p.locator('.btn.primary').first().evaluate(el=>getComputedStyle(el).backgroundColor),
+      'rgb(24, 119, 242)','Seller primary action should use Facebook blue');
   await p.screenshot({path:'artifacts/seller-mobile.png'});
   await p.locator('[data-action="go"][data-route="post"]').first().click();
   await p.locator('#post-title').fill('ATM QA Toyota Fortuner for rental');
@@ -87,6 +108,8 @@ async function booking(p){
   assert.equal(await p.locator('.atm-v15-detail [data-action="chat"]').count(),0);
   await p.locator('.listing-offer-dock [data-action="reserve"]').click();
   await p.locator('.atm-checkout-sheet').waitFor();
+  assert.equal(await p.locator('.atm-main-cta').first().evaluate(el=>getComputedStyle(el).backgroundColor),
+      'rgb(24, 119, 242)','Checkout primary action should be Facebook blue');
   assert.equal(await p.locator('.atm-payment-choice').count(),4);
   await p.locator('[data-atmf="method"][data-value="bank"]').click();
   await p.screenshot({path:'artifacts/reserve-mobile.png'});

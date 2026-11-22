@@ -1,0 +1,214 @@
+/* ATM minimalist Facebook-blue visual system, 22 November 2026.
+   Primary actions = #1877F2. Text stays dark and payments/alerts keep their
+   own meaningful colours. Loaded after all legacy CSS to avoid regressions. */
+:root{
+  --atm-blue:#1877F2;
+  --atm-blue-hover:#166FE5;
+  --atm-blue-deep:#0B5DCB;
+  --atm-blue-soft:#EAF3FF;
+  --atm-blue-border:#C8DEFF;
+  --atm-type:#182534;
+  --atm-subtle:#667085;
+  --accent:var(--atm-blue);
+  --ink:var(--atm-type);
+}
+button:focus-visible,input:focus-visible,textarea:focus-visible,
+select:focus-visible,a:focus-visible{
+  outline-color:rgba(24,119,242,.55);
+}
+::selection{background:#C8DEFF;color:#0B386F}
+
+/* Let browsing and product photography lead. No oversized hero or upsell. */
+.atm-home .home-top .home-search{
+  margin:12px 0 12px;
+  border-color:#E2EAF4;
+  box-shadow:0 2px 8px rgba(15,48,85,.045);
+}
+.atm-home .home-top .home-search:focus-visible{border-color:var(--atm-blue)}
+.atm-home .atm-home-section-heading{margin:8px 0 5px}
+.atm-home .atm-home-section-heading strong{font-size:15px;color:var(--atm-type)}
+.atm-home .atm-category-circle-rail{margin-bottom:16px}
+.atm-home .atm-category-circle-icon{box-shadow:none;border:1px solid transparent}
+.atm-home .atm-category-circle-item:hover .atm-category-circle-icon{
+  background:#EAF3FF;border-color:#B6D5FF;
+  box-shadow:0 3px 10px rgba(24,119,242,.10);
+}
+.atm-home .atm-category-circle-item:focus-visible{outline-color:var(--atm-blue)}
+.atm-home .atm-home-auctions,
+.atm-home .atm-home-recent,
+.atm-home .atm-home-social{margin:17px 0 28px}
+.atm-home .section-head{margin:18px 0 12px}
+.atm-home .section-head h2{font-size:clamp(19px,2.3vw,22px)}
+.atm-home-feed .feed-card{box-shadow:none;border-color:#E8EDF3}
+.atm-home-feed .feed-view-link,
+.atm-v15-feed-owner:hover .author-meta strong,
+.atm-v15-tile-owner:hover{color:var(--atm-blue)}
+.atm-home-feed .feed-price,.tile-price,.see-all,.link-btn{
+  color:var(--atm-blue);
+}
+
+/* Buttons and selections: Facebook blue replaces the old primary black/orange. */
+.btn.primary,.btn.accent,.listing-offer-button,
+.atm-main-cta,.atm-dual-cta .atm-reserve-option,
+.chat-compose button,.atm-mode-options button.active,
+.atm-auction-tag,.atm-leading-label,
+.atm-date-pill.active,.atm-calendar-day.selected,
+.atm-amount-chips button.active,.atm-offer-sheet .atm-amount-chips button.active,
+.atm-subchip.active,.offer-filter-chip.is-active,
+.atm-payment-choice.selected i{
+  background:var(--atm-blue);color:#fff;border-color:var(--atm-blue);
+}
+.btn.primary:hover,.btn.accent:hover,
+.listing-offer-button:hover,.atm-main-cta:hover,
+.atm-dual-cta .atm-reserve-option:hover{
+  background:var(--atm-blue-hover);
+}
+.fnav{border-color:#E4EAF3;box-shadow:0 8px 26px rgba(15,55,111,.12)}
+.fnav button.active{background:var(--atm-blue-soft);color:var(--atm-blue-deep)}
+.fnav button.active svg{stroke:var(--atm-blue)}
+.payment-option.selected,.atm-payment-choice.selected{
+  border-color:var(--atm-blue);background:#F4F8FF;
+}
+.atm-offer-sheet .atm-amount-chips button.active{border-color:var(--atm-blue)}
+.atm-date-pill.active small{color:#fff}
+.atm-quick-search button:hover,.atm-chat-quick-replies button:hover{
+  background:var(--atm-blue-soft);border-color:var(--atm-blue-border);color:var(--atm-blue-deep);
+}
+.atm-date-pill:not(:disabled):hover{border-color:var(--atm-blue)}
+.atm-calendar-day:not(:disabled):hover{background:var(--atm-blue-soft);color:var(--atm-blue-deep)}
+.atm-calendar-day.selected:hover{background:var(--atm-blue-hover);color:#fff}
+.atm-offer-sheet .atm-total-block .atm-main-cta{
+  box-shadow:0 7px 20px rgba(24,119,242,.18);
+}
+.atm-offer-sheet .atm-main-cta,.atm-checkout-sheet .atm-main-cta{background:var(--atm-blue)}
+.atm-approval-phone span{background:var(--atm-blue)}
+.atm-bid-slider{accent-color:var(--atm-blue)}
+.atm-auction-eyebrow{color:var(--atm-blue-deep)}
+.atm-perk.unlocked{
+  background:#F4F8FF;border-color:var(--atm-blue-border);
+}
+.atm-perk.unlocked>svg{color:var(--atm-blue)}
+.atm-win-panel{background:#F4F8FF;border-color:var(--atm-blue-border)}
+.atm-filter-chip.active{background:var(--atm-blue-soft);border-color:var(--atm-blue);color:var(--atm-blue-deep)}
+.atm-load-more{border-color:var(--atm-blue);color:var(--atm-blue-deep)}
+.atm-load-more:hover{background:var(--atm-blue-soft)}
+.atm-load-more:focus-visible{outline-color:var(--atm-blue)}
+.atm-v15-detail .atm-v15-readmore{color:var(--atm-blue)!important}
+.atm-v15-review-link,.atm-v15-section-heading span{color:var(--atm-blue-deep)}
+.atm-offer-option,.atm-dual-cta .atm-offer-option{
+  border-color:var(--atm-blue);color:var(--atm-blue-deep);
+}
+.atm-dual-cta .atm-offer-option:hover{background:var(--atm-blue-soft)}
+#toast{background:#145DB8;box-shadow:0 8px 24px rgba(24,119,242,.20)}
+.banner{background:#F4F8FF;color:var(--atm-type);border:1px solid var(--atm-blue-border)}
+.banner p{color:var(--atm-subtle)}
+.banner .btn{background:var(--atm-blue);color:#fff}
+.banner .btn:hover{background:var(--atm-blue-hover)}
+
+/* Product pages: remove the wall of black, use white content with blue CTAs.
+   Gallery dark overlays remain only where required to read controls over photos. */
+.atm-v15-detail{
+  background:#fff;color:var(--atm-type);
+  --atm-detail-muted:var(--atm-subtle);
+  --atm-detail-orange:var(--atm-blue);
+}
+.atm-v15-hero{background:#E6EEF8}
+.atm-v15-slide{background:#E6EEF8}
+.atm-v15-panel{background:#fff;color:var(--atm-type);box-shadow:0 -4px 17px rgba(0,0,0,.04)}
+.atm-v15-intro h1,
+.atm-v15-stat strong,.atm-v15-stat span,
+.atm-v15-host .atm-v15-host-info strong,
+.atm-v15-story h2,.atm-v15-section h2,
+.atm-v15-tier-grid strong,.atm-v15-date-choice strong,
+.atm-v15-location-card strong,.atm-v15-review-card strong,
+.atm-v15-calendar-top>strong{color:var(--atm-type)}
+.atm-v15-subtitle,.atm-v15-facts,.atm-v15-host .atm-v15-host-info small,
+.atm-v15-story>p,.atm-v15-section>p,.atm-v15-feature-grid span,
+.atm-v15-tier-grid small,.atm-v15-date-choice small,
+.atm-v15-location-card p,.atm-v15-review-card small,
+.atm-v15-review-card p,.atm-v15-calendar-preview>small{
+  color:var(--atm-subtle);
+}
+.atm-v15-trust,.atm-v15-calendar-preview{
+  border-color:#E5EBF2;background:#fff;
+}
+.atm-v15-stat:not(:last-child)::after{background:#E5EBF2}
+.atm-v15-stat .atm-v15-verified-icon svg{color:var(--atm-blue)}
+.atm-v15-stat.atm-v15-verified small{color:var(--atm-subtle)}
+.atm-v15-host,.atm-v15-story,.atm-v15-section{border-color:#E8EDF3}
+.atm-v15-host>svg{color:#7D899A}
+.atm-v15-host:hover .atm-v15-host-info strong{color:var(--atm-blue)}
+.atm-v15-eyebrow,.atm-v15-tier-grid span{color:var(--atm-blue-deep)}
+.atm-v15-demo-note svg,.atm-v15-feature-grid span svg,
+.atm-v15-date-choice>svg:first-child,
+.atm-v15-location-card>svg{color:var(--atm-blue)}
+.atm-v15-tags span{background:var(--atm-blue-soft);color:var(--atm-blue-deep)}
+.atm-v15-story .atm-v15-demo-note{color:var(--atm-subtle)}
+.atm-v15-tier-grid>div{border-color:#E1E8F3;background:#FAFCFF}
+.atm-v15-date-choice{background:#F6F9FE;border-color:#DDE9FB}
+.atm-v15-location-card{background:#F6F9FE}
+.atm-v15-review-card{border-color:#E5EBF2;background:#fff}
+.atm-v15-calendar-top button{border-color:#D9E3F1}
+.atm-v15-calendar-days span{color:#6B7788}
+.atm-v15-calendar-grid .atm-v15-day{color:var(--atm-type)}
+.atm-v15-calendar-grid .atm-v15-day.unavailable{color:#9DA5B0}
+.atm-v15-calendar-grid .atm-v15-day:not(:disabled):hover,
+.atm-v15-calendar-grid .atm-v15-day:focus-visible{
+  color:var(--atm-blue-deep);background:var(--atm-blue-soft);
+}
+.atm-v15-calendar-grid .atm-v15-day.selected{
+  background:var(--atm-blue);color:#fff;
+}
+.atm-v15-map-preview{background:#EFF4FC}
+.atm-v15-circle,.atm-v15-gallery-arrow{background:rgba(24,119,242,.92);color:#fff!important}
+.atm-v15-detail .atm-v15-gallery-arrow{color:#fff}
+.atm-v15-circle.is-saved{color:#fff!important}
+.atm-v15-bookbar{
+  background:#fff;border-top:1px solid #E6ECF4;
+  box-shadow:0 -7px 24px rgba(27,60,105,.07);
+}
+.atm-v15-bookbar .atm-v15-bookprice{color:var(--atm-type)}
+.atm-v15-bookprice span,.atm-v15-bookprice small{color:var(--atm-subtle)}
+.atm-v15-bookbar .atm-offer-option{
+  background:#fff;border:1.5px solid var(--atm-blue);color:var(--atm-blue);
+  box-shadow:none;
+}
+.atm-v15-bookbar .atm-offer-option:hover{background:var(--atm-blue-soft)}
+.atm-v15-bookbar .atm-reserve-option{
+  background:var(--atm-blue);border-color:var(--atm-blue);color:#fff;
+  box-shadow:0 4px 12px rgba(24,119,242,.15);
+}
+.atm-v15-bookbar .atm-reserve-option:hover{background:var(--atm-blue-hover)}
+.atm-v15-seller-top{background:#F2F7FF;color:var(--atm-type);border:1px solid #DAE7FC}
+.atm-v15-seller-top p{color:var(--atm-subtle)}
+.atm-v15-demo-verified,.atm-v15-seller-review span:not(.avatar){color:var(--atm-blue-deep)}
+.atm-v15-seller-history>div{background:var(--atm-blue-soft);color:var(--atm-blue-deep)}
+.atm-v15-seller-metrics strong{color:var(--atm-type)}
+.atm-v15-seller .atm-v15-section h2{color:var(--atm-type)}
+
+/* Preserve brand colours for MTN, Airtel, cards, conditional risk indicators,
+   offer-likelihood meter, error and success status. They are NOT primary theme. */
+@media(max-width:420px){
+  .atm-home .atm-home-section-heading{margin-top:7px}
+  .atm-v15-panel{padding:25px 18px 58px}
+  .atm-v15-bookbar .atm-v15-bookprice{min-width:74px}
+}
+
+/* Consistent, quiet branding on the homepage and top navigation. */
+.topbar .brand{color:var(--atm-blue);letter-spacing:-.095em}
+.atm-home .atm-category-circle-item:nth-child(1) .atm-category-circle-icon,
+.atm-home .atm-category-circle-item:nth-child(2) .atm-category-circle-icon,
+.atm-home .atm-category-circle-item:nth-child(3) .atm-category-circle-icon,
+.atm-home .atm-category-circle-item:nth-child(4) .atm-category-circle-icon,
+.atm-home .atm-category-circle-item:nth-child(5) .atm-category-circle-icon,
+.atm-home .atm-category-circle-item:nth-child(6) .atm-category-circle-icon{
+  color:var(--atm-blue-deep);
+  background:#EFF5FF;
+  border-color:#E0ECFC;
+}
+.atm-home .atm-category-circle-item:focus-visible,
+.listing-offer-button:focus-visible,
+.offer-filter-chip:focus-visible{
+  outline-color:var(--atm-blue);
+}
+.atm-v15-seller-top .atm-v15-eyebrow{color:var(--atm-blue-deep)}
