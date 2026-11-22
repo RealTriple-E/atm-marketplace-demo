@@ -89,3 +89,37 @@ See [the detailed Vercel offer and Reserve parity audit](docs/VERCEL_OFFER_RESER
 
 ## ATM v16 — Product gallery and seller profile redesign (19 November 2026)
 The product-detail page uses a full-bleed swipeable photo carousel, Vercel-reference-inspired overlapping dark panel, three-column reviews/verification, seller photo link, story, features, calendar, city map, sample reviews and fixed price + Offer + Reserve bar. All 288 fictional sample listings carry three curated stock-photo slides; 46 demo providers have distinct stock-portrait URLs. Every seller profile lists the owner's rentals, fictional account-creation date and tenure, aggregate ratings, and clearly fictional customer reviews. There is **never a direct Chat button on product or seller pages**; messages are accessible through My Trips after simulated paid-booking verification only. Images remain representative stock assets, not photos of actual rental inventory. See [source-grounded detail audit](docs/PRODUCT_VIEW_V15_AUDIT.md).
+
+## ATM v21 — Buyer/Seller workspaces and timed auctions (22 November 2026)
+
+### What is available in the browser demo
+- One local sample account with two distinct workspaces. Switch between **Buyer** and **Seller** under Account. The bottom navigation changes with the active mode.
+- **Buyer**: circular home categories, listings, auction discovery, watchlist, live bid-countdown display, bid history, negotiations, accepted bookings, notifications and My Bids.
+- **Seller**: overview dashboard, manage own listings, create/edit listings, choose fixed/negotiable vs auction pricing, manage own auctions, configure minimum increments, optional reserve, rental dates, durations (6 hours–7 days), and three optional perk thresholds.
+- Seller can enable/disable **Make Offer** individually for standard listings. Auction listings have neither direct Reserve nor Make Offer.
+- Four fictional starter auctions provide simulated competing bids. Increase a bid using the slider and see which seller-defined rewards would become eligible **if the bid wins**.
+- Explicit **Confirm bid** is required; moving the slider does not place a bid or charge any money. Bids below the minimum/increment are rejected, current top bidders cannot increase their own leading bid, and a bid placed in the last two minutes extends the auction by two minutes.
+- The buyer may add an illustrative competing bidder to test outbid notifications; a seller may add a clearly labelled sample customer bid to test seller-side monitoring.
+- Auction close determines a winner only if the reserve is met. A winner may complete ATM's existing **simulated** booking/payment flow; earned perks are then recorded in My Trips. Provider chat remains locked until simulated payment has been verified.
+- A seller cannot bid on their own listings or alter important auction terms after bids are recorded. Reset demo data through Settings.
+- The six circular homepage categories, existing swipeable listing image galleries and seller portraits are retained.
+
+### Smoke-test checklist
+1. Open Account, switch Seller, create a listing using **Timed auction**, select future rental dates, increment, reserve, duration and a reward.
+2. Open Seller Auctions, view your listing and click **Simulate buyer bid**. Check bid count and confirm that pricing cannot be changed after the bid.
+3. Switch Buyer; open an original sample auction on Home. Move the slider and verify eligible perks change. Confirm a demo bid and test **Simulate a competing bidder**, followed by My Bids.
+4. Open a normal listing: an enabled negotiation shows Offer and Reserve; disabling negotiation for your own standard listing removes Offer.
+5. Confirm that a listing auction does not offer an ordinary fixed-price reservation or a pre-payment Chat button.
+
+### Technical scope and limitations
+
+This release remains **a static frontend prototype** using the existing `localStorage` namespace. Modes, identity, bids, bidder counts, countdowns, winners, rewards and bookings are **not shared between browsers or devices**. Sample bidders are fabricated and explicitly labelled. Date availability, identity checks, reserve, anti-sniping, auction settlement, seller ownership, payment and messaging permissions have **no trusted backend enforcement**. No real money is charged, and this demo must not be used for binding rental auctions.
+
+To make genuine multi-user bidding possible, implement authenticated buyer/seller identities, an authoritative transactional database with idempotent bids and concurrency control, server-generated auction times and settlement, real-time bidder updates, secure payment confirmation/webhooks, availability locks, notification delivery, fraud/shill bidding controls, and server-side chat permissions.
+
+No new runtime dependencies or build tools are required for the demo. Validate the auction domain with:
+```sh
+node --check atm-auctions.js
+node --check app.js
+node --test tests/auction-model.test.cjs
+```
