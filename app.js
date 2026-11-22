@@ -129,19 +129,18 @@ function home(){
   const live=auctionListings().filter(l=>ATM_Auctions.status(auctionFor(l))==='live').slice(0,4);
   return '<section class="screen reveal atm-home">'+
     '<div class="home-top"><button class="searchbar home-search" data-action="search" aria-label="Search all rentals">'+icon('search')+'<span>What would you like to hire?</span></button></div>'+
-    '<div class="atm-home-heading"><span class="atm-home-eyebrow">ANYTHING TO HIRE · ZAMBIA</span><h1>Find it. Hire it. Enjoy it.</h1><p>From a car for the weekend to the perfect event setup. Explore rentals across Zambia.</p></div>'+
-    '<div class="atm-home-section-heading"><strong>Browse categories</strong><span>6 ways to explore</span></div>'+
+
+    '<div class="atm-home-section-heading"><strong>Categories</strong></div>'+
     categoryRow()+
     (live.length?'<section class="atm-home-auctions">'+sectionTitle('Rental auctions','auctions','See all')+
-      '<p class="atm-home-section-copy">Bid for an entire rental period, unlock sample rewards, and follow your bid in this browser.</p>'+
+
       '<div class="atm-auction-grid">'+live.map(auctionCard).join('')+'</div></section>':'')+
     '<section class="atm-home-recent"><div class="section-head"><h2>Discover rentals</h2><button class="see-all" data-action="go" data-route="explore">Browse all '+icon('chevron')+'</button></div>'+
       '<div class="listing-grid atm-home-recent-grid">'+recent.map(tile).join('')+'</div></section>'+
     '<section class="atm-home-social"><div class="section-head"><h2>From the community</h2><span class="atm-meta">20 sample rental posts</span></div>'+
-      '<p class="atm-home-section-copy">Meet local-style providers, explore their catalogues and save the listings you like.</p>'+
+
       '<div class="atm-home-feed">'+selected.map(feedCard).join('')+'</div></section>'+
-    '<div class="banner atm-home-promo"><div><h3>Have something to hire out?</h3><p>Switch to Seller mode and create a listing, complete with photos, pricing and auctions.</p></div>'+
-      '<button class="btn" data-action="switchmode" data-mode="seller">Start listing '+icon('chevron')+'</button></div>'+
+
     '<p class="demo-label">ATM interactive concept · Fictional listings, reviews, bids and payments · Nothing is transmitted to a real seller.</p>'+
   '</section>';
 }
