@@ -39,13 +39,15 @@ const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const money=n=>'K'+Math.round(Number(n)||0).toLocaleString('en-US');
 const STORAGE_KEY='atm-marketplace-demo-v3';
-const defaultState=()=>({name:'Mwamba Phiri',city:'Lusaka',email:'demo@atm.example',favorites:[],likes:[],offers:[],bookings:[],myListings:[],notifications:ATM_START_NOTICES,conversations:[],comments:{},paymentMethods:[],payout:{},preferences:{updates:true,bookingAlerts:true},reports:[]});
+const defaultState=()=>({mode:'buyer',auctionSeeded:false,auctions:[],auctionBids:[],auctionWatches:[],name:'Mwamba Phiri',city:'Lusaka',email:'demo@atm.example',favorites:[],likes:[],offers:[],bookings:[],myListings:[],notifications:ATM_START_NOTICES,conversations:[],comments:{},paymentMethods:[],payout:{},preferences:{updates:true,bookingAlerts:true},reports:[]});
 let state;try{state={...defaultState(),...JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}')}}catch(_){state=defaultState()}
 if(!Array.isArray(state.offers))state.offers=[];
 
 if(!Array.isArray(state.conversations))state.conversations=[];
 if(!Array.isArray(state.bookings))state.bookings=[];
 if(!Array.isArray(state.myListings))state.myListings=[];
+state.mode=state.mode==='seller'?'seller':'buyer';
+const newlySeeded=ATM_Auctions.init(state);
 state.myListings.forEach(function(l){
   l.category=ATM_LEGACY_CATEGORY[l.category]||l.category;
   let taxonomy=ATM_TAXONOMY.find(function(t){return t.name===l.category;});
@@ -61,6 +63,11 @@ let toastTimer;
 function toast(msg){const el=$('#toast');if(!el)return;el.textContent=msg;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),3200)}
 const listings=()=>[...state.myListings.filter(l=>!l.deleted),...ATM_LISTINGS];
 const getListing=id=>listings().find(l=>String(l.id)===String(id));
+const sellerMode=()=>state.mode==='seller';
+const auctionFor=l=>ATM_Auctions.get(state,l);
+const auctionListings=()=>listings().filter(l=>Boolean(auctionFor(l)));
+const sellerOwns=l=>Boolean(l&&state.myListings.some(x=>String(x.id)===String(l.id)&&!x.deleted));
+if(newlySeeded)save();
 
 const paidBookingFor=listingId=>state.bookings.find(b=>
   String(b.listingId)===String(listingId)&&b.status==='Confirmed (demo)'&&b.paymentStatus==='verified_demo');
@@ -76,9 +83,9 @@ const image=(l,cls='',other='')=>`<img class="${cls}" src="${esc(l.image||photo(
 const verify=l=>l.verified?`<span class="verified">${icon('shield')} Verified demo seller</span>`:'';
 const pagePath=()=>decodeURIComponent((location.hash||'#/home').replace(/^#\/?/,'')).split('/').filter(Boolean);
 function go(route,id){const target=`#/${route}${id!==undefined&&id!==null?'/'+encodeURIComponent(id):''}`;if(location.hash!==target)ui.visibleCount=24;ui.sheet=null;ui.photoIdx=0;ui.storyExpanded=false;ui.calendarOffset=0;if(location.hash===target){render();scrollTo(0,0)}else{location.hash=target}}
-function activeNav(page){if(['home','explore','trending','category'].includes(page))return 'home';if(['offers','book','checkout','success'].includes(page))return 'offers';if(['post','edit'].includes(page))return 'post';return 'account'}
-function navBar(page){const active=activeNav(page);const tabs=[['home','home','Home'],['offers','dollar','Offers'],['post','plus','Post'],['account','user','Account']];return `<nav class="fnav" aria-label="Main navigation">${tabs.map(([p,ic,text])=>`<button aria-label="${text}" aria-current="${p===active?'page':'false'}" class="${p===active?'active':''}" data-action="go" data-route="${p}">${icon(ic,ic==='plus'?'add-icon':'')}<span>${text}</span></button>`).join('')}</nav>`}
-function listingOfferDock(id){const l=getListing(id);return l?`<div class="listing-offer-dock atm-v15-bookbar ${l.offersAllowed===false?'atm-reserve-only':''}" aria-label="Rental booking options"><div class="atm-v15-bookprice"><strong>${money(l.price)}</strong><span>/ ${esc(l.unit||'day')}</span><small>Demo rate · Terms apply</small></div>${l.offersAllowed===false?'':`<button type="button" class="listing-offer-button atm-offer-option" data-action="offer" data-id="${esc(l.id)}" aria-label="Make an offer for ${esc(l.title)}">${icon('handshake')}<span>Offer</span></button>`}<button type="button" class="listing-offer-button atm-reserve-option" data-action="reserve" data-id="${esc(l.id)}" aria-label="Reserve ${esc(l.title)}"><span>Reserve</span></button></div>`:navBar('home')}
+function activeNav(page){if(sellerMode()){if(['sellerdashboard','home'].includes(page))return 'sellerdashboard';if(['mylistings','post','edit'].includes(page))return 'mylistings';if(['sellerauctions','auction'].includes(page))return 'sellerauctions';return 'account'}if(['home','explore','trending','category','listing','seller'].includes(page))return 'home';if(['auctions','auction','mybids'].includes(page))return 'auctions';if(['offers','book','checkout','success'].includes(page))return 'offers';return 'account'}
+function navBar(page){const active=activeNav(page);const tabs=sellerMode()?[['sellerdashboard','grid','Dashboard'],['mylistings','package','Listings'],['sellerauctions','clock','Auctions'],['account','user','Account']]:[['home','home','Home'],['auctions','clock','Auctions'],['offers','handshake','Offers'],['account','user','Account']];return `<nav class="fnav" aria-label="${sellerMode()?'Seller':'Buyer'} navigation">${tabs.map(([p,ic,txt])=>`<button aria-label="${txt}" aria-current="${p===active?'page':'false'}" class="${p===active?'active':''}" data-action="go" data-route="${p}">${icon(ic)}<span>${txt}</span></button>`).join('')}</nav>`}
+function listingOfferDock(id){const l=getListing(id);if(!l)return navBar('home');const a=auctionFor(l);if(sellerMode())return `<div class="listing-offer-dock atm-v15-bookbar"><div class="atm-v15-bookprice"><strong>${money(l.price)}</strong><small>Seller preview · Demo</small></div><button type="button" class="listing-offer-button atm-reserve-option" data-action="go" data-route="${sellerOwns(l)?'edit':'sellerdashboard'}" data-id="${sellerOwns(l)?esc(l.id):''}">${sellerOwns(l)?'Manage':'Seller dashboard'}</button></div>`;if(a)return `<div class="listing-offer-dock atm-v15-bookbar"><div class="atm-v15-bookprice"><strong>${money(ATM_Auctions.current(state,l.id)?.amount||a.startingBid)}</strong><small>Current bid · Demo</small></div><button type="button" class="listing-offer-button atm-reserve-option" data-action="auction" data-id="${esc(l.id)}">Place bid</button></div>`;return `<div class="listing-offer-dock atm-v15-bookbar ${l.offersAllowed===false?'atm-reserve-only':''}" aria-label="Rental booking options"><div class="atm-v15-bookprice"><strong>${money(l.price)}</strong><span>/ ${esc(l.unit||'day')}</span><small>Demo rate · Terms apply</small></div>${l.offersAllowed===false?'':`<button type="button" class="listing-offer-button atm-offer-option" data-action="offer" data-id="${esc(l.id)}">${icon('handshake')}<span>Offer</span></button>`}<button type="button" class="listing-offer-button atm-reserve-option" data-action="reserve" data-id="${esc(l.id)}">Reserve</button></div>`}
 function header(page){const back=!['home','offers','post','account'].includes(page);const unread=state.notifications.filter(n=>!n.read).length;return `<header class="topbar"><div>${back?`<button class="back-btn" data-action="back" aria-label="Back">${icon('back')}</button>`:''}</div><div class="brand" aria-label="ATM">ATM</div><button class="bell-btn" aria-label="Notifications${unread?' '+unread+' unread':''}" data-action="go" data-route="notifications">${icon('bell')}${unread?`<span class="notif-dot">${unread>9?'9+':unread}</span>`:''}</button></header>`}
 function sectionTitle(title,route,txt='See All'){return `<div class="section-head"><h2>${title}</h2><button class="see-all" data-action="go" data-route="${route}">${txt} ${icon('chevron')}</button></div>`}
 function categoryRow(){
