@@ -1,0 +1,81 @@
+/* ATM v21 — Buyer/Seller workspaces and browser-local timed auctions */
+.atm-mode-switch{margin:18px 0 22px;padding:14px;border:1px solid #e3e3e3;background:#fff;border-radius:20px}
+.atm-mode-title{font-size:12px;color:#6b6b6b;letter-spacing:.04em;text-transform:uppercase;font-weight:800;display:block;margin-bottom:10px}
+.atm-mode-options{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:5px;border-radius:14px;background:#f5f5f5}
+.atm-mode-options button{border:0;border-radius:11px;background:transparent;display:flex;gap:7px;align-items:center;justify-content:center;font:800 14px Figtree,system-ui,sans-serif;padding:12px 6px;color:#666;cursor:pointer}
+.atm-mode-options button svg{width:18px;height:18px}
+.atm-mode-options button.active{background:#111;color:#fff;box-shadow:0 3px 14px #1112}
+.atm-demo-alert{border:1px solid #dedede;border-radius:13px;padding:12px 14px;margin:16px 0;color:#525252;background:#fafafa;font-size:13px;line-height:1.5}
+.atm-demo-alert svg{width:16px;height:16px;vertical-align:-3px;margin-right:5px}
+.atm-home-auctions{margin:20px 0 28px}.atm-home-auctions .section-head{margin-bottom:12px}
+.atm-auction-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:14px 0 26px}
+.atm-auction-card{min-width:0;background:#fff;border:1px solid #e6e6e6;border-radius:18px;overflow:hidden;display:flex;flex-direction:column}
+.atm-auction-media{display:block;width:100%;height:150px;position:relative;border:0;padding:0;background:#f4f4f4;cursor:pointer}
+.atm-auction-thumb{width:100%;height:100%;object-fit:cover;display:block}
+.atm-auction-tag{position:absolute;left:10px;top:10px;border-radius:9px;background:#121212;color:#fff;font-size:11px;font-weight:800;padding:5px 8px}
+.atm-auction-body{padding:12px;display:flex;flex:1;flex-direction:column;gap:6px}
+.atm-auction-body>strong{font-size:14px;line-height:1.3;min-height:38px}
+.atm-auction-body>small{color:#686868;font-size:11px;line-height:1.45}
+.atm-auction-metrics{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:7px}
+.atm-auction-metrics>div{min-width:0}
+.atm-auction-metrics small,.atm-auction-summary small{display:block;font-size:11px;color:#737373;line-height:1.4}
+.atm-auction-metrics strong{font-size:14px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.atm-auction-meta{font-size:11px;color:#777;margin:5px 0 8px}
+.atm-auction-card .btn{font-size:12px;min-height:38px;margin-top:auto}
+.atm-auctions-page{padding-bottom:105px}.atm-auctions-page h2{font-size:20px;margin:18px 0 8px}
+.atm-auction-eyebrow{font-size:11px;font-weight:900;letter-spacing:.07em;color:#e46c15}
+.atm-auction-detail{padding-bottom:120px;max-width:850px;margin-inline:auto}
+.atm-auction-detail .page-top h1{font-size:clamp(22px,5vw,34px);margin-top:6px}
+.atm-auction-hero{border-radius:20px;overflow:hidden;background:#f2f2f2;position:relative;margin:14px 0 20px}
+.atm-auction-detail-photo{width:100%;height:275px;object-fit:cover;display:block}
+.atm-gallery-link{position:absolute;right:10px;bottom:10px;background:#fff;border:none;border-radius:11px;padding:9px 12px;display:flex;align-items:center;gap:5px;font-size:12px;font-weight:800;cursor:pointer}
+.atm-gallery-link svg{width:15px;height:15px}
+.atm-auction-summary{display:grid;grid-template-columns:1.15fr .8fr 1fr;border:1px solid #e8e8e8;border-radius:17px;background:#fff;overflow:hidden}
+.atm-auction-summary>div{min-width:0;padding:13px 11px;border-right:1px solid #e8e8e8}
+.atm-auction-summary>div:last-child{border-right:0}
+.atm-auction-summary strong{display:block;font-size:clamp(14px,4vw,22px);font-variant-numeric:tabular-nums;overflow-wrap:anywhere;margin-top:4px}
+.atm-auction-conditions{font-size:12px;color:#575757;line-height:1.7;margin:14px 0 24px}
+.atm-bid-composer{border:1px solid #e5e5e5;border-radius:20px;padding:18px;background:#fff;margin-bottom:24px}
+.atm-bid-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:19px}
+.atm-bid-head h2{font-size:20px;margin:0}
+.atm-bid-head strong{font-size:29px;font-weight:900;font-variant-numeric:tabular-nums;white-space:nowrap}
+.atm-bid-slider{width:100%;height:24px;accent-color:#ef7417;cursor:pointer}
+.atm-bid-range{display:flex;justify-content:space-between;color:#777;font-size:12px;margin:0 0 22px;font-variant-numeric:tabular-nums}
+.atm-bid-composer h3{font-size:17px;margin:16px 0 10px}
+.atm-perks{display:grid;gap:9px}
+.atm-perk{border:1px solid #e5e5e5;border-radius:13px;padding:12px;display:flex;align-items:center;gap:11px;opacity:.7;transition:border-color .18s,background-color .18s,opacity .18s}
+.atm-perk.unlocked{opacity:1;border-color:#ffc99a;background:#fff7f0}
+.atm-perk>svg{width:20px;height:20px;flex-shrink:0}
+.atm-perk.unlocked>svg{color:#c85c11}
+.atm-perk>span{display:flex;flex-direction:column;gap:3px}
+.atm-perk strong{font-size:13px}.atm-perk small{font-size:11px;color:#696969}
+.atm-bid-explainer{color:#696969;font-size:12px;line-height:1.55;margin:16px 0}
+.atm-bid-composer .btn{margin:10px 0}
+.atm-demo-competitor{width:100%;border:0;background:transparent;color:#555;font-size:12px;text-decoration:underline;padding:10px;cursor:pointer}
+.atm-bid-history{border-top:1px solid #e6e6e6;padding-top:22px;margin-top:24px}
+.atm-bid-history h2{font-size:22px;margin-bottom:7px}.atm-bid-history>p{font-size:13px;color:#666}
+.atm-bid-row{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap;padding:12px 2px;border-bottom:1px solid #eee}
+.atm-bid-row span:first-child{font-size:13px;font-weight:700;display:flex;flex-direction:column;gap:4px}.atm-bid-row small{font-size:11px;color:#888;font-weight:400}
+.atm-bid-row>strong{margin-left:auto;font-variant-numeric:tabular-nums}
+.atm-leading-label{font-size:10px;background:#111;color:#fff;border-radius:8px;padding:4px 7px}
+.atm-win-panel{border-radius:17px;padding:22px;background:#faf6f0;border:1px solid #efdfcb;margin:17px 0}
+.atm-win-panel h2{font-size:22px;margin:0 0 6px}.atm-win-panel p{color:#555;font-size:14px;line-height:1.5}
+.atm-my-bid{border-bottom:1px solid #e7e7e7;padding:16px 0;display:flex;justify-content:space-between;gap:14px;align-items:flex-start}
+.atm-my-bid>div:first-child{display:flex;flex-direction:column;gap:7px;flex:1}.atm-my-bid strong{font-size:15px}.atm-my-bid small{font-size:12px;color:#737373}
+.atm-my-bid>div:last-child{display:flex;flex-direction:column;gap:6px}
+.atm-seller-dashboard{padding-bottom:110px}
+.atm-stat-dashboard{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin:15px 0 20px}
+.atm-stat-dashboard>div{border:1px solid #e7e7e7;background:#fff;border-radius:14px;padding:15px 10px}
+.atm-stat-dashboard strong{font-size:24px;font-weight:900;display:block}.atm-stat-dashboard small{color:#666;font-size:11px}
+.atm-seller-actions{display:flex;gap:9px;flex-wrap:wrap;margin:13px 0 25px}
+.atm-dashboard-heading{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.atm-dashboard-heading h2{font-size:20px}.atm-dashboard-heading button{border:0;background:none;cursor:pointer;color:#555;font-weight:700;display:flex;align-items:center;gap:4px}
+.atm-dashboard-heading svg{width:15px;height:15px}
+.atm-post-pricing{border:1px solid #e6e6e6;padding:16px;border-radius:17px;margin:18px 0}
+.atm-post-pricing h3{font-size:19px;margin:0 0 11px}.atm-post-pricing h4{font-size:15px;margin:17px 0 7px}
+.atm-auction-settings{margin-top:16px}
+.atm-auction-settings .form-row{margin:10px 0}
+.atm-perk-form{display:grid;grid-template-columns:minmax(95px,.6fr) minmax(0,1.4fr);gap:9px;margin:10px 0}
+@media(min-width:720px){.atm-auction-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.atm-auction-media{height:195px}.atm-auction-detail-photo{height:390px}.atm-home-auctions .atm-auction-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:375px){.atm-auction-body{padding:10px}.atm-auction-metrics strong{font-size:12px}.atm-auction-summary>div{padding:11px 7px}.atm-auction-summary strong{font-size:13px}.atm-perk-form{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){.atm-perk{transition:none}}
