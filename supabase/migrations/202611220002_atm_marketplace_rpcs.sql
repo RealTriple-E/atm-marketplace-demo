@@ -346,7 +346,7 @@ returns boolean language plpgsql security definer set search_path=''
 as $$
 declare v_booking public.atm_bookings%rowtype;v_prior uuid;
 begin
-  if auth.role()<>'service_role' then
+  if current_setting('request.jwt.claim.role',true) is distinct from 'service_role' then
     raise exception 'Trusted payment provider callback required' using errcode='42501';
   end if;
   if coalesce(char_length(p_provider),0) not between 2 and 60
