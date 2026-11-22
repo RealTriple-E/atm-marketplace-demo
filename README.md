@@ -34,7 +34,7 @@ Visit http://localhost:8080/.
 
 ## Included journeys
 
-- Home screen with 20 swipeable trending hire cards and 20 vertically scrolling social-style hire posts.
+- Home screen with six circular category choices, rental-auction previews and 20 social-style sample hire posts. Trending carousels are inside their respective category pages.
 - Explore/search with category and city filters, price/rating/newest sorting, and detailed rental pages.
 - Saved items, like/comment/share, image galleries, reporting.
 - Select booking dates, calculate total including deposit, select simulated payment and complete a demo booking.
@@ -49,14 +49,11 @@ Visit http://localhost:8080/.
 
 Photos use public Unsplash-hosted images for illustrative purposes, with locally styled fallbacks if images are unavailable. Font is open-licensed Figtree (a geometric substitute for the proprietary Uber Move font); no Uber font assets or logo are bundled. The project is independent of Uber.
 
-## Publish to GitHub Pages
+## Publishing this concept
 
-1. Create a **new public repository** named `atm-marketplace-demo` (or another name) on GitHub.
-2. Add all repository files (including `.nojekyll`) to its `main` branch.
-3. In **Settings → Pages → Build and deployment**, choose **Deploy from a branch**, branch `main`, folder `/ (root)`, then Save.
-4. The site URL will follow `https://YOUR-USERNAME.github.io/REPO-NAME/` once GitHub confirms successful publication.
+This repository is already configured to publish from the GitHub Pages branch, **gh-pages**, at [ATM Marketplace](https://realtriple-e.github.io/atm-marketplace-demo/#/home). Do not change the Pages deployment source to main without updating the repository's hosting configuration.
 
-Because all paths are relative and routing is via `#/...`, it works as a GitHub Pages project site without a framework or GitHub Actions.
+The source of truth is main. After a verified frontend pull request is merged, fast-forward gh-pages to the new main commit. GitHub Actions must show a successful Pages deployment. This is static-file hosting and requires no database.
 
 ## Production roadmap
 
