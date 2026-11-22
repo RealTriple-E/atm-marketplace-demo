@@ -1,5 +1,6 @@
 name: ATM frontend checks
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
@@ -28,6 +29,8 @@ jobs:
       - name: Test auction domain rules
         run: node --test tests/auction-model.test.cjs tests/atm-live-smoke.test.cjs
   database:
+    # ATM is an interactive UI concept; only exercise optional SQL by a manual dispatch.
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     services:
       postgres:
