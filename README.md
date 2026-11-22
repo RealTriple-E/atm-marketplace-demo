@@ -2,6 +2,26 @@
 
 Responsive, mobile-first rental marketplace prototype based on an Uber-inspired layout. The app runs on static hosting and has no runtime build step.
 
+## Current release: frontend concept only (22 November 2026)
+
+ATM is an **interactive buyer-and-seller UI concept**, not a live rental service.
+**Do not configure a database, real login, payment provider or seller messaging server.**
+The working demo is [ATM Marketplace on GitHub Pages](https://realtriple-e.github.io/atm-marketplace-demo/#/home).
+
+- **Home:** six **circular** categories, demonstration auctions, a discovery grid and **20 social-style fictional rental posts**, each with a seller portrait, sharing, saving and a full listing detail.
+- **Categories:** Transport, Hardware, Events, Spaces & Property, Lifestyle and Services. Each has its own Trending carousel, subcategories, filters and pagination across 288 fictional examples.
+- **Product detail:** swipeable, dot/arrow-controlled galleries, seller profiles, reviews, sample availability, city information and functional Offer or Reserve actions.
+- **Seller:** dashboard, listing management, create/edit/delete, fixed or negotiable prices, timed auctions, configurable rewards and three image URL slots (the cover can also be uploaded).
+- **Buyer:** bids, sample competitor bids, sample notifications, saved listings, offers and counteroffers, reservations, simulated MTN/Airtel/card/bank checkout, My Trips and messaging after fictional payment.
+- **Auction checkout:** a winning bid represents the **entire rental period**, not the rate per day. Dates are locked to the auction award and fees/deposits appear once.
+- **No live beta exposure:** the unconfigured ATM Live entry is removed from Account. Direct visitors to live.html are redirected to the concept. Optional Live/SQL source remains in GitHub but is not activated.
+
+### Automated checks
+
+The project has frontend syntax/domain checks plus a real Chromium regression suite covering buyer navigation, mobile widths, custom seller galleries, reservations, postpayment chat, and auction totals. The browser workflow is at .github/workflows/atm-visual-qa.yml, and screenshots are attached to its GitHub Actions runs. It serves only static files, without Supabase or a payment processor.
+
+To run the browser tests locally, serve this directory on port 4173, install the pinned Playwright 1.57.0 package and its Chromium browser in a test environment, and run node tests/ui/concept-smoke.cjs.
+
 ## Run locally
 
 Open `index.html` in a browser or serve the directory:
