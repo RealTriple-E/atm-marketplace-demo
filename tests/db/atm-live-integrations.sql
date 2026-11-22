@@ -88,6 +88,9 @@ begin
  if (select bid_count from public.atm_auctions where id=current_setting('atm.test.auction')::uuid)<>2 then
    raise exception 'Duplicate bid was recorded';
  end if;
+ if (select bidder_count from public.atm_auctions where id=current_setting('atm.test.auction')::uuid)<>2 then
+   raise exception 'Distinct bidder count incorrect';
+ end if;
  if (select count(*) from public.atm_bid_feed where auction_id=current_setting('atm.test.auction')::uuid)<>2 then
    raise exception 'Public feed should contain two masked bids';
  end if;
