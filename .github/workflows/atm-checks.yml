@@ -4,6 +4,7 @@ on:
     branches:
       - main
       - 'feat/**'
+      - 'fix/**'
   pull_request:
     branches:
       - main
@@ -59,6 +60,9 @@ jobs:
           psql -v ON_ERROR_STOP=1 -f tests/db/bootstrap.sql
           psql -v ON_ERROR_STOP=1 -f supabase/migrations/202611220001_atm_live_schema.sql
           psql -v ON_ERROR_STOP=1 -f supabase/migrations/202611220002_atm_marketplace_rpcs.sql
+          psql -v ON_ERROR_STOP=1 -f supabase/migrations/202611220003_atm_lifecycle_hardening.sql
           psql -v ON_ERROR_STOP=1 -f supabase/optional/atm_cron_setup.sql
       - name: Exercise ownership, bidding, RLS, settlement and chat
         run: psql -v ON_ERROR_STOP=1 -f tests/db/atm-live-integrations.sql
+      - name: Race two simultaneous buyer bids
+        run: bash tests/db/atm-concurrent-bids.sh
