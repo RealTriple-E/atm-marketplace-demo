@@ -81,3 +81,13 @@ button:disabled{opacity:.55;cursor:not-allowed}
 @media(min-width:800px){.atm-live-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:19px}.atm-live-card>a{height:215px}.atm-live-main{padding-top:32px}}
 @media(min-width:1080px){.atm-live-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
 @media(max-width:430px){.atm-live-top{padding:0 14px}.atm-live-top span{font-size:9px}.atm-live-card>a{height:127px}.atm-live-card>div{padding:10px}.atm-live-card strong{font-size:13px}.atm-live-card b{font-size:16px}.atm-live-pair{grid-template-columns:1fr}.atm-live-stats div{padding:13px 7px}.atm-live-stats b{font-size:13px}.atm-live-mode button{padding:9px 10px}.atm-live-nav a{min-width:57px;padding:12px 11px;font-size:11px}.atm-live-form,.atm-live-bid{padding:17px}.atm-live-gallery img{min-height:190px}}
+
+/* Match the original ATM homepage's circular, tap-friendly category navigation. */
+.atm-live-categories{display:flex;align-items:flex-start;gap:14px;overflow-x:auto;scrollbar-width:thin;padding:4px 1px 13px;margin:17px 0 27px}
+.atm-live-categories .atm-live-category{border:0;background:transparent;display:flex;flex:0 0 96px;flex-direction:column;align-items:center;gap:8px;cursor:pointer;color:#282828;padding:0}
+.atm-live-categories .atm-live-round{height:62px;width:62px;background:#fff;border:1.5px solid #d8d8d8;border-radius:50%;display:flex;justify-content:center;align-items:center;font-size:15px;font-weight:900;letter-spacing:.02em}
+.atm-live-categories .atm-live-category.active .atm-live-round{background:#111;border-color:#111;color:#fff;box-shadow:inset 0 -4px 0 #f18734}
+.atm-live-categories .atm-live-category strong{font-size:11px;font-weight:800;line-height:1.25;white-space:normal;text-align:center}
+.atm-live-seller-item{min-width:0}
+.atm-live-seller-item button{margin-top:8px;width:100%;font-size:12px}
+@media(max-width:430px){.atm-live-categories{gap:7px}.atm-live-categories .atm-live-category{flex-basis:82px}.atm-live-categories .atm-live-round{height:56px;width:56px}}
