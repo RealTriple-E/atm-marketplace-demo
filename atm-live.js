@@ -8,7 +8,7 @@ const I=s=>/^https:\/\/[^\s"<>]+$/i.test(String(s||''))?E(s):'./favicon.svg';
 const T=s=>{const x=Math.max(0,Math.ceil((new Date(s).getTime()-Date.now())/1000)),d=Math.floor(x/86400);return(d?d+'d ':'')+[Math.floor(x%86400/3600),Math.floor(x%3600/60),x%60].map(y=>String(y).padStart(2,'0')).join(':')};
 const categories=['Transport','Hardware','Events','Spaces & Property','Lifestyle','Services'];
 let api,user=null,seller=null,buyerProfile=null,mode='buyer',busy=false,flash='',db={listings:[],auctions:[],perks:[],sellers:[],feed:[],mine:[],watches:[],bookings:[],offers:[],messages:[]};
-let proposed=0,polling=false,chan;
+let proposed=0,polling=false,chan,categoryFilter='All';
 const page=()=>{const h=(location.hash||'#/browse').replace(/^#\//,'').split('/');return[h[0],h[1]||'']};
 const go=(p,id)=>{location.hash='#/'+p+(id?'/'+id:'');draw();};
 const listing=id=>db.listings.find(x=>x.id===id);
@@ -28,8 +28,8 @@ function card(l){
  return `<article class="atm-live-card"><a href="#/${a?'auction':'item'}/${a?a.id:l.id}"><img src="${I(l.image_urls?.[0])}" alt="${E(l.title)}" loading="lazy"><span>${a?'LIVE AUCTION':l.pricing_mode==='negotiable'?'NEGOTIABLE':'FIXED RATE'}</span></a><div><strong>${E(l.title)}</strong><small>${E(l.city)} · ${E(l.category)}</small><b>${K(a?(a.highest_bid??a.starting_bid):l.price_amount)}</b><small>${a?a.bid_count+' bids · '+a.bidder_count+' bidders · '+T(a.ends_at):'Daily rate'}</small><p><img class="atm-live-avatar" src="${I(s?.avatar_url)}" alt="Seller portrait"> ${E(s?.business_name||'ATM seller')}</p></div></article>`;
 }
 function browse(onlyAuctions=false){
- const list=onlyAuctions?db.listings.filter(x=>linked(x)):db.listings;
- return `<h1>${onlyAuctions?'Live rental auctions':'Discover anything for hire'}</h1><p class="atm-live-lead">Verified account sessions, shared marketplace data and server-controlled bidding.</p>${onlyAuctions?'':'<div class="atm-live-categories">'+categories.map(c=>'<span>'+E(c)+'</span>').join('')+'</div>'}<div class="atm-live-grid">${list.length?list.map(card).join(''):'<p class="atm-live-empty">No real listings yet. You can still explore the ATM demo.</p>'}</div>`;
+ const list=onlyAuctions?db.listings.filter(x=>linked(x)):db.listings.filter(x=>categoryFilter==='All'||x.category===categoryFilter);
+ return `<h1>${onlyAuctions?'Live rental auctions':'Discover anything for hire'}</h1><p class="atm-live-lead">Verified account sessions, shared marketplace data and server-controlled bidding.</p>${onlyAuctions?'':'<div class="atm-live-categories">'+['All',...categories].map(c=>'<button type="button" class="atm-live-category '+(categoryFilter===c?'active':'')+'" data-action="category" data-category="'+E(c)+'"><span class="atm-live-round">'+(c==='All'?'ALL':c.split(/\\s|&/).map(x=>x[0]).join('').slice(0,2).toUpperCase())+'</span><strong>'+E(c)+'</strong></button>').join('')+'</div>'}<div class="atm-live-grid">${list.length?list.map(card).join(''):'<p class="atm-live-empty">No real listings yet. You can still explore the ATM demo.</p>'}</div>`;
 }
 function auth(){
  return `<h1>ATM Live account</h1><p>One account lets you buy, bid and sell from different devices.</p><form data-form="auth" class="atm-live-form"><label>Email<input name="email" type="email" required autocomplete="email"></label><label>Password<input name="password" type="password" required minlength="8" autocomplete="current-password"></label><div class="atm-live-actions"><button name="intent" value="login" class="primary">Sign in</button><button name="intent" value="register" class="secondary">Create account</button></div></form><p class="atm-live-note">Email confirmation may be required. Credentials are handled by Supabase Auth.</p>`;
@@ -126,6 +126,7 @@ async function transact(fn){
 R.addEventListener('click',async ev=>{
  const b=ev.target.closest('[data-action]');if(!b)return;ev.preventDefault();
  const action=b.dataset.action,id=b.dataset.id;
+ if(action==='category'){categoryFilter=b.dataset.category||'All';go('browse');return;}
  if(action==='mode'){mode=b.dataset.mode==='seller'?'seller':'buyer';localStorage.setItem('atm-live-mode',mode);go(mode==='seller'?'seller':'browse');return;}
  if(action==='signout')return transact(async()=>{await errData(api.auth.signOut());user=null;seller=null;go('browse');});
  if(action==='watch')return transact(async()=>{if(!user)throw Error('Sign in first');const watched=db.watches.some(w=>w.auction_id===id);if(watched)await errData(api.from('atm_watches').delete().eq('user_id',user.id).eq('auction_id',id));else await errData(api.from('atm_watches').insert({user_id:user.id,auction_id:id}));});
