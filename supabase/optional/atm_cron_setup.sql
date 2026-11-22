@@ -18,7 +18,7 @@ begin
  for v_auction in
    select a.* from public.atm_auctions a
    where a.status='live' and a.ends_at<=clock_timestamp()
-   order by a.ends_at for update skip locked limit 100
+   order by a.ends_at limit 100 for update skip locked
  loop
    select b.* into v_bid from atm_private.atm_bids b
    where b.auction_id=v_auction.id
