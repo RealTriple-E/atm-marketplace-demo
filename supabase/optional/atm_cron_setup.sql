@@ -64,3 +64,21 @@ revoke all on function atm_private.atm_settle_due() from public,anon,authenticat
 -- If this project is later retired:
 -- SELECT cron.unschedule('atm-live-settle-due');
 -- Note: PostgreSQL cron jobs execute using the job owner's privileges.
+
+-- Lifecycle migration 0003 additionally installs atm_private.atm_expire_unpaid().
+-- Run this second job ONLY after migration 0003 is installed in the dedicated ATM
+-- project. Expiration rejects late payment callbacks and prevents abandoned
+-- awaiting_payment records from accumulating indefinitely.
+--
+-- SELECT cron.schedule(
+--   'atm-live-expire-unpaid',
+--   '* * * * *',
+--   'SELECT atm_private.atm_expire_unpaid();'
+-- );
+--
+-- Remove both jobs when decommissioning ATM:
+-- SELECT cron.unschedule('atm-live-settle-due');
+-- SELECT cron.unschedule('atm-live-expire-unpaid');
+--
+-- Expired winners are cancelled, NOT automatically reassigned to a losing bidder.
+-- Any future runner-up offers will need a separate explicit opt-in flow.
